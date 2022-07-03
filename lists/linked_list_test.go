@@ -20,6 +20,7 @@ func TestLinkedList_Add(t *testing.T) {
 
 	l2 := NewLinkedList[*obj]()
 	l2.Add(nil)
+	assert.Nil(t, l2.head.v)
 }
 
 func TestLinkedList_Pop(t *testing.T) {
@@ -35,4 +36,8 @@ func TestLinkedList_Pop(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.Nil(t, l.head)
 	assert.Nil(t, l.tail)
+
+	l2 := NewLinkedList[*obj]()
+	v3, _ := l2.Pop()
+	assert.Nil(t, v3)
 }
