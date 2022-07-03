@@ -1,4 +1,4 @@
-module github.com/cuzfrog/ggods
+module github.com/cuzfrog/tgods
 
 go 1.18
 

@@ -2,7 +2,7 @@ package maps
 
 import (
 	"container/list"
-	"github.com/cuzfrog/ggods/core"
+	"github.com/cuzfrog/tgods/core"
 )
 
 type LinkedMap struct {
