@@ -1,5 +1,14 @@
 package lists
 
+import (
+	"fmt"
+	"github.com/cuzfrog/ggods/core"
+	"strings"
+)
+
+// assert LinkedList implementation
+var _ core.List[int] = (*LinkedList[int])(nil)
+
 type node[T any] struct {
 	v    T
 	prev *node[T]
@@ -23,10 +32,19 @@ func (l *LinkedList[T]) Clear() {
 }
 
 func (l *LinkedList[T]) String() *string {
-	//TODO implement me
-	panic("implement me")
+	str := "LinkedList["
+	values := []string{}
+	iter := l.Iterator()
+	for iter.HasNext() {
+		_, v := iter.Next()
+		values = append(values, fmt.Sprintf("%v", v))
+	}
+	str += strings.Join(values, ", ")
+	str += "]"
+	return &str
 }
 
+// Contains checks if elem is present, O(n)
 func (l *LinkedList[T]) Contains(elem T) bool {
 	//TODO implement me
 	panic("implement me")
@@ -46,6 +64,11 @@ func (l *LinkedList[T]) Tail() (elem T, found bool) {
 	}
 	elem = l.tail.v
 	return elem, true
+}
+
+// Peek same as Tail
+func (l *LinkedList[T]) Peek() (elem T, found bool) {
+	return l.Tail()
 }
 
 // AddTail same as Add
@@ -103,6 +126,50 @@ func (l *LinkedList[T]) Pop() (elem T, found bool) {
 	return elem, true
 }
 
-func NewLinkedList[T any]() *LinkedList[T] {
-	return &LinkedList[T]{nil, nil, 0}
+type iterator[T any] struct {
+	index    int
+	cur      *node[T]
+	nextTurn bool
+}
+
+func (l *LinkedList[T]) Iterator() core.Iterator[T] {
+	return &iterator[T]{0, l.head, false}
+}
+
+func (iter *iterator[T]) HasNext() bool {
+	if iter.nextTurn {
+		panic("can only call HasNext once before calling Next")
+	}
+	iter.nextTurn = true
+	return iter.cur != nil
+}
+
+func (iter *iterator[T]) Next() (index int, elem T) {
+	if iter.cur == nil {
+		panic("cannot move to next, guard Next by checking HasNext")
+	}
+	index, elem = iter.index, iter.cur.v
+	iter.cur = iter.cur.next
+	iter.index++
+	iter.nextTurn = false
+	return
+}
+
+func NewLinkedList[T any](values ...T) *LinkedList[T] {
+	l := &LinkedList[T]{nil, nil, 0}
+	length := len(values)
+	if length == 0 {
+		return l
+	}
+	first := values[0]
+	l.head = &node[T]{first, nil, nil}
+	l.tail = l.head
+	l.size = 1
+	for i := 1; i < length; i++ {
+		n := &node[T]{values[i], l.tail, nil}
+		l.tail.next = n
+		l.tail = n
+		l.size++
+	}
+	return l
 }

@@ -1,2 +1,2 @@
-# Go Data Structures with Generics
+# Typesafe Go Data Structures with Generics
 

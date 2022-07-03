@@ -26,6 +26,9 @@ func TestLinkedList_Head_Tail(t *testing.T) {
 	v, okt2 := l.Tail()
 	assert.True(t, okt2)
 	assert.Equal(t, 5, v)
+	vp, okp := l.Peek()
+	assert.Equal(t, v, vp)
+	assert.Equal(t, okt2, okp)
 }
 
 func TestLinkedList_Add(t *testing.T) {
@@ -72,4 +75,27 @@ func TestLinkedList_PopHead(t *testing.T) {
 	assert.Equal(t, 5, v)
 	_, found = l.PopHead()
 	assert.False(t, found)
+}
+
+func TestLinkedList_Iterator(t *testing.T) {
+	l := NewLinkedList(3, 4, 6)
+	iter := l.Iterator()
+	assert.True(t, iter.HasNext())
+	assert.Panics(t, func() { iter.HasNext() })
+	i, v := iter.Next()
+	assert.Equal(t, 0, i)
+	assert.Equal(t, 3, v)
+
+	assert.True(t, iter.HasNext())
+	i, v = iter.Next()
+	assert.Equal(t, 1, i)
+	assert.Equal(t, 4, v)
+
+	assert.True(t, iter.HasNext())
+	i, v = iter.Next()
+	assert.Equal(t, 2, i)
+	assert.Equal(t, 6, v)
+
+	assert.False(t, iter.HasNext())
+	assert.Panics(t, func() { iter.Next() })
 }

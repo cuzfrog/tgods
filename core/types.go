@@ -7,7 +7,10 @@ type Collection interface {
 }
 
 type Iterator[T any] interface {
-	Next() (T, bool)
+	// HasNext checks if there's next elem
+	HasNext() bool
+	// Next returns index, value and move iterator state to next
+	Next() (int, T)
 }
 
 type Bag[T any] interface {
