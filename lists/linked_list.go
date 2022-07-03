@@ -9,13 +9,13 @@ import (
 // assert LinkedList implementation
 var _ core.List[int] = (*LinkedList[int])(nil)
 
-type node[T any] struct {
+type node[T comparable] struct {
 	v    T
 	prev *node[T]
 	next *node[T]
 }
 
-type LinkedList[T any] struct {
+type LinkedList[T comparable] struct {
 	head *node[T]
 	tail *node[T]
 	size int
@@ -46,8 +46,14 @@ func (l *LinkedList[T]) String() *string {
 
 // Contains checks if elem is present, O(n)
 func (l *LinkedList[T]) Contains(elem T) bool {
-	//TODO implement me
-	panic("implement me")
+	iter := l.Iterator()
+	for iter.HasNext() {
+		_, v := iter.Next()
+		if elem == v {
+			return true
+		}
+	}
+	return false
 }
 
 func (l *LinkedList[T]) Head() (elem T, found bool) {
@@ -126,7 +132,7 @@ func (l *LinkedList[T]) Pop() (elem T, found bool) {
 	return elem, true
 }
 
-type iterator[T any] struct {
+type iterator[T comparable] struct {
 	index    int
 	cur      *node[T]
 	nextTurn bool
@@ -155,7 +161,7 @@ func (iter *iterator[T]) Next() (index int, elem T) {
 	return
 }
 
-func NewLinkedList[T any](values ...T) *LinkedList[T] {
+func NewLinkedList[T comparable](values ...T) *LinkedList[T] {
 	l := &LinkedList[T]{nil, nil, 0}
 	length := len(values)
 	if length == 0 {

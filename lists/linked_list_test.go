@@ -10,6 +10,25 @@ type obj struct {
 	s int
 }
 
+func TestLinkedList_Clear(t *testing.T) {
+	l := NewLinkedList("a", "d")
+	l.Clear()
+	assert.Equal(t, 0, l.size)
+	assert.Nil(t, l.head)
+	assert.Nil(t, l.tail)
+}
+
+func TestLinkedList_String(t *testing.T) {
+	l := NewLinkedList(3, 7)
+	assert.Equal(t, "LinkedList[3, 7]", *l.String())
+}
+
+func TestLinkedList_Contains(t *testing.T) {
+	l := NewLinkedList("a", "d")
+	assert.True(t, l.Contains("d"))
+	assert.False(t, l.Contains("ds"))
+}
+
 func TestLinkedList_Head_Tail(t *testing.T) {
 	l := NewLinkedList[int]()
 	_, okh := l.Head()
