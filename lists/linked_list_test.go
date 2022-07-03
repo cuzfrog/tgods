@@ -59,3 +59,17 @@ func TestLinkedList_Pop(t *testing.T) {
 	v3, _ := l2.Pop()
 	assert.Nil(t, v3)
 }
+
+func TestLinkedList_PopHead(t *testing.T) {
+	l := NewLinkedList[int]()
+	l.Add(1)
+	l.Add(5)
+	v, found := l.PopHead()
+	assert.True(t, found)
+	assert.Equal(t, 1, v)
+	v, found = l.PopHead()
+	assert.True(t, found)
+	assert.Equal(t, 5, v)
+	_, found = l.PopHead()
+	assert.False(t, found)
+}

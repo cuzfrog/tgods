@@ -48,14 +48,23 @@ func (l *LinkedList[T]) Tail() (elem T, found bool) {
 	return elem, true
 }
 
+// AddTail same as Add
 func (l *LinkedList[T]) AddTail(elem T) {
-	//TODO implement me
-	panic("implement me")
+	l.Add(elem)
 }
 
-func (l *LinkedList[T]) PopHead() (T, bool) {
-	//TODO implement me
-	panic("implement me")
+// PopHead removes elem from the head
+func (l *LinkedList[T]) PopHead() (elem T, found bool) {
+	if l.size == 0 {
+		return elem, false
+	}
+	elem = l.head.v
+	l.head = l.head.next
+	if l.size == 1 {
+		l.tail = nil
+	}
+	l.size--
+	return elem, true
 }
 
 func (l *LinkedList[T]) Get(index int) (T, bool) {
@@ -68,6 +77,7 @@ func (l *LinkedList[T]) Put(index int, elem T) (T, bool) {
 	panic("implement me")
 }
 
+// Add adds elem to the tail
 func (l *LinkedList[T]) Add(elem T) {
 	prevTail := l.tail
 	l.tail = &node[T]{elem, prevTail, nil}
