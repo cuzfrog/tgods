@@ -1,4 +1,4 @@
-package generic_collections
+package lists
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -10,6 +10,6 @@ func TestLinkedList_Add(t *testing.T) {
 	l.Add(1)
 	l.Add(5)
 	assert.Equal(t, l.Size(), 2)
-	assert.Equal(t, l.head, 1)
-	assert.Equal(t, l.tail, 5)
+	assert.Equal(t, l.head.v, 1)
+	assert.Equal(t, l.tail.v, 5)
 }

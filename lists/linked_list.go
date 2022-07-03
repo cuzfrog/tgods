@@ -1,14 +1,20 @@
-package generic_collections
+package lists
+
+type node[T any] struct {
+	v    T
+	prev *node[T]
+	next *node[T]
+}
 
 type LinkedList[T any] struct {
-	head *Node[T]
-	tail *Node[T]
+	head *node[T]
+	tail *node[T]
 	size int
 }
 
 func (l *LinkedList[T]) Add(elem T) {
 	prevTail := l.tail
-	l.tail = &Node[T]{elem, prevTail, nil}
+	l.tail = &node[T]{elem, prevTail, nil}
 	if l.size == 0 {
 		l.head = l.tail
 	} else {
@@ -33,8 +39,7 @@ func (l *LinkedList[T]) Tail() T {
 }
 
 func (l *LinkedList[T]) Size() int {
-	//TODO implement me
-	panic("implement me")
+	return l.size
 }
 
 func (l *LinkedList[T]) AddTail(elem T) {

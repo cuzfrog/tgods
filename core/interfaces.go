@@ -1,4 +1,10 @@
-package generic_collections
+package core
+
+type Collection interface {
+	Size() int
+	Clear()
+	String() *string
+}
 
 type Iterator[T any] interface {
 	HasNext() bool
@@ -8,6 +14,7 @@ type Iterator[T any] interface {
 type Bag[T any] interface {
 	Add(elem T)
 	Pop() T
+	Contains(elem T) bool
 	Size() int
 }
 
