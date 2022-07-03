@@ -13,6 +13,11 @@ type Iterator[T any] interface {
 	Next() (int, T)
 }
 
+type IndexAccess[T any] interface {
+	Get(index int) (T, bool)
+	Put(index int, elem T) (T, bool)
+}
+
 type Bag[T any] interface {
 	Collection
 	Add(elem T)
@@ -39,8 +44,6 @@ type Stack[T any] interface {
 
 type List[T any] interface {
 	Deque[T]
-	Get(index int) (T, bool)
-	Put(index int, elem T) (T, bool)
 }
 
 type Map[K any, V any] interface {

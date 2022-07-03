@@ -33,7 +33,7 @@ func (l *LinkedList[T]) Clear() {
 
 func (l *LinkedList[T]) String() *string {
 	str := "LinkedList["
-	values := []string{}
+	var values []string
 	iter := l.Iterator()
 	for iter.HasNext() {
 		_, v := iter.Next()
@@ -94,16 +94,6 @@ func (l *LinkedList[T]) PopHead() (elem T, found bool) {
 	}
 	l.size--
 	return elem, true
-}
-
-func (l *LinkedList[T]) Get(index int) (T, bool) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (l *LinkedList[T]) Put(index int, elem T) (T, bool) {
-	//TODO implement me
-	panic("implement me")
 }
 
 // Add adds elem to the tail
