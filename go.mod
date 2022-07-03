@@ -1,4 +1,4 @@
-module github.com/cuzfrog/generic-collections
+module github.com/cuzfrog/ggods
 
 go 1.18
 
