@@ -2,7 +2,7 @@ package lists
 
 import (
 	"fmt"
-	"github.com/cuzfrog/ggods/core"
+	"github.com/cuzfrog/tgods/core"
 	"strings"
 )
 
