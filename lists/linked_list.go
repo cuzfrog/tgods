@@ -1,5 +1,7 @@
 package lists
 
+import "errors"
+
 type node[T any] struct {
 	v    T
 	prev *node[T]
@@ -23,9 +25,19 @@ func (l *LinkedList[T]) Add(elem T) {
 	l.size++
 }
 
-func (l *LinkedList[T]) Pop() T {
-	//TODO implement me
-	panic("implement me")
+// Pop gets and removes the last elem
+func (l *LinkedList[T]) Pop() (elem T, err error) {
+	if l.size == 0 {
+		err = errors.New("no elem")
+		return
+	}
+	elem = l.tail.v
+	l.tail = l.tail.prev
+	if l.size == 1 {
+		l.head = nil
+	}
+	l.size--
+	return
 }
 
 func (l *LinkedList[T]) Head() T {
@@ -62,6 +74,6 @@ func (l *LinkedList[T]) Put(index int) (T, bool) {
 	panic("implement me")
 }
 
-func NewLinkedList[T any]() LinkedList[T] {
-	return LinkedList[T]{nil, nil, 0}
+func NewLinkedList[T any]() *LinkedList[T] {
+	return &LinkedList[T]{nil, nil, 0}
 }
