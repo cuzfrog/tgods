@@ -10,6 +10,24 @@ type obj struct {
 	s int
 }
 
+func TestLinkedList_Head_Tail(t *testing.T) {
+	l := NewLinkedList[int]()
+	_, okh := l.Head()
+	assert.False(t, okh)
+	_, okt := l.Tail()
+	assert.False(t, okt)
+
+	l.Add(3)
+	l.Add(5)
+	v, okh2 := l.Head()
+	assert.True(t, okh2)
+	assert.Equal(t, 3, v)
+	assert.Equal(t, 2, l.size)
+	v, okt2 := l.Tail()
+	assert.True(t, okt2)
+	assert.Equal(t, 5, v)
+}
+
 func TestLinkedList_Add(t *testing.T) {
 	l := NewLinkedList[int]()
 	l.Add(1)
@@ -32,8 +50,8 @@ func TestLinkedList_Pop(t *testing.T) {
 	v2, _ := l.Pop()
 	assert.Equal(t, 1, v2)
 	assert.Equal(t, 0, l.Size())
-	_, err := l.Pop()
-	assert.NotNil(t, err)
+	_, ok := l.Pop()
+	assert.False(t, ok)
 	assert.Nil(t, l.head)
 	assert.Nil(t, l.tail)
 

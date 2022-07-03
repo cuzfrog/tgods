@@ -7,26 +7,27 @@ type Collection interface {
 }
 
 type Iterator[T any] interface {
-	Next() (T, error)
+	Next() (T, bool)
 }
 
 type Bag[T any] interface {
 	Collection
 	Add(elem T)
-	Pop() (T, error)
+	Pop() (T, bool)
+	Peek() (T, bool)
 	Contains(elem T) bool
 }
 
 type Queue[T any] interface {
 	Bag[T]
-	Head() (T, error)
-	Tail() (T, error)
+	Head() (T, bool)
+	Tail() (T, bool)
 }
 
 type Deque[T any] interface {
 	Queue[T]
 	AddTail(elem T)
-	PopHead() (T, error)
+	PopHead() (T, bool)
 }
 
 type Stack[T any] interface {
@@ -35,8 +36,8 @@ type Stack[T any] interface {
 
 type List[T any] interface {
 	Deque[T]
-	Get(index int) (T, error)
-	Put(index int, elem T) (T, error)
+	Get(index int) (T, bool)
+	Put(index int, elem T) (T, bool)
 }
 
 type Map[K any, V any] interface {
