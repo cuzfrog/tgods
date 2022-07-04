@@ -18,11 +18,6 @@ func TestLinkedList_Clear(t *testing.T) {
 	assert.Nil(t, l.tail)
 }
 
-func TestLinkedList_String(t *testing.T) {
-	l := NewLinkedList(3, 7)
-	assert.Equal(t, "LinkedList[3, 7]", *l.String())
-}
-
 func TestLinkedList_Contains(t *testing.T) {
 	l := NewLinkedList("a", "d")
 	assert.True(t, l.Contains("d"))
@@ -99,22 +94,22 @@ func TestLinkedList_PopHead(t *testing.T) {
 func TestLinkedList_Iterator(t *testing.T) {
 	l := NewLinkedList(3, 4, 6)
 	iter := l.Iterator()
-	assert.True(t, iter.HasNext())
-	assert.Panics(t, func() { iter.HasNext() })
-	i, v := iter.Next()
+	assert.True(t, iter.Next())
+	i, v := iter.Index(), iter.Value()
 	assert.Equal(t, 0, i)
 	assert.Equal(t, 3, v)
 
-	assert.True(t, iter.HasNext())
-	i, v = iter.Next()
+	assert.True(t, iter.Next())
+	i, v = iter.Index(), iter.Value()
 	assert.Equal(t, 1, i)
 	assert.Equal(t, 4, v)
 
-	assert.True(t, iter.HasNext())
-	i, v = iter.Next()
+	assert.True(t, iter.Next())
+	i, v = iter.Index(), iter.Value()
 	assert.Equal(t, 2, i)
 	assert.Equal(t, 6, v)
 
-	assert.False(t, iter.HasNext())
-	assert.Panics(t, func() { iter.Next() })
+	assert.False(t, iter.Next())
+	assert.PanicsWithValue(t, "index(3) out of range", func() { iter.Index() })
+	assert.PanicsWithValue(t, "index(3) out of range", func() { iter.Value() })
 }
