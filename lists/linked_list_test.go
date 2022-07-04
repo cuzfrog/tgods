@@ -52,10 +52,27 @@ func TestLinkedList_Add(t *testing.T) {
 	assert.Equal(t, 2, l.Size())
 	assert.Equal(t, 1, l.head.v)
 	assert.Equal(t, 5, l.tail.v)
+	assert.Equal(t, l.head.next, l.tail)
+	assert.Equal(t, l.tail.prev, l.head)
+	assert.Nil(t, l.head.prev)
+	assert.Nil(t, l.tail.next)
 
 	l2 := NewLinkedList[*obj]()
 	l2.Add(nil)
 	assert.Nil(t, l2.head.v)
+}
+
+func TestLinkedList_AddHead(t *testing.T) {
+	l := NewLinkedList[int]()
+	l.Add(1)
+	l.AddHead(5)
+	assert.Equal(t, 2, l.Size())
+	assert.Equal(t, 5, l.head.v)
+	assert.Equal(t, 1, l.tail.v)
+	assert.Equal(t, l.head.next, l.tail)
+	assert.Equal(t, l.tail.prev, l.head)
+	assert.Nil(t, l.head.prev)
+	assert.Nil(t, l.tail.next)
 }
 
 func TestLinkedList_Pop(t *testing.T) {

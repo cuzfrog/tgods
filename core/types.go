@@ -38,7 +38,7 @@ type Queue[T comparable] interface {
 
 type Deque[T comparable] interface {
 	Queue[T]
-	AddTail(elem T)
+	AddHead(elem T)
 	PopHead() (T, bool)
 }
 
