@@ -1,9 +1,7 @@
 package lists
 
 import (
-	"fmt"
 	"github.com/cuzfrog/tgods/core"
-	"strings"
 )
 
 // assert LinkedList implementation
@@ -29,19 +27,6 @@ func (l *LinkedList[T]) Clear() {
 	l.size = 0
 	l.head = nil
 	l.tail = nil
-}
-
-func (l *LinkedList[T]) String() *string {
-	str := "LinkedList["
-	var values []string
-	iter := l.Iterator()
-	for iter.HasNext() {
-		_, v := iter.Next()
-		values = append(values, fmt.Sprintf("%v", v))
-	}
-	str += strings.Join(values, ", ")
-	str += "]"
-	return &str
 }
 
 // Contains checks if elem is present, O(n)

@@ -18,11 +18,6 @@ func TestLinkedList_Clear(t *testing.T) {
 	assert.Nil(t, l.tail)
 }
 
-func TestLinkedList_String(t *testing.T) {
-	l := NewLinkedList(3, 7)
-	assert.Equal(t, "LinkedList[3, 7]", *l.String())
-}
-
 func TestLinkedList_Contains(t *testing.T) {
 	l := NewLinkedList("a", "d")
 	assert.True(t, l.Contains("d"))
