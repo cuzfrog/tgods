@@ -20,6 +20,25 @@ type LinkedList[T comparable] struct {
 	size int
 }
 
+func NewLinkedList[T comparable](values ...T) *LinkedList[T] {
+	l := &LinkedList[T]{nil, nil, 0}
+	length := len(values)
+	if length == 0 {
+		return l
+	}
+	first := values[0]
+	l.head = &node[T]{first, nil, nil}
+	l.tail = l.head
+	l.size = 1
+	for i := 1; i < length; i++ {
+		n := &node[T]{values[i], l.tail, nil}
+		l.tail.next = n
+		l.tail = n
+		l.size++
+	}
+	return l
+}
+
 func (l *LinkedList[T]) Size() int {
 	return l.size
 }
@@ -143,23 +162,4 @@ func (it *iterator[T]) Value() T {
 		panic(fmt.Sprintf("index(%d) out of range", it.index))
 	}
 	return it.cur.v
-}
-
-func NewLinkedList[T comparable](values ...T) *LinkedList[T] {
-	l := &LinkedList[T]{nil, nil, 0}
-	length := len(values)
-	if length == 0 {
-		return l
-	}
-	first := values[0]
-	l.head = &node[T]{first, nil, nil}
-	l.tail = l.head
-	l.size = 1
-	for i := 1; i < length; i++ {
-		n := &node[T]{values[i], l.tail, nil}
-		l.tail.next = n
-		l.tail = n
-		l.size++
-	}
-	return l
 }
