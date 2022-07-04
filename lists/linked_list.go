@@ -1,6 +1,7 @@
 package lists
 
 import (
+	"fmt"
 	"github.com/cuzfrog/tgods/core"
 )
 
@@ -32,8 +33,8 @@ func (l *LinkedList[T]) Clear() {
 // Contains checks if elem is present, O(n)
 func (l *LinkedList[T]) Contains(elem T) bool {
 	iter := l.Iterator()
-	for iter.HasNext() {
-		_, v := iter.Next()
+	for iter.Next() {
+		v := iter.Value()
 		if elem == v {
 			return true
 		}
@@ -108,32 +109,40 @@ func (l *LinkedList[T]) Pop() (elem T, found bool) {
 }
 
 type iterator[T comparable] struct {
-	index    int
-	cur      *node[T]
-	nextTurn bool
+	index int
+	head  *node[T]
+	cur   *node[T]
 }
 
 func (l *LinkedList[T]) Iterator() core.Iterator[T] {
-	return &iterator[T]{0, l.head, false}
+	return &iterator[T]{-1, l.head, nil}
 }
 
-func (iter *iterator[T]) HasNext() bool {
-	if iter.nextTurn {
-		panic("can only call HasNext once before calling Next")
+func (it *iterator[T]) Next() bool {
+	if it.head == nil {
+		return false
 	}
-	iter.nextTurn = true
-	return iter.cur != nil
+	if it.index < 0 {
+		it.cur = it.head
+	} else {
+		it.cur = it.cur.next
+	}
+	it.index++
+	return it.cur != nil
 }
 
-func (iter *iterator[T]) Next() (index int, elem T) {
-	if iter.cur == nil {
-		panic("cannot move to next, guard Next by checking HasNext")
+func (it *iterator[T]) Index() int {
+	if it.cur == nil {
+		panic(fmt.Sprintf("index(%d) out of range", it.index))
 	}
-	index, elem = iter.index, iter.cur.v
-	iter.cur = iter.cur.next
-	iter.index++
-	iter.nextTurn = false
-	return
+	return it.index
+}
+
+func (it *iterator[T]) Value() T {
+	if it.cur == nil {
+		panic(fmt.Sprintf("index(%d) out of range", it.index))
+	}
+	return it.cur.v
 }
 
 func NewLinkedList[T comparable](values ...T) *LinkedList[T] {

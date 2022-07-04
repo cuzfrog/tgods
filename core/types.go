@@ -6,10 +6,10 @@ type Collection interface {
 }
 
 type Iterator[T any] interface {
-	// HasNext checks if there's next elem
-	HasNext() bool
-	// Next returns index, value and move iterator state to next
-	Next() (int, T)
+	// Next checks if there's next elem, and move iterator state to next
+	Next() bool
+	Index() int
+	Value() T
 }
 
 type Iterable[T any] interface {
@@ -44,6 +44,11 @@ type Deque[T comparable] interface {
 
 type Stack[T comparable] interface {
 	Bag[T]
+}
+
+type ArrayList[T comparable] interface {
+	List[T]
+	IndexAccess[T]
 }
 
 type List[T comparable] interface {

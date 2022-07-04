@@ -9,6 +9,6 @@ type LinkedMap struct {
 	list list.List
 }
 
-func New[K any, V any]() core.Map[K, V] {
+func New[K comparable, V any]() core.Map[K, V] {
 	return nil
 }
