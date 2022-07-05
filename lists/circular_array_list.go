@@ -72,11 +72,11 @@ func (l *CircularArrayList[T]) Pop() (elem T, found bool) {
 	if l.size == 0 {
 		return elem, false
 	}
-	elem = l.arr[l.end-1]
-	l.end--
-	if l.end < 0 {
+	if l.end <= 0 {
 		l.end = len(l.arr)
 	}
+	elem = l.arr[l.end-1]
+	l.end--
 	l.size--
 	l.shrinkIfNeeded()
 	return elem, true
@@ -124,9 +124,6 @@ func (l *CircularArrayList[T]) AddHead(elem T) {
 	}
 	l.arr[l.start] = elem
 	l.size++
-	if l.end >= len(l.arr) {
-		l.end = 0
-	}
 }
 
 // PopHead removes the first elem, O(1)
