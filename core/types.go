@@ -18,7 +18,7 @@ type Iterable[T any] interface {
 
 type IndexAccess[T any] interface {
 	Get(index int) (T, bool)
-	Put(index int, elem T) (T, bool)
+	Set(index int, elem T) (T, bool)
 }
 
 type Bag[T comparable] interface {
@@ -38,7 +38,7 @@ type Queue[T comparable] interface {
 
 type Deque[T comparable] interface {
 	Queue[T]
-	AddTail(elem T)
+	AddHead(elem T)
 	PopHead() (T, bool)
 }
 

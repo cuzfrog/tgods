@@ -20,6 +20,25 @@ type LinkedList[T comparable] struct {
 	size int
 }
 
+func NewLinkedList[T comparable](values ...T) *LinkedList[T] {
+	l := &LinkedList[T]{nil, nil, 0}
+	length := len(values)
+	if length == 0 {
+		return l
+	}
+	first := values[0]
+	l.head = &node[T]{first, nil, nil}
+	l.tail = l.head
+	l.size = 1
+	for i := 1; i < length; i++ {
+		n := &node[T]{values[i], l.tail, nil}
+		l.tail.next = n
+		l.tail = n
+		l.size++
+	}
+	return l
+}
+
 func (l *LinkedList[T]) Size() int {
 	return l.size
 }
@@ -63,9 +82,16 @@ func (l *LinkedList[T]) Peek() (elem T, found bool) {
 	return l.Tail()
 }
 
-// AddTail same as Add
-func (l *LinkedList[T]) AddTail(elem T) {
-	l.Add(elem)
+// AddHead prepends to the list
+func (l *LinkedList[T]) AddHead(elem T) {
+	prevHead := l.head
+	l.head = &node[T]{elem, nil, prevHead}
+	if l.size == 0 {
+		l.tail = l.head
+	} else {
+		prevHead.prev = l.head
+	}
+	l.size++
 }
 
 // PopHead removes elem from the head
@@ -108,17 +134,17 @@ func (l *LinkedList[T]) Pop() (elem T, found bool) {
 	return elem, true
 }
 
-type iterator[T comparable] struct {
+type llIterator[T comparable] struct {
 	index int
 	head  *node[T]
 	cur   *node[T]
 }
 
 func (l *LinkedList[T]) Iterator() core.Iterator[T] {
-	return &iterator[T]{-1, l.head, nil}
+	return &llIterator[T]{-1, l.head, nil}
 }
 
-func (it *iterator[T]) Next() bool {
+func (it *llIterator[T]) Next() bool {
 	if it.head == nil {
 		return false
 	}
@@ -131,35 +157,16 @@ func (it *iterator[T]) Next() bool {
 	return it.cur != nil
 }
 
-func (it *iterator[T]) Index() int {
+func (it *llIterator[T]) Index() int {
 	if it.cur == nil {
 		panic(fmt.Sprintf("index(%d) out of range", it.index))
 	}
 	return it.index
 }
 
-func (it *iterator[T]) Value() T {
+func (it *llIterator[T]) Value() T {
 	if it.cur == nil {
 		panic(fmt.Sprintf("index(%d) out of range", it.index))
 	}
 	return it.cur.v
-}
-
-func NewLinkedList[T comparable](values ...T) *LinkedList[T] {
-	l := &LinkedList[T]{nil, nil, 0}
-	length := len(values)
-	if length == 0 {
-		return l
-	}
-	first := values[0]
-	l.head = &node[T]{first, nil, nil}
-	l.tail = l.head
-	l.size = 1
-	for i := 1; i < length; i++ {
-		n := &node[T]{values[i], l.tail, nil}
-		l.tail.next = n
-		l.tail = n
-		l.size++
-	}
-	return l
 }

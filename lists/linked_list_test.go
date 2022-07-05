@@ -52,10 +52,33 @@ func TestLinkedList_Add(t *testing.T) {
 	assert.Equal(t, 2, l.Size())
 	assert.Equal(t, 1, l.head.v)
 	assert.Equal(t, 5, l.tail.v)
+	assert.Equal(t, l.head.next, l.tail)
+	assert.Equal(t, l.tail.prev, l.head)
+	assert.Nil(t, l.head.prev)
+	assert.Nil(t, l.tail.next)
 
 	l2 := NewLinkedList[*obj]()
 	l2.Add(nil)
 	assert.Nil(t, l2.head.v)
+}
+
+func TestLinkedList_AddHead(t *testing.T) {
+	l := NewLinkedList[int]()
+	l.AddHead(5)
+	l.Add(1)
+	assert.Equal(t, 2, l.Size())
+	assert.Equal(t, 5, l.head.v)
+	assert.Equal(t, 1, l.tail.v)
+	assert.Equal(t, l.head.next, l.tail)
+	assert.Equal(t, l.tail.prev, l.head)
+	assert.Nil(t, l.head.prev)
+	assert.Nil(t, l.tail.next)
+
+	l.AddHead(6)
+	assert.Equal(t, 3, l.Size())
+	assert.Equal(t, 6, l.head.v)
+	assert.Equal(t, 5, l.head.next.v)
+	assert.Nil(t, l.head.prev)
 }
 
 func TestLinkedList_Pop(t *testing.T) {
@@ -112,4 +135,8 @@ func TestLinkedList_Iterator(t *testing.T) {
 	assert.False(t, iter.Next())
 	assert.PanicsWithValue(t, "index(3) out of range", func() { iter.Index() })
 	assert.PanicsWithValue(t, "index(3) out of range", func() { iter.Value() })
+
+	l = NewLinkedList[int]()
+	iter = l.Iterator()
+	assert.False(t, iter.Next())
 }
