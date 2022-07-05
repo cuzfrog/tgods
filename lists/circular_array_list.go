@@ -54,7 +54,7 @@ func (l *CircularArrayList[T]) Clear() {
 }
 
 // Add appends to the list, see AddHead
-func (l *CircularArrayList[T]) Add(elem T) {
+func (l *CircularArrayList[T]) Add(elem T) bool {
 	l.expandIfNeeded()
 	if l.end >= len(l.arr) {
 		l.end = 0
@@ -65,6 +65,7 @@ func (l *CircularArrayList[T]) Add(elem T) {
 	if l.start < 0 {
 		l.start = 0
 	}
+	return true
 }
 
 // Pop removes the last elem
@@ -116,7 +117,7 @@ func (l *CircularArrayList[T]) Tail() (T, bool) {
 }
 
 // AddHead prepends to the list, see Add
-func (l *CircularArrayList[T]) AddHead(elem T) {
+func (l *CircularArrayList[T]) AddHead(elem T) bool {
 	l.expandIfNeeded()
 	l.start--
 	if l.start < 0 {
@@ -124,6 +125,7 @@ func (l *CircularArrayList[T]) AddHead(elem T) {
 	}
 	l.arr[l.start] = elem
 	l.size++
+	return true
 }
 
 // PopHead removes the first elem, O(1)

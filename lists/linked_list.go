@@ -83,7 +83,7 @@ func (l *LinkedList[T]) Peek() (elem T, found bool) {
 }
 
 // AddHead prepends to the list
-func (l *LinkedList[T]) AddHead(elem T) {
+func (l *LinkedList[T]) AddHead(elem T) bool {
 	prevHead := l.head
 	l.head = &node[T]{elem, nil, prevHead}
 	if l.size == 0 {
@@ -92,6 +92,7 @@ func (l *LinkedList[T]) AddHead(elem T) {
 		prevHead.prev = l.head
 	}
 	l.size++
+	return true
 }
 
 // PopHead removes elem from the head
@@ -109,7 +110,7 @@ func (l *LinkedList[T]) PopHead() (elem T, found bool) {
 }
 
 // Add adds elem to the tail
-func (l *LinkedList[T]) Add(elem T) {
+func (l *LinkedList[T]) Add(elem T) bool {
 	prevTail := l.tail
 	l.tail = &node[T]{elem, prevTail, nil}
 	if l.size == 0 {
@@ -118,6 +119,7 @@ func (l *LinkedList[T]) Add(elem T) {
 		prevTail.next = l.tail
 	}
 	l.size++
+	return true
 }
 
 // Pop gets and removes the last elem
