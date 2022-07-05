@@ -18,7 +18,7 @@ type Iterable[T any] interface {
 
 type IndexAccess[T any] interface {
 	Get(index int) (T, bool)
-	Put(index int, elem T) (T, bool)
+	Set(index int, elem T) (T, bool)
 }
 
 type Bag[T comparable] interface {

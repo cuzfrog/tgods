@@ -134,17 +134,17 @@ func (l *LinkedList[T]) Pop() (elem T, found bool) {
 	return elem, true
 }
 
-type iterator[T comparable] struct {
+type llIterator[T comparable] struct {
 	index int
 	head  *node[T]
 	cur   *node[T]
 }
 
 func (l *LinkedList[T]) Iterator() core.Iterator[T] {
-	return &iterator[T]{-1, l.head, nil}
+	return &llIterator[T]{-1, l.head, nil}
 }
 
-func (it *iterator[T]) Next() bool {
+func (it *llIterator[T]) Next() bool {
 	if it.head == nil {
 		return false
 	}
@@ -157,14 +157,14 @@ func (it *iterator[T]) Next() bool {
 	return it.cur != nil
 }
 
-func (it *iterator[T]) Index() int {
+func (it *llIterator[T]) Index() int {
 	if it.cur == nil {
 		panic(fmt.Sprintf("index(%d) out of range", it.index))
 	}
 	return it.index
 }
 
-func (it *iterator[T]) Value() T {
+func (it *llIterator[T]) Value() T {
 	if it.cur == nil {
 		panic(fmt.Sprintf("index(%d) out of range", it.index))
 	}
