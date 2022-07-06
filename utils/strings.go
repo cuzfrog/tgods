@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func ToString[T any](b core.Iterable[T]) *string {
+func String[T any](b core.Iterable[T]) *string {
 	str := "["
 	var values []string
 	iter := b.Iterator()
