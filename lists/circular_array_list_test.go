@@ -130,6 +130,17 @@ func TestCircularArrayList_Set(t *testing.T) {
 	assert.False(t, ok)
 }
 
+func TestCircularArrayList_Swap(t *testing.T) {
+	l := NewCircularArrayList(3, 6, 7, 8)
+	ok := l.Swap(0, 2)
+	assert.True(t, ok)
+	assert.ElementsMatch(t, []int{7, 6, 3, 8}, l.arr)
+	ok = l.Swap(0, 7)
+	assert.False(t, ok)
+	ok = l.Swap(9, 1)
+	assert.False(t, ok)
+}
+
 func TestCircularArrayList_Peek(t *testing.T) {
 	l := NewCircularArrayList(3, 5)
 	v, ok := l.Peek()

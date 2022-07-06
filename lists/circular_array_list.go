@@ -10,6 +10,11 @@ const DefaultShrinkThreshold = 3 // bitwise shift
 
 // assert CircularArrayList implementation
 var _ core.ArrayList[int] = (*CircularArrayList[int])(nil)
+var _ core.List[int] = (*CircularArrayList[int])(nil)
+var _ core.Stack[int] = (*CircularArrayList[int])(nil)
+var _ core.Bag[int] = (*CircularArrayList[int])(nil)
+var _ core.Queue[int] = (*CircularArrayList[int])(nil)
+var _ core.Deque[int] = (*CircularArrayList[int])(nil)
 
 type CircularArrayList[T comparable] struct {
 	start int //inclusive
@@ -160,6 +165,19 @@ func (l *CircularArrayList[T]) Set(index int, elem T) (oldElem T, found bool) {
 		return oldElem, true
 	}
 	return oldElem, false
+}
+
+// Swap exchanges values of provided indices, if one of the indices is invalid, returns false
+func (l *CircularArrayList[T]) Swap(indexA, indexB int) bool {
+	arrIndexA, okA := l.toArrIndex(indexA)
+	arrIndexB, okB := l.toArrIndex(indexB)
+	if !okA || !okB {
+		return false
+	}
+	tmp := l.arr[arrIndexA]
+	l.arr[arrIndexA] = l.arr[arrIndexB]
+	l.arr[arrIndexB] = tmp
+	return true
 }
 
 func (l *CircularArrayList[T]) toArrIndex(index int) (int, bool) {
