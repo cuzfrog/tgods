@@ -7,10 +7,11 @@ import (
 
 // assert LinkedList implementation
 var _ core.List[int] = (*LinkedList[int])(nil)
-var _ core.Stack[int] = (*CircularArrayList[int])(nil)
-var _ core.Bag[int] = (*CircularArrayList[int])(nil)
-var _ core.Queue[int] = (*CircularArrayList[int])(nil)
-var _ core.Deque[int] = (*CircularArrayList[int])(nil)
+var _ core.Stack[int] = (*LinkedList[int])(nil)
+var _ core.Bag[int] = (*LinkedList[int])(nil)
+var _ core.Queue[int] = (*LinkedList[int])(nil)
+var _ core.Deque[int] = (*LinkedList[int])(nil)
+var _ core.Iterable[int] = (*LinkedList[int])(nil)
 
 type node[T comparable] struct {
 	v    T
