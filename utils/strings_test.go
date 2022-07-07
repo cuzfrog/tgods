@@ -8,5 +8,5 @@ import (
 
 func TestLinkedList_String(t *testing.T) {
 	l := lists.NewLinkedList(3, 7)
-	assert.Equal(t, "[3, 7]", *String[int](l))
+	assert.Equal(t, "[3, 7]", *StringFrom[int](l))
 }
