@@ -3,6 +3,7 @@ package utils
 import (
 	"github.com/cuzfrog/tgods/lists"
 	"github.com/stretchr/testify/assert"
+	"math/rand"
 	"testing"
 )
 
@@ -17,4 +18,12 @@ func TestSlice(t *testing.T) {
 	arr = SliceFrom(l.Iterator(), 5)
 	assert.Equal(t, 4, len(arr))
 	assert.Equal(t, 5, cap(arr))
+}
+
+func TestShuffle(t *testing.T) {
+	a := []int{1, 2, 3, 4, 5}
+	a2 := make([]int, 5)
+	copy(a2, a)
+	Shuffle(a2, rand.Intn)
+	assert.NotEqual(t, a, a2)
 }

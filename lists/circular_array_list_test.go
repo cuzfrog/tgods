@@ -14,7 +14,7 @@ func TestCircularArrayList_shrinkIfNeeded(t *testing.T) {
 	assert.Equal(t, 0, l.start)
 	assert.Equal(t, 3, l.end)
 	assert.Equal(t, 3, l.Size())
-	assert.ElementsMatch(t, []int{2, 0, 4}, l.arr[0:3])
+	assert.Equal(t, []int{2, 0, 4}, l.arr[0:3])
 
 	l = &CircularArrayList[int]{5, 8, make([]int, 12), 3}
 	l.shrinkIfNeeded()
@@ -34,7 +34,7 @@ func TestCircularArrayList_expandIfNeeded(t *testing.T) {
 	l.Add(6)
 	l.expandIfNeeded()
 	assert.Equal(t, 6, len(l.arr))
-	assert.ElementsMatch(t, []int{3, 5, 6}, l.arr[0:3])
+	assert.Equal(t, []int{3, 5, 6}, l.arr[0:3])
 	assert.Equal(t, 3, l.size)
 	assert.Equal(t, 0, l.start)
 	assert.Equal(t, 3, l.end)
@@ -134,7 +134,7 @@ func TestCircularArrayList_Swap(t *testing.T) {
 	l := NewCircularArrayList(3, 6, 7, 8)
 	ok := l.Swap(0, 2)
 	assert.True(t, ok)
-	assert.ElementsMatch(t, []int{7, 6, 3, 8}, l.arr)
+	assert.Equal(t, []int{7, 6, 3, 8}, l.arr)
 	ok = l.Swap(0, 7)
 	assert.False(t, ok)
 	ok = l.Swap(9, 1)
