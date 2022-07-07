@@ -7,6 +7,7 @@ import (
 )
 
 // assert ArrayStack implementation
+var _ core.Bag[int] = (*ArrayStack[int])(nil)
 var _ core.Stack[int] = (*ArrayStack[int])(nil)
 
 // ArrayStack limited size array based stack
@@ -32,9 +33,13 @@ func (s *ArrayStack[T]) Clear() {
 	s.cur = -1
 }
 
-func (s *ArrayStack[T]) Add(elem T) {
+func (s *ArrayStack[T]) Add(elem T) bool {
 	s.cur++
+	if s.cur >= len(s.arr) {
+		return false
+	}
 	s.arr[s.cur] = elem
+	return true
 }
 
 func (s *ArrayStack[T]) Pop() (elem T, found bool) {

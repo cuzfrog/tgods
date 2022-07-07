@@ -10,6 +10,11 @@ const DefaultShrinkThreshold = 3 // bitwise shift
 
 // assert CircularArrayList implementation
 var _ core.ArrayList[int] = (*CircularArrayList[int])(nil)
+var _ core.List[int] = (*CircularArrayList[int])(nil)
+var _ core.Stack[int] = (*CircularArrayList[int])(nil)
+var _ core.Bag[int] = (*CircularArrayList[int])(nil)
+var _ core.Queue[int] = (*CircularArrayList[int])(nil)
+var _ core.Deque[int] = (*CircularArrayList[int])(nil)
 
 type CircularArrayList[T comparable] struct {
 	start int //inclusive
@@ -54,7 +59,7 @@ func (l *CircularArrayList[T]) Clear() {
 }
 
 // Add appends to the list, see AddHead
-func (l *CircularArrayList[T]) Add(elem T) {
+func (l *CircularArrayList[T]) Add(elem T) bool {
 	l.expandIfNeeded()
 	if l.end >= len(l.arr) {
 		l.end = 0
@@ -65,6 +70,7 @@ func (l *CircularArrayList[T]) Add(elem T) {
 	if l.start < 0 {
 		l.start = 0
 	}
+	return true
 }
 
 // Pop removes the last elem
@@ -116,7 +122,7 @@ func (l *CircularArrayList[T]) Tail() (T, bool) {
 }
 
 // AddHead prepends to the list, see Add
-func (l *CircularArrayList[T]) AddHead(elem T) {
+func (l *CircularArrayList[T]) AddHead(elem T) bool {
 	l.expandIfNeeded()
 	l.start--
 	if l.start < 0 {
@@ -124,6 +130,7 @@ func (l *CircularArrayList[T]) AddHead(elem T) {
 	}
 	l.arr[l.start] = elem
 	l.size++
+	return true
 }
 
 // PopHead removes the first elem, O(1)
@@ -158,6 +165,17 @@ func (l *CircularArrayList[T]) Set(index int, elem T) (oldElem T, found bool) {
 		return oldElem, true
 	}
 	return oldElem, false
+}
+
+// Swap exchanges values of provided indices, if one of the indices is invalid, returns false
+func (l *CircularArrayList[T]) Swap(indexA, indexB int) bool {
+	arrIndexA, okA := l.toArrIndex(indexA)
+	arrIndexB, okB := l.toArrIndex(indexB)
+	if !okA || !okB {
+		return false
+	}
+	l.arr[arrIndexA], l.arr[arrIndexB] = l.arr[arrIndexB], l.arr[arrIndexA]
+	return true
 }
 
 func (l *CircularArrayList[T]) toArrIndex(index int) (int, bool) {

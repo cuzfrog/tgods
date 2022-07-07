@@ -19,12 +19,13 @@ type Iterable[T any] interface {
 type IndexAccess[T any] interface {
 	Get(index int) (T, bool)
 	Set(index int, elem T) (T, bool)
+	Swap(indexA, indexB int) bool
 }
 
 type Bag[T comparable] interface {
 	Collection
 	Iterable[T]
-	Add(elem T)
+	Add(elem T) bool
 	Pop() (T, bool)
 	Peek() (T, bool)
 	Contains(elem T) bool
@@ -32,14 +33,14 @@ type Bag[T comparable] interface {
 
 type Queue[T comparable] interface {
 	Bag[T]
-	Head() (T, bool)
-	Tail() (T, bool)
 }
 
 type Deque[T comparable] interface {
+	Stack[T]
 	Queue[T]
-	AddHead(elem T)
+	AddHead(elem T) bool
 	PopHead() (T, bool)
+	Head() (T, bool)
 }
 
 type Stack[T comparable] interface {
@@ -52,7 +53,11 @@ type ArrayList[T comparable] interface {
 }
 
 type List[T comparable] interface {
-	Deque[T]
+	Bag[T]
+	AddHead(elem T) bool
+	PopHead() (T, bool)
+	Head() (T, bool)
+	Tail() (T, bool)
 }
 
 type Map[K comparable, V any] interface {
