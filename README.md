@@ -5,6 +5,8 @@
 
 Your brand-new Golang collections implementation with generics.
 
+Go version >= 1.18, currently depends on `golang.org/x/exp` for some type constraints.
+
 ## Interfaces
 
 All implementation implements `Collection`
