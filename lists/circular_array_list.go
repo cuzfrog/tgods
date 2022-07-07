@@ -174,9 +174,7 @@ func (l *CircularArrayList[T]) Swap(indexA, indexB int) bool {
 	if !okA || !okB {
 		return false
 	}
-	tmp := l.arr[arrIndexA]
-	l.arr[arrIndexA] = l.arr[arrIndexB]
-	l.arr[arrIndexB] = tmp
+	l.arr[arrIndexA], l.arr[arrIndexB] = l.arr[arrIndexB], l.arr[arrIndexA]
 	return true
 }
 
