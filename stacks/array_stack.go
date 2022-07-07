@@ -7,6 +7,7 @@ import (
 )
 
 // assert ArrayStack implementation
+var _ core.Bag[int] = (*ArrayStack[int])(nil)
 var _ core.Stack[int] = (*ArrayStack[int])(nil)
 
 // ArrayStack limited size array based stack

@@ -33,7 +33,6 @@ type Bag[T comparable] interface {
 
 type Queue[T comparable] interface {
 	Bag[T]
-	Pop() (T, bool)
 }
 
 type Deque[T comparable] interface {
@@ -41,6 +40,7 @@ type Deque[T comparable] interface {
 	Queue[T]
 	AddHead(elem T) bool
 	PopHead() (T, bool)
+	Head() (T, bool)
 }
 
 type Stack[T comparable] interface {
