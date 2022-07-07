@@ -12,6 +12,11 @@ func TestArrayStack_Add(t *testing.T) {
 	assert.Equal(t, 2, s.Size())
 	assert.ElementsMatch(t, []int{5, 3, 0}, s.arr)
 	assert.Equal(t, 1, s.cur)
+
+	ok := s.Add(3)
+	assert.True(t, ok)
+	ok = s.Add(6)
+	assert.False(t, ok)
 }
 
 func TestArrayStack_Clear(t *testing.T) {
