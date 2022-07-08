@@ -6,8 +6,7 @@ type Collection interface {
 }
 
 type Iterator[T any] interface {
-	// Next checks if there's next elem, and move iterator state to next
-	Next() bool
+	Next() bool // Next checks if there's next elem, and move iterator state to next
 	Index() int
 	Value() T
 }

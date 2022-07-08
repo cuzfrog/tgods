@@ -5,36 +5,47 @@
 
 Your brand-new Golang collections implementation with generics.
 
-Go version >= 1.18, currently depends on `golang.org/x/exp` for some type constraints.
+Go version >= 1.18, currently depends on `golang.org/x/exp` for `Ordered` type constraints.
+
+* ArrayStack - fixed length first-in-last-out array based stack.
+* CircularArrayList - variable length list with fast add/remove at head or tail and random access by index.
+* LinkedList - doubly linked list with fast add/remove.
+* HeapPriorityQueue - binary heap based min or max priority queue.
+
+more...
 
 ## Interfaces
 
 All implementation implements `Collection`
+```go
+type Collection interface {
+	Size() int
+	Clear()
+}
+```
 
-| Method\Interface                   | (Usual)Time | Collection         | IndexAccess        | Bag                | Stack              | List               | ArrayList          | Queue              | Deque              |
-|------------------------------------|-------------|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
-| `Size() int`                       | O(1)        | :heavy_check_mark: |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| `Clear()`                          | O(1)        | :heavy_check_mark: |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| `Get(index int) (T, bool)`         | O(1)        |                    | :heavy_check_mark: |                    |                    |                    | :heavy_check_mark: |                    |                    |
-| `Set(index int, elem T) (T, bool)` | O(1)        |                    | :heavy_check_mark: |                    |                    |                    | :heavy_check_mark: |                    |                    |
-| `Swap(indexA, indexB int) bool`    | O(1)        |                    | :heavy_check_mark: |                    |                    |                    | :heavy_check_mark: |                    |                    |
-| `Add(elem T) bool`                 | O(1)        |                    |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| `Pop() (T, bool)`                  | O(1)        |                    |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| `Peek() (T, bool)`                 | O(1)        |                    |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| `Contains(elem T) bool`            | O(n)        |                    |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| `Head() (T, bool)`                 | O(1)        |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: |
-| `Tail() (T, bool)`                 | O(1)        |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
-| `AddHead(elem T) bool`             | O(1)        |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: |
-| `PopHead() (T, bool)`              | O(1)        |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: |
+| Method\Interface                   | Time | Bag                | Stack              | List               | ArrayList          | Queue              | Deque              |
+|------------------------------------|------|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
+| `Get(index int) (T, bool)`         | O(1) |                    |                    |                    | :heavy_check_mark: |                    |                    |
+| `Set(index int, elem T) (T, bool)` | O(1) |                    |                    |                    | :heavy_check_mark: |                    |                    |
+| `Swap(indexA, indexB int) bool`    | O(1) |                    |                    |                    | :heavy_check_mark: |                    |                    |
+| `Add(elem T) bool`                 | O(1) | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| `Pop() (T, bool)`                  | O(1) | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| `Peek() (T, bool)`                 | O(1) | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| `Contains(elem T) bool`            | O(n) | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| `Head() (T, bool)`                 | O(1) |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: |
+| `Tail() (T, bool)`                 | O(1) |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
+| `AddHead(elem T) bool`             | O(1) |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: |
+| `PopHead() (T, bool)`              | O(1) |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: |
 
 ## Implementations
 
-| Implementation\Interface | Iterable           | Bag                | Stack              | List               | ArrayList / IndexAccess | Queue              | Deque              |
-|--------------------------|--------------------|--------------------|--------------------|--------------------|-------------------------|--------------------|--------------------|
-| ArrayStack               | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                         |                    |                    |
-| CircularArrayList        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:      | :heavy_check_mark: | :heavy_check_mark: |
-| LinkedList               | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                         | :heavy_check_mark: | :heavy_check_mark: |
-| HeapPriorityQueue        | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                         | :heavy_check_mark: |                    |
+| Implementation\Interface | Bag                | Stack              | List               | ArrayList          | Queue              | Deque              |
+|--------------------------|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
+| ArrayStack               | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
+| CircularArrayList        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| LinkedList               | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: | :heavy_check_mark: |
+| HeapPriorityQueue        | :heavy_check_mark: |                    |                    |                    | :heavy_check_mark: |                    |
 
 ## Author
 
