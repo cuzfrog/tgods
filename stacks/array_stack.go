@@ -6,33 +6,27 @@ import (
 	"github.com/cuzfrog/tgods/utils"
 )
 
-// assert ArrayStack implementation
-var _ core.Stack[int] = (*ArrayStack[int])(nil)
+// assert arrayStack implementation
+var _ core.Stack[int] = (*arrayStack[int])(nil)
 
-// ArrayStack limited size array based stack
-type ArrayStack[T comparable] struct {
+// arrayStack limited size array based stack
+type arrayStack[T comparable] struct {
 	arr []T
 	cur int
 }
 
-// NewArrayStack creates a stack with static size limit, allocating the underlying array eagerly
-func NewArrayStack[T comparable](size int) *ArrayStack[T] {
-	arr := make([]T, size)
-	return &ArrayStack[T]{arr, -1}
-}
-
-func (s *ArrayStack[T]) Size() int {
+func (s *arrayStack[T]) Size() int {
 	return s.cur + 1
 }
 
-func (s *ArrayStack[T]) Clear() {
+func (s *arrayStack[T]) Clear() {
 	for i := 0; i <= s.cur; i++ {
 		s.arr[i] = utils.Nil[T]()
 	}
 	s.cur = -1
 }
 
-func (s *ArrayStack[T]) Enstack(elem T) bool {
+func (s *arrayStack[T]) Enstack(elem T) bool {
 	s.cur++
 	if s.cur >= len(s.arr) {
 		return false
@@ -41,7 +35,7 @@ func (s *ArrayStack[T]) Enstack(elem T) bool {
 	return true
 }
 
-func (s *ArrayStack[T]) Pop() (elem T, found bool) {
+func (s *arrayStack[T]) Pop() (elem T, found bool) {
 	if s.cur < 0 {
 		return elem, false
 	}
@@ -51,14 +45,14 @@ func (s *ArrayStack[T]) Pop() (elem T, found bool) {
 	return elem, true
 }
 
-func (s *ArrayStack[T]) Peek() (elem T, found bool) {
+func (s *arrayStack[T]) Peek() (elem T, found bool) {
 	if s.cur < 0 {
 		return elem, false
 	}
 	return s.arr[s.cur], true
 }
 
-func (s *ArrayStack[T]) Contains(elem T) bool {
+func (s *arrayStack[T]) Contains(elem T) bool {
 	for i := 0; i <= s.cur; i++ {
 		if s.arr[i] == elem {
 			return true
@@ -67,12 +61,12 @@ func (s *ArrayStack[T]) Contains(elem T) bool {
 	return false
 }
 
-func (s *ArrayStack[T]) Iterator() core.Iterator[T] {
+func (s *arrayStack[T]) Iterator() core.Iterator[T] {
 	return &iterator[T]{s, -1}
 }
 
 type iterator[T comparable] struct {
-	s   *ArrayStack[T]
+	s   *arrayStack[T]
 	cur int
 }
 

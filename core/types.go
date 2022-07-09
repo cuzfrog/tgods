@@ -3,6 +3,7 @@ package core
 type Collection[T any] interface {
 	Size() int
 	Contains(elem T) bool // typical time complexity O(n)
+	Iterator() Iterator[T]
 	Clear()
 }
 
@@ -10,10 +11,6 @@ type Iterator[T any] interface {
 	Next() bool // checks if there's next elem, and move iterator state to next
 	Index() int
 	Value() T
-}
-
-type Iterable[T any] interface {
-	Iterator() Iterator[T]
 }
 
 type IndexAccess[T any] interface {
@@ -24,7 +21,6 @@ type IndexAccess[T any] interface {
 
 type Queue[T any] interface {
 	Collection[T]
-	Iterable[T]
 	Enqueue(elem T) bool
 	Dequeue() (T, bool)
 	Peek() (T, bool) // Peek retrieves the next elem of the queue, equivalent to Dequeue without removal
@@ -40,7 +36,6 @@ type Deque[T any] interface {
 
 type Stack[T any] interface {
 	Collection[T]
-	Iterable[T]
 	Enstack(elem T) bool
 	Pop() (T, bool)
 	Peek() (T, bool)
@@ -53,7 +48,6 @@ type ArrayList[T any] interface {
 
 type List[T any] interface {
 	Collection[T]
-	Iterable[T]
 	AddHead(elem T) bool
 	RemoveHead() (T, bool) // removes the first elem of the list
 	Head() (T, bool)
@@ -68,6 +62,4 @@ type Map[K any, V any] interface {
 	Get(k K) V
 	Put(k K, v V) V
 	Remove(k K) V
-	Values() Iterable[V]
-	Keys() Iterable[K]
 }

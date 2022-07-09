@@ -3,7 +3,6 @@ package lists
 import (
 	"fmt"
 	"github.com/cuzfrog/tgods/core"
-	"github.com/cuzfrog/tgods/utils"
 )
 
 // assert LinkedList implementation
@@ -11,7 +10,6 @@ var _ core.List[int] = (*LinkedList[int])(nil)
 var _ core.Stack[int] = (*LinkedList[int])(nil)
 var _ core.Queue[int] = (*LinkedList[int])(nil)
 var _ core.Deque[int] = (*LinkedList[int])(nil)
-var _ core.Iterable[int] = (*LinkedList[int])(nil)
 
 type node[T any] struct {
 	v    T
@@ -23,11 +21,11 @@ type LinkedList[T any] struct {
 	head *node[T]
 	tail *node[T]
 	size int
-	comp utils.Equal[T]
+	comp core.Equal[T]
 }
 
 func NewLinkedList[T comparable](values ...T) *LinkedList[T] {
-	l := &LinkedList[T]{nil, nil, 0, utils.EqualComparable[T]}
+	l := &LinkedList[T]{nil, nil, 0, core.EqualComparable[T]}
 	length := len(values)
 	if length == 0 {
 		return l
@@ -47,7 +45,7 @@ func NewLinkedList[T comparable](values ...T) *LinkedList[T] {
 
 // NewLinkedListOfEqual creates a new empty list of custom Equal func
 //   param comp - func(elem, value) bool
-func NewLinkedListOfEqual[T any](comp utils.Equal[T]) *LinkedList[T] {
+func NewLinkedListOfEqual[T any](comp core.Equal[T]) *LinkedList[T] {
 	return &LinkedList[T]{nil, nil, 0, comp}
 }
 

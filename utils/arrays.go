@@ -7,7 +7,8 @@ import (
 // SliceFrom creates a new slice from the Iterator,
 // len(slice) = min(size, elemCntFromIterator)
 // cap(slice) = size
-func SliceFrom[T any](it core.Iterator[T], size int) []T {
+func SliceFrom[T any](col core.Collection[T]) []T {
+	it, size := col.Iterator(), col.Size()
 	arr := make([]T, size)
 	var i int
 	for it.Next() {

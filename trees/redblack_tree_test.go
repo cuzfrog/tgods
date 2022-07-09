@@ -1,12 +1,13 @@
 package trees
 
 import (
+	"github.com/cuzfrog/tgods/core"
 	"github.com/cuzfrog/tgods/utils"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
-var comp = utils.CompareOrdered[int]
+var comp = core.CompareOrdered[int]
 
 func Test_rbNode_insert_root(t *testing.T) {
 	r, found, nn := insert(nil, 3, comp)
@@ -107,7 +108,7 @@ func Test_rbNode_rebalance_recolorRight(t *testing.T) {
 	assert.Equal(t, black, n50.c)
 	assert.Equal(t, red, n30.c)
 	l := bfTraverse[int](n30)
-	assert.Equal(t, []int{30, 20, 50, 40}, utils.SliceFrom(l.Iterator(), l.Size()))
+	assert.Equal(t, []int{30, 20, 50, 40}, utils.SliceFrom[int](l))
 }
 
 func Test_rbNode_rotate(t *testing.T) {

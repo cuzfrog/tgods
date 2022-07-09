@@ -7,60 +7,58 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
-// assert HeapPriorityQueue implementation
-var _ core.Queue[int] = (*HeapPriorityQueue[int])(nil)
-var _ core.Bag[int] = (*HeapPriorityQueue[int])(nil)
-var _ core.Iterable[int] = (*HeapPriorityQueue[int])(nil)
+// assert binaryHeap implementation
+var _ core.Queue[int] = (*binaryHeap[int])(nil)
 
-type HeapPriorityQueue[T comparable] struct {
+type binaryHeap[T comparable] struct {
 	arr  core.ArrayList[T]
-	comp utils.Compare[T]
+	comp core.Compare[T]
 }
 
-func NewHeapPriorityQueue[T comparable](comparator utils.Compare[T]) *HeapPriorityQueue[T] {
-	return &HeapPriorityQueue[T]{lists.NewCircularArrayListOf[T](), comparator}
+func NewHeapPriorityQueue[T comparable](comparator core.Compare[T]) *binaryHeap[T] {
+	return &binaryHeap[T]{lists.NewCircularArrayListOf[T](), comparator}
 }
 
-func NewHeapPriorityQueueForMaxValue[T constraints.Ordered]() *HeapPriorityQueue[T] {
-	return &HeapPriorityQueue[T]{lists.NewCircularArrayListOf[T](), utils.CompareOrdered[T]}
+func NewHeapPriorityQueueForMaxValue[T constraints.Ordered]() *binaryHeap[T] {
+	return &binaryHeap[T]{lists.NewCircularArrayListOf[T](), core.CompareOrdered[T]}
 }
-func NewHeapPriorityQueueForMinValue[T constraints.Ordered]() *HeapPriorityQueue[T] {
-	fn := func(a, b T) int8 { return utils.CompareOrdered(b, a) }
-	return &HeapPriorityQueue[T]{lists.NewCircularArrayListOf[T](), fn}
+func NewHeapPriorityQueueForMinValue[T constraints.Ordered]() *binaryHeap[T] {
+	fn := func(a, b T) int8 { return core.CompareOrdered(b, a) }
+	return &binaryHeap[T]{lists.NewCircularArrayListOf[T](), fn}
 }
 
-func (h *HeapPriorityQueue[T]) Size() int {
+func (h *binaryHeap[T]) Size() int {
 	return h.arr.Size()
 }
 
-func (h *HeapPriorityQueue[T]) Clear() {
+func (h *binaryHeap[T]) Clear() {
 	h.arr.Clear()
 }
 
-func (h *HeapPriorityQueue[T]) Add(elem T) bool {
+func (h *binaryHeap[T]) Enqueue(elem T) bool {
 	ret := h.arr.Add(elem)
 	h.swim()
 	return ret
 }
 
-func (h *HeapPriorityQueue[T]) Pop() (T, bool) {
+func (h *binaryHeap[T]) Dequeue() (T, bool) {
 	h.sink()
-	return h.arr.Pop()
+	return h.arr.Remove()
 }
 
-func (h *HeapPriorityQueue[T]) Peek() (T, bool) {
+func (h *binaryHeap[T]) Peek() (T, bool) {
 	return h.arr.Head()
 }
 
 // Contains delegates to underlying array, O(n)
-func (h *HeapPriorityQueue[T]) Contains(elem T) bool {
+func (h *binaryHeap[T]) Contains(elem T) bool {
 	return h.arr.Contains(elem)
 }
 
 type hpqIterator[T comparable] struct {
-	h     *HeapPriorityQueue[T]
+	h     *binaryHeap[T]
 	index int
-	cur   T
+	v     T
 }
 
 func (it *hpqIterator[T]) Next() bool {
@@ -68,7 +66,7 @@ func (it *hpqIterator[T]) Next() bool {
 		return false
 	}
 	it.index++
-	it.cur, _ = it.h.Pop()
+	it.v, _ = it.h.Dequeue()
 	return true
 }
 
@@ -81,17 +79,17 @@ func (it *hpqIterator[T]) Index() int {
 // Value returns current value.
 // If Next return false, the value returned is meaningless, it must be guarded by Next
 func (it *hpqIterator[T]) Value() T {
-	return it.cur
+	return it.v
 }
 
-func (h *HeapPriorityQueue[T]) Iterator() core.Iterator[T] {
+func (h *binaryHeap[T]) Iterator() core.Iterator[T] {
 	return &hpqIterator[T]{h, -1, utils.Nil[T]()}
 }
 
 // swim reheapifies by checking and moving up the last element of the arr, this should be called after adding
 // i - child node index
 // pi - parent node index
-func (h *HeapPriorityQueue[T]) swim() {
+func (h *binaryHeap[T]) swim() {
 	if h.arr.Size() <= 1 {
 		return
 	}
@@ -115,7 +113,7 @@ func (h *HeapPriorityQueue[T]) swim() {
 // pi - parent node index
 // i1 - left child node index
 // i2 - right child node index
-func (h *HeapPriorityQueue[T]) sink() {
+func (h *binaryHeap[T]) sink() {
 	if h.arr.Size() <= 1 {
 		return
 	}

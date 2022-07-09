@@ -6,7 +6,7 @@ import (
 )
 
 func TestArrayStack_Add(t *testing.T) {
-	s := NewArrayStack[int](3)
+	s := newArrayStack[int](3)
 	s.Enstack(5)
 	s.Enstack(3)
 	assert.Equal(t, 2, s.Size())
@@ -20,7 +20,7 @@ func TestArrayStack_Add(t *testing.T) {
 }
 
 func TestArrayStack_Clear(t *testing.T) {
-	s := NewArrayStack[int](3)
+	s := newArrayStack[int](3)
 	s.Enstack(5)
 	s.Enstack(3)
 	s.Clear()
@@ -30,7 +30,7 @@ func TestArrayStack_Clear(t *testing.T) {
 }
 
 func TestArrayStack_Contains(t *testing.T) {
-	s := NewArrayStack[int](3)
+	s := newArrayStack[int](3)
 	assert.False(t, s.Contains(3))
 	s.Enstack(5)
 	s.Enstack(3)
@@ -39,7 +39,7 @@ func TestArrayStack_Contains(t *testing.T) {
 }
 
 func TestArrayStack_Peek(t *testing.T) {
-	s := NewArrayStack[int](3)
+	s := newArrayStack[int](3)
 	s.Enstack(5)
 	s.Enstack(3)
 	v, ok := s.Peek()
@@ -51,7 +51,7 @@ func TestArrayStack_Peek(t *testing.T) {
 }
 
 func TestArrayStack_Pop(t *testing.T) {
-	s := NewArrayStack[int](3)
+	s := newArrayStack[int](3)
 	s.Enstack(5)
 	s.Enstack(3)
 	v, ok := s.Pop()
@@ -65,7 +65,7 @@ func TestArrayStack_Pop(t *testing.T) {
 }
 
 func TestArrayStack_Iterator(t *testing.T) {
-	s := NewArrayStack[int](3)
+	s := newArrayStack[int](3)
 	s.Enstack(5)
 	s.Enstack(3)
 	iter := s.Iterator()

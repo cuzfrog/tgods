@@ -1,4 +1,4 @@
-package utils
+package core
 
 import "golang.org/x/exp/constraints"
 
