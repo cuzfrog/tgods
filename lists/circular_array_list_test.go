@@ -24,12 +24,12 @@ func TestCircularArrayList_shrinkIfNeeded(t *testing.T) {
 	l.shrinkIfNeeded()
 	assert.Equal(t, 14, len(l.arr))
 
-	l = NewCircularArrayList[int]()
+	l = NewCircularArrayListOf[int]()
 	l.shrinkIfNeeded()
 }
 
 func TestCircularArrayList_expandIfNeeded(t *testing.T) {
-	l := NewCircularArrayList(1, 3, 5)
+	l := NewCircularArrayListOf(1, 3, 5)
 	l.PopHead()
 	l.Add(6)
 	l.expandIfNeeded()
@@ -50,7 +50,7 @@ func TestCircularArrayList_expandIfNeeded(t *testing.T) {
 }
 
 func TestCircularArrayList_Add(t *testing.T) {
-	l := NewCircularArrayList[int]()
+	l := NewCircularArrayListOf[int]()
 	l.Add(3)
 	assert.Equal(t, 0, l.start)
 	assert.Equal(t, 1, l.end)
@@ -131,7 +131,7 @@ func TestCircularArrayList_Set(t *testing.T) {
 }
 
 func TestCircularArrayList_Swap(t *testing.T) {
-	l := NewCircularArrayList(3, 6, 7, 8)
+	l := NewCircularArrayListOf(3, 6, 7, 8)
 	ok := l.Swap(0, 2)
 	assert.True(t, ok)
 	assert.Equal(t, []int{7, 6, 3, 8}, l.arr)
@@ -142,7 +142,7 @@ func TestCircularArrayList_Swap(t *testing.T) {
 }
 
 func TestCircularArrayList_Peek(t *testing.T) {
-	l := NewCircularArrayList(3, 5)
+	l := NewCircularArrayListOf(3, 5)
 	v, ok := l.Peek()
 	assert.True(t, ok)
 	assert.Equal(t, 5, v)
@@ -157,18 +157,18 @@ func TestCircularArrayList_Peek(t *testing.T) {
 }
 
 func TestCircularArrayList_Head(t *testing.T) {
-	l := NewCircularArrayList(3, 5)
+	l := NewCircularArrayListOf(3, 5)
 	v, ok := l.Head()
 	assert.True(t, ok)
 	assert.Equal(t, 3, v)
 
-	l = NewCircularArrayList[int]()
+	l = NewCircularArrayListOf[int]()
 	v, ok = l.Head()
 	assert.False(t, ok)
 }
 
 func TestCircularArrayList_Pop(t *testing.T) {
-	l := NewCircularArrayList(3, 5)
+	l := NewCircularArrayListOf(3, 5)
 	v, ok := l.Pop()
 	assert.True(t, ok)
 	assert.Equal(t, 5, v)
@@ -199,7 +199,7 @@ func TestCircularArrayList_Pop(t *testing.T) {
 }
 
 func TestCircularArrayList_PopHead(t *testing.T) {
-	l := NewCircularArrayList(3, 5)
+	l := NewCircularArrayListOf(3, 5)
 	v, ok := l.PopHead()
 	assert.True(t, ok)
 	assert.Equal(t, 3, v)
@@ -211,7 +211,7 @@ func TestCircularArrayList_PopHead(t *testing.T) {
 }
 
 func TestCircularArrayList_Iterator(t *testing.T) {
-	l := NewCircularArrayList(3, 5, 7)
+	l := NewCircularArrayListOf(3, 5, 7)
 	it := l.Iterator()
 	assert.True(t, it.Next())
 	assert.Equal(t, 0, it.Index())

@@ -11,3 +11,8 @@ func TestValueComparator(t *testing.T) {
 	assert.Equal(t, int8(0), CompareOrdered(2, 2))
 	assert.True(t, 0 == CompareOrdered(2, 2))
 }
+
+func TestEqualComparable(t *testing.T) {
+	assert.True(t, EqualComparable(1, 1))
+	assert.False(t, EqualComparable("1", "2"))
+}

@@ -2,12 +2,21 @@ package lists
 
 import (
 	"github.com/stretchr/testify/assert"
+	"strings"
 	"testing"
 )
 
 type obj struct {
 	v int
 	s int
+}
+
+func TestLinkedList_New(t *testing.T) {
+	comp := func(a string, b string) bool { return strings.Contains(a, b) }
+	l := NewLinkedListOfEqual(comp)
+	l.Add("abc")
+	assert.True(t, l.Contains("ab"))
+	assert.False(t, l.Contains("bcd"))
 }
 
 func TestLinkedList_Clear(t *testing.T) {

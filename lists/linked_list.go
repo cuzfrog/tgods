@@ -3,6 +3,7 @@ package lists
 import (
 	"fmt"
 	"github.com/cuzfrog/tgods/core"
+	"github.com/cuzfrog/tgods/utils"
 )
 
 // assert LinkedList implementation
@@ -13,20 +14,21 @@ var _ core.Queue[int] = (*LinkedList[int])(nil)
 var _ core.Deque[int] = (*LinkedList[int])(nil)
 var _ core.Iterable[int] = (*LinkedList[int])(nil)
 
-type node[T comparable] struct {
+type node[T any] struct {
 	v    T
 	prev *node[T]
 	next *node[T]
 }
 
-type LinkedList[T comparable] struct {
+type LinkedList[T any] struct {
 	head *node[T]
 	tail *node[T]
 	size int
+	comp utils.Equal[T]
 }
 
 func NewLinkedList[T comparable](values ...T) *LinkedList[T] {
-	l := &LinkedList[T]{nil, nil, 0}
+	l := &LinkedList[T]{nil, nil, 0, utils.EqualComparable[T]}
 	length := len(values)
 	if length == 0 {
 		return l
@@ -44,6 +46,12 @@ func NewLinkedList[T comparable](values ...T) *LinkedList[T] {
 	return l
 }
 
+// NewLinkedListOfEqual creates a new empty list of custom Equal func
+//   param comp - func(elem, value) bool
+func NewLinkedListOfEqual[T any](comp utils.Equal[T]) *LinkedList[T] {
+	return &LinkedList[T]{nil, nil, 0, comp}
+}
+
 func (l *LinkedList[T]) Size() int {
 	return l.size
 }
@@ -59,7 +67,7 @@ func (l *LinkedList[T]) Contains(elem T) bool {
 	iter := l.Iterator()
 	for iter.Next() {
 		v := iter.Value()
-		if elem == v {
+		if l.comp(v, elem) { // TODO, check for optimize
 			return true
 		}
 	}
@@ -141,7 +149,7 @@ func (l *LinkedList[T]) Pop() (elem T, found bool) {
 	return elem, true
 }
 
-type llIterator[T comparable] struct {
+type llIterator[T any] struct {
 	index int
 	head  *node[T]
 	cur   *node[T]

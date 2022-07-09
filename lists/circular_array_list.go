@@ -23,9 +23,9 @@ type CircularArrayList[T comparable] struct {
 	size  int
 }
 
-// NewCircularArrayList creates an auto expandable circular array based list, auto shrinkable, but will not shrink if the length is <= DefaultInitSize,
+// NewCircularArrayListOf creates an auto expandable circular array based list, auto shrinkable, but will not shrink if the length is <= DefaultInitSize,
 // the underlying array will be lazily created, if init values are provided, the init arr size is the same as init values'
-func NewCircularArrayList[T comparable](values ...T) *CircularArrayList[T] {
+func NewCircularArrayListOf[T comparable](values ...T) *CircularArrayList[T] {
 	var arr []T
 	var size, start int
 	length := len(values)
@@ -41,7 +41,7 @@ func NewCircularArrayList[T comparable](values ...T) *CircularArrayList[T] {
 	return &CircularArrayList[T]{start, size, arr, size}
 }
 
-// NewCircularArrayListWithInitSize creates underlying array eagerly with the size, see NewCircularArrayList
+// NewCircularArrayListWithInitSize creates underlying array eagerly with the size, see NewCircularArrayListOf
 func NewCircularArrayListWithInitSize[T comparable](size int) *CircularArrayList[T] {
 	return &CircularArrayList[T]{-1, 0, make([]T, size), 0}
 }

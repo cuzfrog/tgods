@@ -18,15 +18,15 @@ type HeapPriorityQueue[T comparable] struct {
 }
 
 func NewHeapPriorityQueue[T comparable](comparator utils.Compare[T]) *HeapPriorityQueue[T] {
-	return &HeapPriorityQueue[T]{lists.NewCircularArrayList[T](), comparator}
+	return &HeapPriorityQueue[T]{lists.NewCircularArrayListOf[T](), comparator}
 }
 
 func NewHeapPriorityQueueForMaxValue[T constraints.Ordered]() *HeapPriorityQueue[T] {
-	return &HeapPriorityQueue[T]{lists.NewCircularArrayList[T](), utils.CompareOrdered[T]}
+	return &HeapPriorityQueue[T]{lists.NewCircularArrayListOf[T](), utils.CompareOrdered[T]}
 }
 func NewHeapPriorityQueueForMinValue[T constraints.Ordered]() *HeapPriorityQueue[T] {
 	fn := func(a, b T) int8 { return utils.CompareOrdered(b, a) }
-	return &HeapPriorityQueue[T]{lists.NewCircularArrayList[T](), fn}
+	return &HeapPriorityQueue[T]{lists.NewCircularArrayListOf[T](), fn}
 }
 
 func (h *HeapPriorityQueue[T]) Size() int {

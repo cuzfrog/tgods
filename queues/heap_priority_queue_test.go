@@ -63,7 +63,7 @@ func TestHeapPriorityQueue(t *testing.T) {
 }
 
 func TestHeapPriorityQueue_swim(t *testing.T) {
-	arr := lists.NewCircularArrayList("t", "s", "r", "p", "n", "o", "a", "e", "i", "h", "w")
+	arr := lists.NewCircularArrayListOf("t", "s", "r", "p", "n", "o", "a", "e", "i", "h", "w")
 	q := &HeapPriorityQueue[string]{arr, utils.CompareOrdered[string]}
 	q.swim()
 	assert.Equal(t, []string{"w", "t", "r", "p", "s", "o", "a", "e", "i", "h", "n"}, utils.SliceFrom(arr.Iterator(), arr.Size()))
@@ -75,7 +75,7 @@ func TestHeapPriorityQueue_swim(t *testing.T) {
 }
 
 func TestHeapPriorityQueue_sink(t *testing.T) {
-	arr := lists.NewCircularArrayList("t", "s", "r", "p", "n", "o", "a", "e", "i", "h", "g")
+	arr := lists.NewCircularArrayListOf("t", "s", "r", "p", "n", "o", "a", "e", "i", "h", "g")
 	q := &HeapPriorityQueue[string]{arr, utils.CompareOrdered[string]}
 	q.sink()
 	assert.Equal(t, []string{"s", "p", "r", "i", "n", "o", "a", "e", "g", "h", "t"}, utils.SliceFrom(arr.Iterator(), arr.Size()))

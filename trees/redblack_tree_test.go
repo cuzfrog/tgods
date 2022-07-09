@@ -106,6 +106,8 @@ func Test_rbNode_rebalance_recolorRight(t *testing.T) {
 	assert.Equal(t, black, n20.c)
 	assert.Equal(t, black, n50.c)
 	assert.Equal(t, red, n30.c)
+	l := bfTraverse[int](n30)
+	assert.Equal(t, []int{30, 20, 50, 40}, utils.SliceFrom(l.Iterator(), l.Size()))
 }
 
 func Test_rbNode_rotate(t *testing.T) {

@@ -13,6 +13,9 @@ type rbTree[T any] struct {
 	comp utils.Compare[T]
 }
 
+// assert rbNode implementation
+//var _ node[int] = (*rbNode[int])(nil)
+
 type rbNode[T any] struct {
 	v T
 	a *rbNode[T]
