@@ -1,12 +1,16 @@
 package lists
 
 import (
+	"github.com/cuzfrog/tgods/core"
+	"github.com/cuzfrog/tgods/utils"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
+var comp = core.EqualComparable[int]
+
 func TestCircularArrayList_shrinkIfNeeded(t *testing.T) {
-	l := &circularArrayList[int]{5, 8, make([]int, 200), 3}
+	l := &circularArrayList[int]{5, 8, make([]int, 200), 3, comp}
 	l.arr[l.start] = 2
 	l.arr[l.end-1] = 4
 	l.shrinkIfNeeded()
@@ -16,11 +20,11 @@ func TestCircularArrayList_shrinkIfNeeded(t *testing.T) {
 	assert.Equal(t, 3, l.Size())
 	assert.Equal(t, []int{2, 0, 4}, l.arr[0:3])
 
-	l = &circularArrayList[int]{5, 8, make([]int, 12), 3}
+	l = &circularArrayList[int]{5, 8, make([]int, 12), 3, comp}
 	l.shrinkIfNeeded()
 	assert.Equal(t, 12, len(l.arr))
 
-	l = &circularArrayList[int]{5, 8, make([]int, 14), 3}
+	l = &circularArrayList[int]{5, 8, make([]int, 14), 3, comp}
 	l.shrinkIfNeeded()
 	assert.Equal(t, 14, len(l.arr))
 
@@ -39,7 +43,7 @@ func TestCircularArrayList_expandIfNeeded(t *testing.T) {
 	assert.Equal(t, 0, l.start)
 	assert.Equal(t, 3, l.end)
 
-	l = NewCircularArrayListWithInitSize[int](5)
+	l = NewCircularArrayList[int](5)
 	l.Add(4)
 	l.AddHead(2)
 	l.expandIfNeeded()
@@ -66,7 +70,7 @@ func TestCircularArrayList_Add(t *testing.T) {
 }
 
 func TestCircularArrayList_AddHead(t *testing.T) {
-	l := NewCircularArrayListWithInitSize[int](5)
+	l := NewCircularArrayList[int](5)
 	l.AddHead(3)
 	assert.Equal(t, 1, l.size)
 	assert.Equal(t, 4, l.start)
@@ -85,7 +89,7 @@ func TestCircularArrayList_AddHead(t *testing.T) {
 }
 
 func TestCircularArrayList_Clear(t *testing.T) {
-	l := NewCircularArrayListWithInitSize[int](5)
+	l := NewCircularArrayList[int](5)
 	l.AddHead(5)
 	l.Clear()
 	assert.Equal(t, 0, l.size)
@@ -95,7 +99,7 @@ func TestCircularArrayList_Clear(t *testing.T) {
 }
 
 func TestCircularArrayList_Contains(t *testing.T) {
-	l := NewCircularArrayListWithInitSize[int](5)
+	l := NewCircularArrayList[int](5)
 	l.AddHead(5)
 	assert.True(t, l.Contains(5))
 	assert.False(t, l.Contains(6))
@@ -104,7 +108,7 @@ func TestCircularArrayList_Contains(t *testing.T) {
 }
 
 func TestCircularArrayList_Get(t *testing.T) {
-	l := NewCircularArrayListWithInitSize[int](5)
+	l := NewCircularArrayList[int](5)
 	l.Add(100)
 	for i := 1; i <= 12; i++ {
 		l.AddHead(i)
@@ -119,7 +123,7 @@ func TestCircularArrayList_Get(t *testing.T) {
 }
 
 func TestCircularArrayList_Set(t *testing.T) {
-	l := NewCircularArrayListWithInitSize[int](5)
+	l := NewCircularArrayList[int](5)
 	l.Add(100)
 	v, ok := l.Set(0, 5)
 	assert.True(t, ok)
@@ -178,7 +182,7 @@ func TestCircularArrayList_Pop(t *testing.T) {
 	v, ok = l.RemoveTail()
 	assert.False(t, ok)
 
-	l = &circularArrayList[int]{4, 1, make([]int, 6), 3}
+	l = &circularArrayList[int]{4, 1, make([]int, 6), 3, comp}
 	l.arr[0] = 13
 	l.arr[4] = 3
 	l.arr[5] = 11
@@ -234,5 +238,5 @@ func TestCircularArrayList_Clone(t *testing.T) {
 	l := NewCircularArrayListOf(3, 5, 7)
 	nl := l.Clone()
 	assert.NotSame(t, l, nl)
-	assert.Equal(t, l, nl)
+	assert.Equal(t, utils.SliceFrom[int](l), utils.SliceFrom[int](nl))
 }

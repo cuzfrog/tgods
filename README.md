@@ -10,14 +10,14 @@ Go version >= 1.18, currently depends on `golang.org/x/exp` for `Ordered` type c
 * arrayStack - fixed length first-in-last-out array based stack.
 * circularArrayList - variable length/cap list with fast add/remove at head or tail and random access with index.
 * linkedList - doubly linked list with fast add/remove.
-* heapPriorityQueue - binary heap based min or max priority queue.
-* rbTree (under implementation) - red black tree with no recursion but with a parent pointer in the node
+* binaryHeap - heap based min or max priority queue.
+* rbTree (under implementation..) - red black tree with no recursion but with a parent pointer in the node
 
 more...
 
 ## Implementations
 
-All implementation implements `Collection`
+All implementations implement `Collection`
 ```go
 type Collection[T any] interface {
 	Size() int

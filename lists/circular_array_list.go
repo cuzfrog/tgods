@@ -15,34 +15,12 @@ var _ core.Stack[int] = (*circularArrayList[int])(nil)
 var _ core.Queue[int] = (*circularArrayList[int])(nil)
 var _ core.Deque[int] = (*circularArrayList[int])(nil)
 
-type circularArrayList[T comparable] struct {
+type circularArrayList[T any] struct {
 	start int //inclusive
 	end   int //exclusive
 	arr   []T
 	size  int
-}
-
-// NewCircularArrayListOf creates an auto expandable circular array based list, auto shrinkable, but will not shrink if the length is <= DefaultInitSize,
-// the underlying array will be lazily created, if init values are provided, the init arr size is the same as init values'
-func NewCircularArrayListOf[T comparable](values ...T) *circularArrayList[T] {
-	var arr []T
-	var size, start int
-	length := len(values)
-	if length == 0 {
-		arr = nil
-		size = 0
-		start = -1
-	} else {
-		arr = values
-		size = length
-		start = 0
-	}
-	return &circularArrayList[T]{start, size, arr, size}
-}
-
-// NewCircularArrayListWithInitSize creates underlying array eagerly with the size, see NewCircularArrayListOf
-func NewCircularArrayListWithInitSize[T comparable](size int) *circularArrayList[T] {
-	return &circularArrayList[T]{-1, 0, make([]T, size), 0}
+	comp  core.Equal[T]
 }
 
 func (l *circularArrayList[T]) Size() int {
@@ -125,7 +103,7 @@ func (l *circularArrayList[T]) Contains(elem T) bool {
 	it := l.Iterator()
 	for it.Next() {
 		v := it.Value()
-		if v == elem {
+		if l.comp(v, elem) {
 			return true
 		}
 	}
@@ -229,7 +207,7 @@ func (l *circularArrayList[T]) Iterator() core.Iterator[T] {
 	return &calIterator[T]{l, -1, -1}
 }
 
-type calIterator[T comparable] struct {
+type calIterator[T any] struct {
 	l        *circularArrayList[T]
 	index    int
 	arrIndex int
@@ -254,7 +232,7 @@ func (it *calIterator[T]) Value() T {
 func (l *circularArrayList[T]) Clone() core.ArrayList[T] {
 	arr := make([]T, l.size)
 	copy(arr, l.arr)
-	return &circularArrayList[T]{l.start, l.end, arr, l.size}
+	return &circularArrayList[T]{l.start, l.end, arr, l.size, l.comp}
 }
 
 func (l *circularArrayList[T]) expandIfNeeded() {
