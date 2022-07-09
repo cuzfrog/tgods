@@ -10,15 +10,11 @@ import (
 func SliceFrom[T any](col core.Collection[T]) []T {
 	it, size := col.Iterator(), col.Size()
 	arr := make([]T, size)
-	var i int
 	for it.Next() {
-		i = it.Index()
-		if i >= size {
-			break
-		}
+		i := it.Index()
 		arr[i] = it.Value()
 	}
-	return arr[:Min(i+1, size)]
+	return arr
 }
 
 // Shuffle redistributes elems in the slice a using Knuth algorithm: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle

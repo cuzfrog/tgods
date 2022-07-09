@@ -55,35 +55,39 @@ func (h *binaryHeap[T]) Contains(elem T) bool {
 	return h.arr.Contains(elem)
 }
 
-type hpqIterator[T comparable] struct {
-	h     *binaryHeap[T]
+type binaryHeapIterator[T comparable] struct {
+	q     core.Queue[T]
 	index int
 	v     T
 }
 
-func (it *hpqIterator[T]) Next() bool {
-	if it.h.Size() <= 0 {
+func (it *binaryHeapIterator[T]) Next() bool {
+	if it.q.Size() <= 0 {
 		return false
 	}
 	it.index++
-	it.v, _ = it.h.Dequeue()
+	it.v, _ = it.q.Dequeue()
 	return true
 }
 
 // Index returns current index from iteration order, starting from 0.
 // If Next return false, the number returned is meaningless, it must be guarded by Next
-func (it *hpqIterator[T]) Index() int {
+func (it *binaryHeapIterator[T]) Index() int {
 	return it.index
 }
 
 // Value returns current value.
 // If Next return false, the value returned is meaningless, it must be guarded by Next
-func (it *hpqIterator[T]) Value() T {
+func (it *binaryHeapIterator[T]) Value() T {
 	return it.v
 }
 
 func (h *binaryHeap[T]) Iterator() core.Iterator[T] {
-	return &hpqIterator[T]{h, -1, utils.Nil[T]()}
+	return &binaryHeapIterator[T]{h.Clone(), -1, utils.Nil[T]()}
+}
+
+func (h *binaryHeap[T]) Clone() core.Queue[T] {
+	return &binaryHeap[T]{h.arr.Clone(), h.comp}
 }
 
 // swim reheapifies by checking and moving up the last element of the arr, this should be called after adding
@@ -138,7 +142,11 @@ func (h *binaryHeap[T]) sink() {
 				i = i2
 			}
 		}
-		h.arr.Swap(i-1, pi-1)
+		vi, _ := h.arr.Get(i - 1)
+		vpi, _ := h.arr.Get(pi - 1)
+		if h.comp(vi, vpi) > 0 {
+			h.arr.Swap(i-1, pi-1)
+		}
 		if i >= nextSize {
 			break
 		}

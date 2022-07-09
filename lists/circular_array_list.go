@@ -251,6 +251,12 @@ func (it *calIterator[T]) Value() T {
 	return it.l.arr[it.arrIndex]
 }
 
+func (l *circularArrayList[T]) Clone() core.ArrayList[T] {
+	arr := make([]T, l.size)
+	copy(arr, l.arr)
+	return &circularArrayList[T]{l.start, l.end, arr, l.size}
+}
+
 func (l *circularArrayList[T]) expandIfNeeded() {
 	if l.arr == nil {
 		l.arr = make([]T, DefaultInitSize)

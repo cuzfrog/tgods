@@ -44,6 +44,7 @@ type Stack[T any] interface {
 type ArrayList[T any] interface {
 	List[T]
 	IndexAccess[T]
+	Cloneable[T, ArrayList[T]]
 }
 
 type List[T any] interface {

@@ -34,9 +34,9 @@ func TestHeapPriorityQueue(t *testing.T) {
 	q.Enqueue(3)
 	assert.Equal(t, []int{6, 3}, utils.SliceFrom[int](q))
 	q.Enqueue(7)
-	assert.Equal(t, []int{7, 3, 6}, utils.SliceFrom[int](q))
+	assert.Equal(t, []int{7, 6, 3}, utils.SliceFrom[int](q))
 	q.Enqueue(3)
-	assert.Equal(t, []int{7, 3, 6, 3}, utils.SliceFrom[int](q))
+	assert.Equal(t, []int{7, 6, 3, 3}, utils.SliceFrom[int](q))
 	assert.Equal(t, 4, q.Size())
 	assert.True(t, q.Contains(6))
 	assert.False(t, q.Contains(5))
@@ -64,14 +64,14 @@ func TestHeapPriorityQueue(t *testing.T) {
 }
 
 func TestHeapPriorityQueue_swim(t *testing.T) {
-	arr := lists.NewCircularArrayListOf("t", "s", "r", "p", "n", "o", "a", "e", "i", "h", "w")
+	arr := lists.NewCircularArrayListOf("t", "s", "r", "p", "n", "o", "a", "e", "i", "q", "w")
 	q := &binaryHeap[string]{arr, core.CompareOrdered[string]}
 	q.swim()
-	assert.Equal(t, []string{"w", "t", "r", "p", "s", "o", "a", "e", "i", "h", "n"}, utils.SliceFrom[string](arr))
+	assert.Equal(t, []string{"w", "t", "r", "p", "s", "o", "a", "e", "i", "q", "n"}, utils.SliceFrom[string](arr))
 
 	q.Enqueue("s")
 	q.swim()
-	assert.Equal(t, []string{"w", "t", "s", "p", "s", "r", "a", "e", "i", "h", "n", "o"}, utils.SliceFrom[string](arr))
+	assert.Equal(t, []string{"w", "t", "s", "p", "s", "r", "a", "e", "i", "q", "n", "o"}, utils.SliceFrom[string](arr))
 
 }
 
@@ -101,6 +101,14 @@ func TestHeapPriorityQueue_Iterator(t *testing.T) {
 	assert.Equal(t, 3, v)
 
 	q.Enqueue(1)
-	arr := utils.SliceFrom[int](q)
-	assert.Equal(t, []int{1, 6, 7, 7, 8, 11}, arr)
+	assert.Equal(t, []int{1, 6, 7, 7, 8, 11}, utils.SliceFrom[int](q))
+
+	q = NewHeapPriorityQueueForMaxValue[int]()
+	q.Enqueue(7)
+	q.Enqueue(6)
+	q.Enqueue(11)
+	q.Enqueue(7)
+	q.Enqueue(8)
+	q.Enqueue(3)
+	assert.Equal(t, []int{11, 8, 7, 7, 6, 3}, utils.SliceFrom[int](q))
 }

@@ -229,3 +229,10 @@ func TestCircularArrayList_Iterator(t *testing.T) {
 	it = l.Iterator()
 	assert.False(t, it.Next())
 }
+
+func TestCircularArrayList_Clone(t *testing.T) {
+	l := NewCircularArrayListOf(3, 5, 7)
+	nl := l.Clone()
+	assert.NotSame(t, l, nl)
+	assert.Equal(t, l, nl)
+}
