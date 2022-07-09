@@ -14,18 +14,18 @@ var _ core.Iterable[int] = (*HeapPriorityQueue[int])(nil)
 
 type HeapPriorityQueue[T comparable] struct {
 	arr  core.ArrayList[T]
-	comp utils.Comparator[T]
+	comp utils.Compare[T]
 }
 
-func NewHeapPriorityQueue[T comparable](comparator utils.Comparator[T]) *HeapPriorityQueue[T] {
+func NewHeapPriorityQueue[T comparable](comparator utils.Compare[T]) *HeapPriorityQueue[T] {
 	return &HeapPriorityQueue[T]{lists.NewCircularArrayList[T](), comparator}
 }
 
 func NewHeapPriorityQueueForMaxValue[T constraints.Ordered]() *HeapPriorityQueue[T] {
-	return &HeapPriorityQueue[T]{lists.NewCircularArrayList[T](), utils.ValueComparator[T]}
+	return &HeapPriorityQueue[T]{lists.NewCircularArrayList[T](), utils.CompareOrdered[T]}
 }
 func NewHeapPriorityQueueForMinValue[T constraints.Ordered]() *HeapPriorityQueue[T] {
-	fn := func(a, b T) int8 { return utils.ValueComparator(b, a) }
+	fn := func(a, b T) int8 { return utils.CompareOrdered(b, a) }
 	return &HeapPriorityQueue[T]{lists.NewCircularArrayList[T](), fn}
 }
 

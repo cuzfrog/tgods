@@ -6,8 +6,8 @@ import (
 )
 
 func TestValueComparator(t *testing.T) {
-	assert.Equal(t, int8(-1), ValueComparator(1, 2))
-	assert.Equal(t, int8(1), ValueComparator("c", "b"))
-	assert.Equal(t, int8(0), ValueComparator(2, 2))
-	assert.True(t, 0 == ValueComparator(2, 2))
+	assert.Equal(t, int8(-1), CompareOrdered(1, 2))
+	assert.Equal(t, int8(1), CompareOrdered("c", "b"))
+	assert.Equal(t, int8(0), CompareOrdered(2, 2))
+	assert.True(t, 0 == CompareOrdered(2, 2))
 }
