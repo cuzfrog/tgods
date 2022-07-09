@@ -5,7 +5,7 @@ import "github.com/cuzfrog/tgods/utils"
 const red, black = true, false
 
 // assert rbTree implementation
-var _ RbTree[int] = (*rbTree[int])(nil)
+var _ Tree[int] = (*rbTree[int])(nil)
 
 type rbTree[T any] struct {
 	root *rbNode[T]
@@ -25,7 +25,7 @@ func (t *rbTree[T]) Insert(d T) bool {
 	r, found, nn := insert(t.root, d, t.comp)
 	t.root = r
 	for true {
-		nn = rectify(nn)
+		nn = rebalance(nn)
 		if nn == nil {
 			break
 		}
@@ -80,8 +80,8 @@ func insert[T any](n *rbNode[T], d T, comp utils.Compare[T]) (r *rbNode[T], foun
 	return n, found, nn
 }
 
-// rectify recolors and/or rotates when necessary, returns next rectifiable node or nil if finishes
-func rectify[T any](n *rbNode[T]) (r *rbNode[T]) {
+// rebalance recolors and/or rotates when necessary, returns next rectifiable node or nil if finishes
+func rebalance[T any](n *rbNode[T]) (r *rbNode[T]) {
 	if n.p == nil {
 		n.c = black
 		return nil

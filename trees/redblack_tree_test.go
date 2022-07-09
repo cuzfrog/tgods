@@ -8,14 +8,14 @@ import (
 
 var comp = utils.CompareOrdered[int]
 
-func Test_insert_root(t *testing.T) {
+func Test_rbNode_insert_root(t *testing.T) {
 	r, found, nn := insert(nil, 3, comp)
 	assert.False(t, found)
 	assert.Equal(t, rbNode[int]{3, nil, nil, nil, true}, *r)
 	assert.Equal(t, r, nn)
 }
 
-func Test_insert(t *testing.T) {
+func Test_rbNode_insert(t *testing.T) {
 	/*         70
 	    30
 	20      50
@@ -60,7 +60,55 @@ func Test_insert(t *testing.T) {
 	assert.Equal(t, n35, n40.a)
 }
 
-func Test_rotate(t *testing.T) {
+func Test_rbNode_rebalance_noAction(t *testing.T) {
+	n := newRbNode(3, nil)
+	r := rebalance(n)
+	assert.Equal(t, black, n.c) // root color as black
+	assert.Nil(t, r)            // no next node for rectification
+
+	/*
+		    30b
+		20b      50r
+	*/
+	n30 := newRbNode(30, nil)
+	n30.c = black
+	n20 := newRbNode(20, n30)
+	n30.a = n20
+	n20.c = black
+	n50 := newRbNode(50, n30)
+	n30.b = n50
+	r = rebalance(n50)
+	assert.Nil(t, r)
+	assert.Equal(t, black, n30.c)
+	assert.Equal(t, n50, n30.b)
+}
+
+func Test_rbNode_rebalance_recolorRight(t *testing.T) {
+	/*
+		    30b
+		20r      50r
+		      40r
+	*/
+	n30 := newRbNode(30, nil)
+	n30.c = black
+	n20 := newRbNode(20, n30)
+	n20.c = red
+	n30.a = n20
+	n50 := newRbNode(50, n30)
+	n50.c = red
+	n30.b = n50
+	n40 := newRbNode(40, n50)
+	n40.c = red
+	n50.a = n40
+	r := rebalance(n40)
+	assert.Equal(t, n30, r)
+	assert.Equal(t, red, n40.c)
+	assert.Equal(t, black, n20.c)
+	assert.Equal(t, black, n50.c)
+	assert.Equal(t, red, n30.c)
+}
+
+func Test_rbNode_rotate(t *testing.T) {
 	n := &rbNode[int]{3, nil, nil, nil, true}
 	assert.Equal(t, newRbNode(3, nil), rotateLeft(n))
 	assert.Equal(t, newRbNode(3, nil), rotateRight(n))

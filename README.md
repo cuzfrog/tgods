@@ -11,6 +11,7 @@ Go version >= 1.18, currently depends on `golang.org/x/exp` for `Ordered` type c
 * CircularArrayList - variable length list with fast add/remove at head or tail and random access by index.
 * LinkedList - doubly linked list with fast add/remove.
 * HeapPriorityQueue - binary heap based min or max priority queue.
+* RbTree - red black tree with no recursion but with a parent pointer in the node
 
 more...
 
