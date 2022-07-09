@@ -22,8 +22,14 @@ type rbNode[T any] struct {
 }
 
 func (t *rbTree[T]) Insert(d T) bool {
-	r, found := insert(t.root, d, t.comp)
+	r, found, nn := insert(t.root, d, t.comp)
 	t.root = r
+	for true {
+		nn = rectify(nn)
+		if nn == nil {
+			break
+		}
+	}
 	if !found {
 		t.size++
 	}
@@ -34,34 +40,54 @@ func newRbNode[T any](d T, p *rbNode[T]) *rbNode[T] {
 	return &rbNode[T]{d, nil, nil, p, red}
 }
 
-// insert returns found or created rbNode
-//   np - n's parent
-//   ngp - n's grandparent
-func insert[T any](n *rbNode[T], d T, comp utils.Compare[T]) (*rbNode[T], bool) {
+/*
+insert returns:
+	r - the top node after insertion
+	found - if found an existing node
+	nn - the newly created or found node
+*/
+func insert[T any](n *rbNode[T], d T, comp utils.Compare[T]) (r *rbNode[T], found bool, nn *rbNode[T]) {
 	if n == nil {
-		return newRbNode(d, nil), false
+		r, found = newRbNode(d, nil), false
+		nn = r
+		return
 	}
-	var found bool
-	if comp(d, n.v) < 0 {
-		n.a, found = insert(n.a, d, comp)
-	} else if comp(d, n.v) > 0 {
-		n.b, found = insert(n.b, d, comp)
-	} else {
-		n.v = d
-		found = true
+	ni := n
+	for true {
+		if comp(d, ni.v) < 0 {
+			if ni.a == nil {
+				ni.a = newRbNode(d, ni)
+				nn = ni.a
+				break
+			} else {
+				ni = ni.a
+			}
+		} else if comp(d, ni.v) > 0 {
+			if ni.b == nil {
+				ni.b = newRbNode(d, ni)
+				nn = ni.b
+				break
+			} else {
+				ni = ni.b
+			}
+		} else {
+			ni.v = d
+			found = true
+			nn = ni
+			break
+		}
 	}
-	n = rectify(n)
-	return n, found
+	return n, found, nn
 }
 
-// rectify recolors and/or rotates when necessary
-func rectify[T any](n *rbNode[T]) *rbNode[T] {
+// rectify recolors and/or rotates when necessary, returns next rectifiable node or nil if finishes
+func rectify[T any](n *rbNode[T]) (r *rbNode[T]) {
 	if n.p == nil {
 		n.c = black
-		return n
+		return nil
 	}
 	if n.p.c == black {
-		return n
+		return nil
 	}
 	// when np is red, ngp must exist
 	ngp := n.p.p
@@ -69,15 +95,16 @@ func rectify[T any](n *rbNode[T]) *rbNode[T] {
 	if nu.color() == red {
 		n.p.setColor(black)
 		nu.setColor(black)
-		n.p.p.setColor(red)
+		ngp.setColor(red)
+		r = ngp
 	} else {
 		if n == n.p.a { // left child
-			rotateRight(ngp)
+			r = rotateRight(ngp)
 		} else { // right child
-
+			r = rotateLeft(ngp)
 		}
 	}
-	return n
+	return r
 }
 
 func (n *rbNode[T]) uncle() *rbNode[T] {
@@ -92,30 +119,34 @@ func (n *rbNode[T]) uncle() *rbNode[T] {
 	}
 }
 
-func rotateLeft[T any](n *rbNode[T]) {
+func rotateLeft[T any](n *rbNode[T]) (r *rbNode[T]) {
 	if n.b == nil {
-		return
+		return n
 	}
-	r := n.b
+	r = n.b
 	n.b = r.a
 	if n.b != nil {
 		n.b.p = n
 	}
 	r.a = n
 	updateParentChild(n, r)
+	//r.c, n.c = n.c, red
+	return
 }
 
-func rotateRight[T any](n *rbNode[T]) {
+func rotateRight[T any](n *rbNode[T]) (r *rbNode[T]) {
 	if n.a == nil {
-		return
+		return n
 	}
-	r := n.a
+	r = n.a
 	n.a = r.b
 	if n.a != nil {
 		n.a.p = n
 	}
 	r.b = n
 	updateParentChild(n, r)
+	//r.c, n.c = n.c, red
+	return
 }
 
 // updateParentChild update original parent's child after rotation
