@@ -79,7 +79,7 @@ func TestHeapPriorityQueue_sink(t *testing.T) {
 	q := &HeapPriorityQueue[string]{arr, utils.CompareOrdered[string]}
 	q.sink()
 	assert.Equal(t, []string{"s", "p", "r", "i", "n", "o", "a", "e", "g", "h", "t"}, utils.SliceFrom(arr.Iterator(), arr.Size()))
-	arr.Pop()
+	arr.RemoveTail()
 	q.sink()
 	assert.Equal(t, []string{"r", "p", "o", "i", "n", "h", "a", "e", "g", "s"}, utils.SliceFrom(arr.Iterator(), arr.Size()))
 }

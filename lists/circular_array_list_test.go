@@ -6,7 +6,7 @@ import (
 )
 
 func TestCircularArrayList_shrinkIfNeeded(t *testing.T) {
-	l := &CircularArrayList[int]{5, 8, make([]int, 200), 3}
+	l := &circularArrayList[int]{5, 8, make([]int, 200), 3}
 	l.arr[l.start] = 2
 	l.arr[l.end-1] = 4
 	l.shrinkIfNeeded()
@@ -16,11 +16,11 @@ func TestCircularArrayList_shrinkIfNeeded(t *testing.T) {
 	assert.Equal(t, 3, l.Size())
 	assert.Equal(t, []int{2, 0, 4}, l.arr[0:3])
 
-	l = &CircularArrayList[int]{5, 8, make([]int, 12), 3}
+	l = &circularArrayList[int]{5, 8, make([]int, 12), 3}
 	l.shrinkIfNeeded()
 	assert.Equal(t, 12, len(l.arr))
 
-	l = &CircularArrayList[int]{5, 8, make([]int, 14), 3}
+	l = &circularArrayList[int]{5, 8, make([]int, 14), 3}
 	l.shrinkIfNeeded()
 	assert.Equal(t, 14, len(l.arr))
 
@@ -30,7 +30,7 @@ func TestCircularArrayList_shrinkIfNeeded(t *testing.T) {
 
 func TestCircularArrayList_expandIfNeeded(t *testing.T) {
 	l := NewCircularArrayListOf(1, 3, 5)
-	l.PopHead()
+	l.RemoveHead()
 	l.Add(6)
 	l.expandIfNeeded()
 	assert.Equal(t, 6, len(l.arr))
@@ -169,44 +169,44 @@ func TestCircularArrayList_Head(t *testing.T) {
 
 func TestCircularArrayList_Pop(t *testing.T) {
 	l := NewCircularArrayListOf(3, 5)
-	v, ok := l.Pop()
+	v, ok := l.RemoveTail()
 	assert.True(t, ok)
 	assert.Equal(t, 5, v)
-	v, ok = l.Pop()
+	v, ok = l.RemoveTail()
 	assert.True(t, ok)
 	assert.Equal(t, 3, v)
-	v, ok = l.Pop()
+	v, ok = l.RemoveTail()
 	assert.False(t, ok)
 
-	l = &CircularArrayList[int]{4, 1, make([]int, 6), 3}
+	l = &circularArrayList[int]{4, 1, make([]int, 6), 3}
 	l.arr[0] = 13
 	l.arr[4] = 3
 	l.arr[5] = 11
-	v, ok = l.Pop()
+	v, ok = l.RemoveTail()
 	assert.True(t, ok)
 	assert.Equal(t, 13, v)
 	assert.Equal(t, 2, l.size)
-	v, ok = l.Pop()
+	v, ok = l.RemoveTail()
 	assert.Equal(t, 11, v)
 	assert.Equal(t, 5, l.end)
 	assert.Equal(t, 1, l.size)
-	v, ok = l.Pop()
+	v, ok = l.RemoveTail()
 	assert.Equal(t, 3, v)
 	assert.Equal(t, 4, l.end)
 	assert.Equal(t, 0, l.size)
-	v, ok = l.Pop()
+	v, ok = l.RemoveTail()
 	assert.False(t, ok)
 }
 
 func TestCircularArrayList_PopHead(t *testing.T) {
 	l := NewCircularArrayListOf(3, 5)
-	v, ok := l.PopHead()
+	v, ok := l.RemoveHead()
 	assert.True(t, ok)
 	assert.Equal(t, 3, v)
-	v, ok = l.PopHead()
+	v, ok = l.RemoveHead()
 	assert.True(t, ok)
 	assert.Equal(t, 5, v)
-	v, ok = l.PopHead()
+	v, ok = l.RemoveHead()
 	assert.False(t, ok)
 }
 

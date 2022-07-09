@@ -9,7 +9,6 @@ import (
 // assert LinkedList implementation
 var _ core.List[int] = (*LinkedList[int])(nil)
 var _ core.Stack[int] = (*LinkedList[int])(nil)
-var _ core.Bag[int] = (*LinkedList[int])(nil)
 var _ core.Queue[int] = (*LinkedList[int])(nil)
 var _ core.Deque[int] = (*LinkedList[int])(nil)
 var _ core.Iterable[int] = (*LinkedList[int])(nil)
@@ -82,6 +81,10 @@ func (l *LinkedList[T]) Head() (elem T, found bool) {
 	return elem, true
 }
 
+func (l *LinkedList[T]) First() (elem T, found bool) {
+	return l.Head()
+}
+
 func (l *LinkedList[T]) Tail() (elem T, found bool) {
 	if l.size == 0 {
 		return elem, false
@@ -108,8 +111,15 @@ func (l *LinkedList[T]) AddHead(elem T) bool {
 	return true
 }
 
-// PopHead removes elem from the head
-func (l *LinkedList[T]) PopHead() (elem T, found bool) {
+func (l *LinkedList[T]) Enqueue(elem T) bool {
+	return l.AddHead(elem)
+}
+
+func (l *LinkedList[T]) Enstack(elem T) bool {
+	return l.AddHead(elem)
+}
+
+func (l *LinkedList[T]) RemoveHead() (elem T, found bool) {
 	if l.size == 0 {
 		return elem, false
 	}
@@ -120,6 +130,14 @@ func (l *LinkedList[T]) PopHead() (elem T, found bool) {
 	}
 	l.size--
 	return elem, true
+}
+
+func (l *LinkedList[T]) Pop() (elem T, found bool) {
+	return l.RemoveHead()
+}
+
+func (l *LinkedList[T]) DequeueFirst() (elem T, found bool) {
+	return l.RemoveHead()
 }
 
 // Add adds elem to the tail
@@ -135,8 +153,16 @@ func (l *LinkedList[T]) Add(elem T) bool {
 	return true
 }
 
-// Pop gets and removes the last elem
-func (l *LinkedList[T]) Pop() (elem T, found bool) {
+func (l *LinkedList[T]) AddTail(elem T) bool {
+	return l.Add(elem)
+}
+
+func (l *LinkedList[T]) EnqueueLast(elem T) bool {
+	return l.Add(elem)
+}
+
+// Remove gets and removes the last elem
+func (l *LinkedList[T]) Remove() (elem T, found bool) {
 	if l.size == 0 {
 		return elem, false
 	}
@@ -147,6 +173,14 @@ func (l *LinkedList[T]) Pop() (elem T, found bool) {
 	}
 	l.size--
 	return elem, true
+}
+
+func (l *LinkedList[T]) RemoveTail() (elem T, found bool) {
+	return l.Remove()
+}
+
+func (l *LinkedList[T]) Dequeue() (elem T, found bool) {
+	return l.Remove()
 }
 
 type llIterator[T any] struct {

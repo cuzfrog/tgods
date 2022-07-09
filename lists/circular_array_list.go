@@ -8,15 +8,14 @@ import (
 const DefaultInitSize = 12
 const DefaultShrinkThreshold = 3 // bitwise shift
 
-// assert CircularArrayList implementation
-var _ core.ArrayList[int] = (*CircularArrayList[int])(nil)
-var _ core.List[int] = (*CircularArrayList[int])(nil)
-var _ core.Stack[int] = (*CircularArrayList[int])(nil)
-var _ core.Bag[int] = (*CircularArrayList[int])(nil)
-var _ core.Queue[int] = (*CircularArrayList[int])(nil)
-var _ core.Deque[int] = (*CircularArrayList[int])(nil)
+// assert circularArrayList implementation
+var _ core.ArrayList[int] = (*circularArrayList[int])(nil)
+var _ core.List[int] = (*circularArrayList[int])(nil)
+var _ core.Stack[int] = (*circularArrayList[int])(nil)
+var _ core.Queue[int] = (*circularArrayList[int])(nil)
+var _ core.Deque[int] = (*circularArrayList[int])(nil)
 
-type CircularArrayList[T comparable] struct {
+type circularArrayList[T comparable] struct {
 	start int //inclusive
 	end   int //exclusive
 	arr   []T
@@ -25,7 +24,7 @@ type CircularArrayList[T comparable] struct {
 
 // NewCircularArrayListOf creates an auto expandable circular array based list, auto shrinkable, but will not shrink if the length is <= DefaultInitSize,
 // the underlying array will be lazily created, if init values are provided, the init arr size is the same as init values'
-func NewCircularArrayListOf[T comparable](values ...T) *CircularArrayList[T] {
+func NewCircularArrayListOf[T comparable](values ...T) *circularArrayList[T] {
 	var arr []T
 	var size, start int
 	length := len(values)
@@ -38,28 +37,28 @@ func NewCircularArrayListOf[T comparable](values ...T) *CircularArrayList[T] {
 		size = length
 		start = 0
 	}
-	return &CircularArrayList[T]{start, size, arr, size}
+	return &circularArrayList[T]{start, size, arr, size}
 }
 
 // NewCircularArrayListWithInitSize creates underlying array eagerly with the size, see NewCircularArrayListOf
-func NewCircularArrayListWithInitSize[T comparable](size int) *CircularArrayList[T] {
-	return &CircularArrayList[T]{-1, 0, make([]T, size), 0}
+func NewCircularArrayListWithInitSize[T comparable](size int) *circularArrayList[T] {
+	return &circularArrayList[T]{-1, 0, make([]T, size), 0}
 }
 
-func (l *CircularArrayList[T]) Size() int {
+func (l *circularArrayList[T]) Size() int {
 	return l.size
 }
 
 // Clear drop the underlying arr, O(1)
-func (l *CircularArrayList[T]) Clear() {
+func (l *circularArrayList[T]) Clear() {
 	l.arr = nil
 	l.start = -1
 	l.end = 0
 	l.size = 0
 }
 
-// Add appends to the list, see AddHead
-func (l *CircularArrayList[T]) Add(elem T) bool {
+// Add appends to the tail of the list, same as AddTail
+func (l *circularArrayList[T]) Add(elem T) bool {
 	l.expandIfNeeded()
 	if l.end >= len(l.arr) {
 		l.end = 0
@@ -73,8 +72,21 @@ func (l *CircularArrayList[T]) Add(elem T) bool {
 	return true
 }
 
-// Pop removes the last elem
-func (l *CircularArrayList[T]) Pop() (elem T, found bool) {
+// AddTail appends to the tail of the list, same as Add
+func (l *circularArrayList[T]) AddTail(elem T) bool {
+	return l.Add(elem)
+}
+
+func (l *circularArrayList[T]) Enstack(elem T) bool {
+	return l.Add(elem)
+}
+
+func (l *circularArrayList[T]) EnqueueLast(elem T) bool {
+	return l.Add(elem)
+}
+
+// RemoveTail removes the last elem of the list, same as Remove
+func (l *circularArrayList[T]) RemoveTail() (elem T, found bool) {
 	if l.size == 0 {
 		return elem, false
 	}
@@ -88,16 +100,28 @@ func (l *CircularArrayList[T]) Pop() (elem T, found bool) {
 	return elem, true
 }
 
-// Peek retrieves the last elem, same as Tail
-func (l *CircularArrayList[T]) Peek() (elem T, found bool) {
+// Remove removes the last elem of the list, same as RemoveTail
+func (l *circularArrayList[T]) Remove() (elem T, found bool) {
+	return l.RemoveTail()
+}
+
+func (l *circularArrayList[T]) Pop() (elem T, found bool) {
+	return l.RemoveTail()
+}
+
+func (l *circularArrayList[T]) Peek() (elem T, found bool) {
 	if l.size == 0 {
 		return elem, false
 	}
 	return l.arr[l.end-1], true
 }
 
+func (l *circularArrayList[T]) Dequeue() (elem T, found bool) {
+	return l.RemoveTail()
+}
+
 // Contains checks if elem exists, O(n)
-func (l *CircularArrayList[T]) Contains(elem T) bool {
+func (l *circularArrayList[T]) Contains(elem T) bool {
 	it := l.Iterator()
 	for it.Next() {
 		v := it.Value()
@@ -109,20 +133,24 @@ func (l *CircularArrayList[T]) Contains(elem T) bool {
 }
 
 // Head retrieves the first elem
-func (l *CircularArrayList[T]) Head() (elem T, found bool) {
+func (l *circularArrayList[T]) Head() (elem T, found bool) {
 	if l.size == 0 {
 		return elem, false
 	}
 	return l.arr[l.start], true
 }
 
+func (l *circularArrayList[T]) First() (elem T, found bool) {
+	return l.Head()
+}
+
 // Tail retrieves the last elem, same as Peek
-func (l *CircularArrayList[T]) Tail() (T, bool) {
+func (l *circularArrayList[T]) Tail() (T, bool) {
 	return l.Peek()
 }
 
 // AddHead prepends to the list, see Add
-func (l *CircularArrayList[T]) AddHead(elem T) bool {
+func (l *circularArrayList[T]) AddHead(elem T) bool {
 	l.expandIfNeeded()
 	l.start--
 	if l.start < 0 {
@@ -133,8 +161,11 @@ func (l *CircularArrayList[T]) AddHead(elem T) bool {
 	return true
 }
 
-// PopHead removes the first elem, O(1)
-func (l *CircularArrayList[T]) PopHead() (elem T, found bool) {
+func (l *circularArrayList[T]) Enqueue(elem T) bool {
+	return l.AddHead(elem)
+}
+
+func (l *circularArrayList[T]) RemoveHead() (elem T, found bool) {
 	if l.size == 0 {
 		return elem, false
 	}
@@ -148,7 +179,11 @@ func (l *CircularArrayList[T]) PopHead() (elem T, found bool) {
 	return elem, true
 }
 
-func (l *CircularArrayList[T]) Get(index int) (elem T, found bool) {
+func (l *circularArrayList[T]) DequeueFirst() (elem T, found bool) {
+	return l.RemoveHead()
+}
+
+func (l *circularArrayList[T]) Get(index int) (elem T, found bool) {
 	arrIndex, ok := l.toArrIndex(index)
 	if ok {
 		return l.arr[arrIndex], true
@@ -157,7 +192,7 @@ func (l *CircularArrayList[T]) Get(index int) (elem T, found bool) {
 }
 
 // Set sets value by index and returns the old value, will not expand the list
-func (l *CircularArrayList[T]) Set(index int, elem T) (oldElem T, found bool) {
+func (l *circularArrayList[T]) Set(index int, elem T) (oldElem T, found bool) {
 	arrIndex, ok := l.toArrIndex(index)
 	if ok {
 		oldElem = l.arr[arrIndex]
@@ -168,7 +203,7 @@ func (l *CircularArrayList[T]) Set(index int, elem T) (oldElem T, found bool) {
 }
 
 // Swap exchanges values of provided indices, if one of the indices is invalid, returns false
-func (l *CircularArrayList[T]) Swap(indexA, indexB int) bool {
+func (l *circularArrayList[T]) Swap(indexA, indexB int) bool {
 	arrIndexA, okA := l.toArrIndex(indexA)
 	arrIndexB, okB := l.toArrIndex(indexB)
 	if !okA || !okB {
@@ -178,7 +213,7 @@ func (l *CircularArrayList[T]) Swap(indexA, indexB int) bool {
 	return true
 }
 
-func (l *CircularArrayList[T]) toArrIndex(index int) (int, bool) {
+func (l *circularArrayList[T]) toArrIndex(index int) (int, bool) {
 	if index >= l.size {
 		return -1, false
 	}
@@ -190,12 +225,12 @@ func (l *CircularArrayList[T]) toArrIndex(index int) (int, bool) {
 	return arrIndex, true
 }
 
-func (l *CircularArrayList[T]) Iterator() core.Iterator[T] {
+func (l *circularArrayList[T]) Iterator() core.Iterator[T] {
 	return &calIterator[T]{l, -1, -1}
 }
 
 type calIterator[T comparable] struct {
-	l        *CircularArrayList[T]
+	l        *circularArrayList[T]
 	index    int
 	arrIndex int
 }
@@ -216,7 +251,7 @@ func (it *calIterator[T]) Value() T {
 	return it.l.arr[it.arrIndex]
 }
 
-func (l *CircularArrayList[T]) expandIfNeeded() {
+func (l *circularArrayList[T]) expandIfNeeded() {
 	if l.arr == nil {
 		l.arr = make([]T, DefaultInitSize)
 	} else if l.size >= len(l.arr) {
@@ -236,7 +271,7 @@ func (l *CircularArrayList[T]) expandIfNeeded() {
 	}
 }
 
-func (l *CircularArrayList[T]) shrinkIfNeeded() {
+func (l *circularArrayList[T]) shrinkIfNeeded() {
 	if l.arr == nil {
 		return
 	}
