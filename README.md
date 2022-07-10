@@ -3,20 +3,52 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/c1532de0f9ff4fcd9f2ec7b63792b37d)](https://www.codacy.com/gh/cuzfrog/tgods/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cuzfrog/tgods&amp;utm_campaign=Badge_Grade)
 # Typesafe Go Data Structures
 
-Your brand-new Golang collections implementation with generics.
+Your brand-new Golang collections implementation with generics. Go version >= 1.18.
 
-Data Structures:
+#### Data Structures:
 * arrayStack - fixed length first-in-last-out array based stack.
 * circularArray - variable length/cap array with fast add/remove at head or tail and random access with index.
 * linkedList - doubly linked list with fast add/remove.
 * binaryHeap - heap based min or max priority queue.
-* rbTree (under implementation..) - red black tree with no recursion but with a parent pointer in the node
+* (under implementation..) rbTree - red black tree with no recursion but with a parent pointer in the node
 
-more...
+#### Constructors:
+```go
+import "github.com/cuzfrog/tgods/collections"
 
-Go version >= 1.18.
+list := collections.NewLinkedListOf(1, 2, 3) // List[int]
+list := collections.NewCircularArrayListOf(1, 2, 3) // List[int]
+queue := collections.NewLinkedListQueue[int]() // Queue[int]
+queue := collections.NewArrayListQueue[int]() // Queue[int]
+// more...
+```
 
-## Implementations
+#### Utils:
+```go
+import "github.com/cuzfrog/tgods/utils"
+list := collections.NewLinkedListOf(1, 2, 3)
+utils.StringFrom(list) // [1, 2, 3]
+utils.SliceFrom(list) // []int{1, 2, 3}
+// more...
+```
+
+#### Semantic Iterators:
+Iteration behavior is based on which interface type is constructed.
+```go
+list := collections.NewLinkedListOf[int]() // interface List[int], implementation linkedList[int]
+list.Add(1)
+list.Add(2)
+list.Add(3)
+utils.SliceFrom(list) // []int{1, 2, 3}
+
+stack := collections.NewLinkedListStack[int]() // interface Stack[int], implementation linkedList[int]
+stack.Push(1)
+stack.Push(2)
+stack.Push(3)
+utils.SliceFrom(list) // []int{3, 2, 1}
+```
+
+## Implementations & Design
 
 All implementations implement `Collection`
 ```go

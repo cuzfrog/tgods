@@ -27,7 +27,7 @@ func (s *arrayStack[T]) Clear() {
 	s.cur = -1
 }
 
-func (s *arrayStack[T]) Enstack(elem T) bool {
+func (s *arrayStack[T]) Push(elem T) bool {
 	s.cur++
 	if s.cur >= len(s.arr) {
 		return false

@@ -36,7 +36,7 @@ type Deque[T any] interface {
 
 type Stack[T any] interface {
 	Collection[T]
-	Enstack(elem T) bool
+	Push(elem T) bool
 	Pop() (T, bool)
 	Peek() (T, bool)
 }

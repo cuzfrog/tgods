@@ -18,3 +18,7 @@ func NewLinkedStack[T comparable]() types.Stack[T] {
 func NewCircularArrayStack[T comparable]() types.Stack[T] {
 	return newCircularArrayOf[T]().withRole(stack)
 }
+
+func NewLinkedListStack[T comparable]() types.Stack[T] {
+	return newLinkedListOf[T]().withRole(stack)
+}

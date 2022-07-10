@@ -112,7 +112,7 @@ func (l *linkedList[T]) Enqueue(elem T) bool {
 	return l.AddHead(elem)
 }
 
-func (l *linkedList[T]) Enstack(elem T) bool {
+func (l *linkedList[T]) Push(elem T) bool {
 	return l.AddHead(elem)
 }
 

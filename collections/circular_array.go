@@ -82,7 +82,7 @@ func (l *circularArray[T]) AddTail(elem T) bool {
 	return l.Add(elem)
 }
 
-func (l *circularArray[T]) Enstack(elem T) bool {
+func (l *circularArray[T]) Push(elem T) bool {
 	return l.Add(elem)
 }
 

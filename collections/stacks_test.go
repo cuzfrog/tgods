@@ -19,9 +19,9 @@ func TestStackProperties(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			s := test.s
-			s.Enstack(1)
-			s.Enstack(3)
-			s.Enstack(4)
+			s.Push(1)
+			s.Push(3)
+			s.Push(4)
 			assert.Equal(t, []int{4, 3, 1}, utils.SliceFrom[int](s))
 			s.Pop()
 			assert.Equal(t, []int{3, 1}, utils.SliceFrom[int](s))

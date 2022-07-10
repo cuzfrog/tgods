@@ -48,9 +48,9 @@ func TestForStack(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			l := test.l
-			l.Enstack(3)
-			l.Enstack(5)
-			l.Enstack(2)
+			l.Push(3)
+			l.Push(5)
+			l.Push(2)
 			it := l.Iterator()
 			assert.True(t, it.Next())
 			assert.Equal(t, 0, it.Index())
