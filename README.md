@@ -5,8 +5,6 @@
 
 Your brand-new Golang collections implementation with generics.
 
-Go version >= 1.18, currently depends on `golang.org/x/exp` for `Ordered` type constraints.
-
 Data Structures:
 * arrayStack - fixed length first-in-last-out array based stack.
 * circularArray - variable length/cap array with fast add/remove at head or tail and random access with index.
@@ -15,6 +13,8 @@ Data Structures:
 * rbTree (under implementation..) - red black tree with no recursion but with a parent pointer in the node
 
 more...
+
+Go version >= 1.18.
 
 ## Implementations
 
