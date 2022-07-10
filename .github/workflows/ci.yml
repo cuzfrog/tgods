@@ -14,7 +14,7 @@ jobs:
       with:
         go-version: '1.18.3'
     - name: Test
-      run: go test -race -coverprofile=coverage.out -covermode=atomic ./...
+      run: go test -race -coverprofile=coverage.out -covermode=atomic $(go list ./... | grep -v /removed/)
     - name: Upload Coverage
       uses: codecov/codecov-action@v3
       with:

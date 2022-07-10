@@ -1,0 +1,274 @@
+package collections
+
+import (
+	"fmt"
+	"github.com/cuzfrog/tgods/funcs"
+)
+
+const defaultInitSize = 12
+const defaultShrinkThreshold = 3 // bitwise shift
+
+type circularArray[T any] struct {
+	start int //inclusive
+	end   int //exclusive
+	arr   []T
+	size  int
+	comp  funcs.Equal[T]
+	r     role
+}
+
+// newCircularArrayOf creates an auto expandable circular array based list, auto shrinkable, but will not shrink if the length is <= defaultInitSize,
+// the underlying array will be lazily created unless init values are provided, the init arr size is the same as init values'
+func newCircularArrayOf[T comparable](values ...T) *circularArray[T] {
+	var arr []T
+	var size, start int
+	length := len(values)
+	if length == 0 {
+		arr = nil
+		size = 0
+		start = -1
+	} else {
+		arr = values
+		size = length
+		start = 0
+	}
+	return &circularArray[T]{start, size, arr, size, funcs.ValueEqual[T], list}
+}
+
+// newCircularArray creates underlying array eagerly with the init size
+func newCircularArray[T comparable](initSize int) *circularArray[T] {
+	return &circularArray[T]{-1, 0, make([]T, initSize), 0, funcs.ValueEqual[T], list}
+}
+
+// newCircularArrayOfEq creates underlying array eagerly with the init size
+func newCircularArrayOfEq[T any](initSize int, eq funcs.Equal[T]) *circularArray[T] {
+	return &circularArray[T]{-1, 0, make([]T, initSize), 0, eq, list}
+}
+
+func (l *circularArray[T]) withRole(r role) *circularArray[T] {
+	l.r = r
+	return l
+}
+
+func (l *circularArray[T]) Size() int {
+	return l.size
+}
+
+// Clear drop the underlying arr, O(1)
+func (l *circularArray[T]) Clear() {
+	l.arr = nil
+	l.start = -1
+	l.end = 0
+	l.size = 0
+}
+
+// Add appends to the tail of the list, same as AddTail
+func (l *circularArray[T]) Add(elem T) bool {
+	l.expandIfNeeded()
+	if l.end >= len(l.arr) {
+		l.end = 0
+	}
+	l.arr[l.end] = elem
+	l.end++
+	l.size++
+	if l.start < 0 {
+		l.start = 0
+	}
+	return true
+}
+
+// AddTail appends to the tail of the list, same as Add
+func (l *circularArray[T]) AddTail(elem T) bool {
+	return l.Add(elem)
+}
+
+func (l *circularArray[T]) Push(elem T) bool {
+	return l.Add(elem)
+}
+
+func (l *circularArray[T]) EnqueueLast(elem T) bool {
+	return l.Add(elem)
+}
+
+// RemoveTail removes the last elem of the list, same as Remove
+func (l *circularArray[T]) RemoveTail() (elem T, found bool) {
+	if l.size == 0 {
+		return elem, false
+	}
+	if l.end <= 0 {
+		l.end = len(l.arr)
+	}
+	elem = l.arr[l.end-1]
+	l.end--
+	l.size--
+	l.shrinkIfNeeded()
+	return elem, true
+}
+
+// Remove removes the last elem of the list, same as RemoveTail
+func (l *circularArray[T]) Remove() (elem T, found bool) {
+	return l.RemoveTail()
+}
+
+func (l *circularArray[T]) Pop() (elem T, found bool) {
+	return l.RemoveTail()
+}
+
+func (l *circularArray[T]) Peek() (elem T, found bool) {
+	if l.size == 0 {
+		return elem, false
+	}
+	return l.arr[l.end-1], true
+}
+
+func (l *circularArray[T]) Dequeue() (elem T, found bool) {
+	return l.RemoveTail()
+}
+
+// Contains checks if elem exists, O(n)
+func (l *circularArray[T]) Contains(elem T) bool {
+	it := l.Iterator()
+	for it.Next() {
+		v := it.Value()
+		if l.comp(v, elem) {
+			return true
+		}
+	}
+	return false
+}
+
+// Head retrieves the first elem
+func (l *circularArray[T]) Head() (elem T, found bool) {
+	if l.size == 0 {
+		return elem, false
+	}
+	return l.arr[l.start], true
+}
+
+func (l *circularArray[T]) First() (elem T, found bool) {
+	return l.Head()
+}
+
+// Tail retrieves the last elem, same as Peek
+func (l *circularArray[T]) Tail() (T, bool) {
+	return l.Peek()
+}
+
+// AddHead prepends to the list, see Add
+func (l *circularArray[T]) AddHead(elem T) bool {
+	l.expandIfNeeded()
+	l.start--
+	if l.start < 0 {
+		l.start = len(l.arr) - 1
+	}
+	l.arr[l.start] = elem
+	l.size++
+	return true
+}
+
+func (l *circularArray[T]) Enqueue(elem T) bool {
+	return l.AddHead(elem)
+}
+
+func (l *circularArray[T]) RemoveHead() (elem T, found bool) {
+	if l.size == 0 {
+		return elem, false
+	}
+	elem = l.arr[l.start]
+	l.start++
+	if l.start >= len(l.arr) {
+		l.start = 0
+	}
+	l.size--
+	l.shrinkIfNeeded()
+	return elem, true
+}
+
+func (l *circularArray[T]) DequeueFirst() (elem T, found bool) {
+	return l.RemoveHead()
+}
+
+func (l *circularArray[T]) Get(index int) (elem T, found bool) {
+	arrIndex, ok := l.toArrIndex(index)
+	if ok {
+		return l.arr[arrIndex], true
+	}
+	return elem, false
+}
+
+// Set sets value by index and returns the old value, will not expand the list
+func (l *circularArray[T]) Set(index int, elem T) (oldElem T, found bool) {
+	arrIndex, ok := l.toArrIndex(index)
+	if ok {
+		oldElem = l.arr[arrIndex]
+		l.arr[arrIndex] = elem
+		return oldElem, true
+	}
+	return oldElem, false
+}
+
+// Swap exchanges values of provided indices, if one of the indices is invalid, returns false
+func (l *circularArray[T]) Swap(indexA, indexB int) bool {
+	arrIndexA, okA := l.toArrIndex(indexA)
+	arrIndexB, okB := l.toArrIndex(indexB)
+	if !okA || !okB {
+		return false
+	}
+	l.arr[arrIndexA], l.arr[arrIndexB] = l.arr[arrIndexB], l.arr[arrIndexA]
+	return true
+}
+
+func (l *circularArray[T]) toArrIndex(index int) (int, bool) {
+	if index >= l.size || index < 0 {
+		return -1, false
+	}
+	arrIndex := l.start + index
+	length := len(l.arr)
+	if arrIndex >= length {
+		arrIndex -= length
+	}
+	return arrIndex, true
+}
+
+func (l *circularArray[T]) expandIfNeeded() {
+	if l.arr == nil || cap(l.arr) == 0 {
+		l.arr = make([]T, defaultInitSize)
+	} else if l.size >= len(l.arr) {
+		newLength := l.size << 1
+		if newLength <= l.size {
+			panic(fmt.Sprintf("cannot expand arr of size(%d)", l.size))
+		}
+		newArr := make([]T, l.size<<1)
+		iter := l.Iterator() // TODO: try to optimize
+		for iter.Next() {
+			i, v := iter.Index(), iter.Value()
+			newArr[i] = v
+		}
+		l.arr = newArr
+		l.start = 0
+		l.end = l.size
+	}
+}
+
+func (l *circularArray[T]) shrinkIfNeeded() {
+	if l.arr == nil {
+		return
+	}
+	if l.size == 0 {
+		l.arr = nil
+		return
+	}
+	newLength := len(l.arr) >> defaultShrinkThreshold
+	if newLength <= l.size || newLength <= defaultInitSize {
+		return
+	}
+	newArr := make([]T, newLength)
+	iter := l.Iterator() // TODO: try to optimize
+	for iter.Next() {
+		i, v := iter.Index(), iter.Value()
+		newArr[i] = v
+	}
+	l.arr = newArr
+	l.start = 0
+	l.end = l.size
+}

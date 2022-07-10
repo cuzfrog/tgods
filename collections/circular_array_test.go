@@ -1,12 +1,20 @@
-package lists
+package collections
 
 import (
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
+func TestNewCircularArrayListOfType(t *testing.T) {
+	l := newCircularArrayOfEq[*intStruct](3, func(a, b *intStruct) bool { return a.v > b.v })
+	assert.False(t, l.Contains(&intStruct{2}))
+	l.Add(&intStruct{3})
+	assert.True(t, l.Contains(&intStruct{2}))
+	assert.False(t, l.Contains(&intStruct{5}))
+}
+
 func TestCircularArrayList_shrinkIfNeeded(t *testing.T) {
-	l := &CircularArrayList[int]{5, 8, make([]int, 200), 3}
+	l := &circularArray[int]{5, 8, make([]int, 200), 3, equalInt, list}
 	l.arr[l.start] = 2
 	l.arr[l.end-1] = 4
 	l.shrinkIfNeeded()
@@ -16,21 +24,21 @@ func TestCircularArrayList_shrinkIfNeeded(t *testing.T) {
 	assert.Equal(t, 3, l.Size())
 	assert.Equal(t, []int{2, 0, 4}, l.arr[0:3])
 
-	l = &CircularArrayList[int]{5, 8, make([]int, 12), 3}
+	l = &circularArray[int]{5, 8, make([]int, 12), 3, equalInt, list}
 	l.shrinkIfNeeded()
 	assert.Equal(t, 12, len(l.arr))
 
-	l = &CircularArrayList[int]{5, 8, make([]int, 14), 3}
+	l = &circularArray[int]{5, 8, make([]int, 14), 3, equalInt, list}
 	l.shrinkIfNeeded()
 	assert.Equal(t, 14, len(l.arr))
 
-	l = NewCircularArrayList[int]()
+	l = newCircularArrayOf[int]()
 	l.shrinkIfNeeded()
 }
 
 func TestCircularArrayList_expandIfNeeded(t *testing.T) {
-	l := NewCircularArrayList(1, 3, 5)
-	l.PopHead()
+	l := newCircularArrayOf(1, 3, 5)
+	l.RemoveHead()
 	l.Add(6)
 	l.expandIfNeeded()
 	assert.Equal(t, 6, len(l.arr))
@@ -39,7 +47,7 @@ func TestCircularArrayList_expandIfNeeded(t *testing.T) {
 	assert.Equal(t, 0, l.start)
 	assert.Equal(t, 3, l.end)
 
-	l = NewCircularArrayListWithInitSize[int](5)
+	l = newCircularArray[int](5)
 	l.Add(4)
 	l.AddHead(2)
 	l.expandIfNeeded()
@@ -50,13 +58,13 @@ func TestCircularArrayList_expandIfNeeded(t *testing.T) {
 }
 
 func TestCircularArrayList_Add(t *testing.T) {
-	l := NewCircularArrayList[int]()
+	l := newCircularArrayOf[int]()
 	l.Add(3)
 	assert.Equal(t, 0, l.start)
 	assert.Equal(t, 1, l.end)
 	assert.Equal(t, 1, l.size)
 	l.AddHead(7)
-	l.Add(6)
+	l.AddTail(6)
 	assert.Equal(t, 3, l.size)
 	assert.Equal(t, len(l.arr)-1, l.start)
 	assert.Equal(t, 2, l.end)
@@ -66,7 +74,7 @@ func TestCircularArrayList_Add(t *testing.T) {
 }
 
 func TestCircularArrayList_AddHead(t *testing.T) {
-	l := NewCircularArrayListWithInitSize[int](5)
+	l := newCircularArray[int](5)
 	l.AddHead(3)
 	assert.Equal(t, 1, l.size)
 	assert.Equal(t, 4, l.start)
@@ -85,7 +93,7 @@ func TestCircularArrayList_AddHead(t *testing.T) {
 }
 
 func TestCircularArrayList_Clear(t *testing.T) {
-	l := NewCircularArrayListWithInitSize[int](5)
+	l := newCircularArray[int](5)
 	l.AddHead(5)
 	l.Clear()
 	assert.Equal(t, 0, l.size)
@@ -95,7 +103,7 @@ func TestCircularArrayList_Clear(t *testing.T) {
 }
 
 func TestCircularArrayList_Contains(t *testing.T) {
-	l := NewCircularArrayListWithInitSize[int](5)
+	l := newCircularArray[int](5)
 	l.AddHead(5)
 	assert.True(t, l.Contains(5))
 	assert.False(t, l.Contains(6))
@@ -104,7 +112,7 @@ func TestCircularArrayList_Contains(t *testing.T) {
 }
 
 func TestCircularArrayList_Get(t *testing.T) {
-	l := NewCircularArrayListWithInitSize[int](5)
+	l := newCircularArray[int](5)
 	l.Add(100)
 	for i := 1; i <= 12; i++ {
 		l.AddHead(i)
@@ -119,7 +127,7 @@ func TestCircularArrayList_Get(t *testing.T) {
 }
 
 func TestCircularArrayList_Set(t *testing.T) {
-	l := NewCircularArrayListWithInitSize[int](5)
+	l := newCircularArray[int](5)
 	l.Add(100)
 	v, ok := l.Set(0, 5)
 	assert.True(t, ok)
@@ -131,7 +139,7 @@ func TestCircularArrayList_Set(t *testing.T) {
 }
 
 func TestCircularArrayList_Swap(t *testing.T) {
-	l := NewCircularArrayList(3, 6, 7, 8)
+	l := newCircularArrayOf(3, 6, 7, 8)
 	ok := l.Swap(0, 2)
 	assert.True(t, ok)
 	assert.Equal(t, []int{7, 6, 3, 8}, l.arr)
@@ -142,7 +150,7 @@ func TestCircularArrayList_Swap(t *testing.T) {
 }
 
 func TestCircularArrayList_Peek(t *testing.T) {
-	l := NewCircularArrayList(3, 5)
+	l := newCircularArrayOf(3, 5)
 	v, ok := l.Peek()
 	assert.True(t, ok)
 	assert.Equal(t, 5, v)
@@ -157,75 +165,83 @@ func TestCircularArrayList_Peek(t *testing.T) {
 }
 
 func TestCircularArrayList_Head(t *testing.T) {
-	l := NewCircularArrayList(3, 5)
+	l := newCircularArrayOf(3, 5)
 	v, ok := l.Head()
 	assert.True(t, ok)
 	assert.Equal(t, 3, v)
+	v, ok = l.First()
+	assert.True(t, ok)
+	assert.Equal(t, 3, v)
 
-	l = NewCircularArrayList[int]()
+	l = newCircularArrayOf[int]()
 	v, ok = l.Head()
 	assert.False(t, ok)
 }
 
-func TestCircularArrayList_Pop(t *testing.T) {
-	l := NewCircularArrayList(3, 5)
-	v, ok := l.Pop()
+func TestCircularArrayList_Remove(t *testing.T) {
+	l := newCircularArrayOf(3, 5)
+	v, ok := l.RemoveTail()
 	assert.True(t, ok)
 	assert.Equal(t, 5, v)
-	v, ok = l.Pop()
+	v, ok = l.RemoveTail()
 	assert.True(t, ok)
 	assert.Equal(t, 3, v)
-	v, ok = l.Pop()
+	v, ok = l.RemoveTail()
 	assert.False(t, ok)
 
-	l = &CircularArrayList[int]{4, 1, make([]int, 6), 3}
+	l = &circularArray[int]{4, 1, make([]int, 6), 3, equalInt, list}
 	l.arr[0] = 13
 	l.arr[4] = 3
 	l.arr[5] = 11
-	v, ok = l.Pop()
+	v, ok = l.RemoveTail()
 	assert.True(t, ok)
 	assert.Equal(t, 13, v)
 	assert.Equal(t, 2, l.size)
-	v, ok = l.Pop()
+	v, ok = l.RemoveTail()
 	assert.Equal(t, 11, v)
 	assert.Equal(t, 5, l.end)
 	assert.Equal(t, 1, l.size)
-	v, ok = l.Pop()
+	v, ok = l.RemoveTail()
 	assert.Equal(t, 3, v)
 	assert.Equal(t, 4, l.end)
 	assert.Equal(t, 0, l.size)
-	v, ok = l.Pop()
+	v, ok = l.RemoveTail()
 	assert.False(t, ok)
 }
 
-func TestCircularArrayList_PopHead(t *testing.T) {
-	l := NewCircularArrayList(3, 5)
-	v, ok := l.PopHead()
+func TestCircularArrayList_RemoveHead(t *testing.T) {
+	l := newCircularArrayOf(3, 5)
+	v, ok := l.RemoveHead()
 	assert.True(t, ok)
 	assert.Equal(t, 3, v)
-	v, ok = l.PopHead()
+	v, ok = l.RemoveHead()
 	assert.True(t, ok)
 	assert.Equal(t, 5, v)
-	v, ok = l.PopHead()
+	v, ok = l.RemoveHead()
 	assert.False(t, ok)
 }
 
-func TestCircularArrayList_Iterator(t *testing.T) {
-	l := NewCircularArrayList(3, 5, 7)
-	it := l.Iterator()
-	assert.True(t, it.Next())
-	assert.Equal(t, 0, it.Index())
-	assert.Equal(t, 3, it.Value())
-	assert.True(t, it.Next())
-	assert.Equal(t, 1, it.Index())
-	assert.Equal(t, 5, it.Value())
-	assert.True(t, it.Next())
-	assert.Equal(t, 2, it.Index())
-	assert.Equal(t, 7, it.Value())
-	assert.False(t, it.Next())
-	assert.False(t, it.Next())
+func TestCircularArray_toArrIndex(t *testing.T) {
+	l := newCircularArrayOf(3, 5)
+	l.AddHead(7)
+	l.Add(13)
+	i, ok := l.toArrIndex(0)
+	assert.True(t, ok)
+	assert.Equal(t, len(l.arr)-1, i)
+	i, ok = l.toArrIndex(1)
+	assert.Equal(t, 0, i)
+	i, ok = l.toArrIndex(2)
+	assert.Equal(t, 1, i)
+	i, ok = l.toArrIndex(3)
+	assert.Equal(t, 2, i)
+	i, ok = l.toArrIndex(l.Size() - 1)
+	assert.True(t, ok)
+	assert.Equal(t, 2, i)
 
-	l.Clear()
-	it = l.Iterator()
-	assert.False(t, it.Next())
+	i, ok = l.toArrIndex(-1)
+	assert.False(t, ok)
+	i, ok = l.toArrIndex(l.Size())
+	assert.False(t, ok)
+	i, ok = l.toArrIndex(4)
+	assert.False(t, ok)
 }
