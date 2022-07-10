@@ -182,17 +182,17 @@ func (l *linkedList[T]) Dequeue() (elem T, found bool) {
 	return l.Remove()
 }
 
-type llIterator[T any] struct {
+type linkedListIterator[T any] struct {
 	index int
 	head  *node[T]
 	cur   *node[T]
 }
 
 func (l *linkedList[T]) Iterator() types.Iterator[T] {
-	return &llIterator[T]{-1, l.head, nil}
+	return &linkedListIterator[T]{-1, l.head, nil}
 }
 
-func (it *llIterator[T]) Next() bool {
+func (it *linkedListIterator[T]) Next() bool {
 	if it.head == nil {
 		return false
 	}
@@ -205,14 +205,14 @@ func (it *llIterator[T]) Next() bool {
 	return it.cur != nil
 }
 
-func (it *llIterator[T]) Index() int {
+func (it *linkedListIterator[T]) Index() int {
 	if it.cur == nil {
 		panic(fmt.Sprintf("index(%d) out of range", it.index))
 	}
 	return it.index
 }
 
-func (it *llIterator[T]) Value() T {
+func (it *linkedListIterator[T]) Value() T {
 	if it.cur == nil {
 		panic(fmt.Sprintf("index(%d) out of range", it.index))
 	}

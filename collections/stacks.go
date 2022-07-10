@@ -11,10 +11,13 @@ func NewArrayStack[T comparable](size int) types.Stack[T] {
 
 // NewLinkedStack create a stack with linkedList as the implementation
 func NewLinkedStack[T comparable]() types.Stack[T] {
-	return newLinkedListOf[T]()
+	s := newLinkedListOf[T]()
+	return s
 }
 
 // NewCircularArrayStack create a stack with circularArray as the implementation
 func NewCircularArrayStack[T comparable]() types.Stack[T] {
-	return newCircularArrayOf[T]()
+	s := newCircularArrayOf[T]()
+	s.cl = stack
+	return s
 }

@@ -3,7 +3,6 @@ package collections
 import (
 	"fmt"
 	"github.com/cuzfrog/tgods/funcs"
-	"github.com/cuzfrog/tgods/types"
 )
 
 const defaultInitSize = 12
@@ -15,6 +14,7 @@ type circularArray[T any] struct {
 	arr   []T
 	size  int
 	comp  funcs.Equal[T]
+	cl    class
 }
 
 // newCircularArrayOf creates an auto expandable circular array based list, auto shrinkable, but will not shrink if the length is <= defaultInitSize,
@@ -32,17 +32,17 @@ func newCircularArrayOf[T comparable](values ...T) *circularArray[T] {
 		size = length
 		start = 0
 	}
-	return &circularArray[T]{start, size, arr, size, funcs.ValueEqual[T]}
+	return &circularArray[T]{start, size, arr, size, funcs.ValueEqual[T], list}
 }
 
 // newCircularArray creates underlying array eagerly with the init size
 func newCircularArray[T comparable](initSize int) *circularArray[T] {
-	return &circularArray[T]{-1, 0, make([]T, initSize), 0, funcs.ValueEqual[T]}
+	return &circularArray[T]{-1, 0, make([]T, initSize), 0, funcs.ValueEqual[T], list}
 }
 
 // newCircularArrayOfEq creates underlying array eagerly with the init size
 func newCircularArrayOfEq[T any](initSize int, eq funcs.Equal[T]) *circularArray[T] {
-	return &circularArray[T]{-1, 0, make([]T, initSize), 0, eq}
+	return &circularArray[T]{-1, 0, make([]T, initSize), 0, eq, list}
 }
 
 func (l *circularArray[T]) Size() int {
@@ -214,7 +214,7 @@ func (l *circularArray[T]) Swap(indexA, indexB int) bool {
 }
 
 func (l *circularArray[T]) toArrIndex(index int) (int, bool) {
-	if index >= l.size {
+	if index >= l.size || index < 0 {
 		return -1, false
 	}
 	arrIndex := l.start + index
@@ -223,38 +223,6 @@ func (l *circularArray[T]) toArrIndex(index int) (int, bool) {
 		arrIndex -= length
 	}
 	return arrIndex, true
-}
-
-func (l *circularArray[T]) Iterator() types.Iterator[T] {
-	return &calIterator[T]{l, -1, -1}
-}
-
-type calIterator[T any] struct {
-	l        *circularArray[T]
-	index    int
-	arrIndex int
-}
-
-func (it *calIterator[T]) Next() bool {
-	it.index++
-	arrIndex, ok := it.l.toArrIndex(it.index) // TODO: optimize
-	it.arrIndex = arrIndex
-	return ok
-}
-
-// Index returns current index, will not fail when invalid, should be guarded by Next()
-func (it *calIterator[T]) Index() int {
-	return it.index
-}
-
-func (it *calIterator[T]) Value() T {
-	return it.l.arr[it.arrIndex]
-}
-
-func (l *circularArray[T]) Clone() types.ArrayList[T] {
-	arr := make([]T, l.size)
-	copy(arr, l.arr)
-	return &circularArray[T]{l.start, l.end, arr, l.size, l.comp}
 }
 
 func (l *circularArray[T]) expandIfNeeded() {

@@ -1,7 +1,6 @@
 package collections
 
 import (
-	"fmt"
 	"github.com/cuzfrog/tgods/types"
 	"github.com/cuzfrog/tgods/utils"
 )
@@ -64,29 +63,23 @@ func (s *arrayStack[T]) Contains(elem T) bool {
 }
 
 func (s *arrayStack[T]) Iterator() types.Iterator[T] {
-	return &iterator[T]{s, -1}
+	return &arrayStackIterator[T]{s, s.cur + 1}
 }
 
-type iterator[T comparable] struct {
+type arrayStackIterator[T comparable] struct {
 	s   *arrayStack[T]
 	cur int
 }
 
-func (it *iterator[T]) Next() bool {
-	it.cur++
-	return it.cur <= it.s.cur
+func (it *arrayStackIterator[T]) Next() bool {
+	it.cur--
+	return it.cur >= 0
 }
 
-func (it *iterator[T]) Index() int {
-	if it.cur > it.s.cur {
-		panic(fmt.Sprintf("index(%d) out of range", it.cur))
-	}
-	return it.cur
+func (it *arrayStackIterator[T]) Index() int {
+	return it.s.Size() - 1 - it.cur
 }
 
-func (it *iterator[T]) Value() T {
-	if it.cur > it.s.cur {
-		panic(fmt.Sprintf("index(%d) out of range", it.cur))
-	}
+func (it *arrayStackIterator[T]) Value() T {
 	return it.s.arr[it.cur]
 }
