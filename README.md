@@ -5,14 +5,14 @@
 
 Your brand-new Golang collections implementation with generics. Go version >= 1.18.
 
-#### Data Structures:
+### Data Structures:
 * arrayStack - fixed length first-in-last-out array based stack.
 * circularArray - variable length/cap array with fast add/remove at head or tail and random access with index.
 * linkedList - doubly linked list with fast add/remove.
 * binaryHeap - heap based min or max priority queue.
 * (under implementation..) rbTree - red black tree with no recursion but with a parent pointer in the node
 
-#### Constructors:
+### Constructors:
 ```go
 import "github.com/cuzfrog/tgods/collections"
 
@@ -23,7 +23,7 @@ queue := collections.NewArrayListQueue[int]() // Queue[int]
 // more...
 ```
 
-#### Utils:
+### Utils:
 ```go
 import "github.com/cuzfrog/tgods/utils"
 list := collections.NewLinkedListOf(1, 2, 3)
@@ -32,7 +32,7 @@ utils.SliceFrom(list) // []int{1, 2, 3}
 // more...
 ```
 
-#### Semantic Iterators:
+### Semantic Iterators:
 Iteration behavior is based on which interface type is constructed.
 ```go
 list := collections.NewLinkedListOf[int]() // interface List[int], implementation linkedList[int]
