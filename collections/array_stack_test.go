@@ -65,19 +65,3 @@ func TestArrayStack_Pop(t *testing.T) {
 	assert.False(t, ok)
 	assert.Equal(t, 0, s.Size())
 }
-
-func TestArrayStack_Iterator(t *testing.T) {
-	s := newArrayStack[int](3)
-	s.Push(5)
-	s.Push(3)
-	iter := s.Iterator()
-	assert.True(t, iter.Next())
-	i, v := iter.Index(), iter.Value()
-	assert.Equal(t, 0, i)
-	assert.Equal(t, 3, v)
-	assert.True(t, iter.Next())
-	i, v = iter.Index(), iter.Value()
-	assert.Equal(t, 1, i)
-	assert.Equal(t, 5, v)
-	assert.False(t, iter.Next())
-}

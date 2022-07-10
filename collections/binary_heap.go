@@ -3,7 +3,6 @@ package collections
 import (
 	"github.com/cuzfrog/tgods/funcs"
 	"github.com/cuzfrog/tgods/types"
-	"github.com/cuzfrog/tgods/utils"
 )
 
 type binaryHeap[T any] struct {
@@ -41,37 +40,6 @@ func (h *binaryHeap[T]) Peek() (T, bool) {
 // Contains delegates to underlying array, O(n)
 func (h *binaryHeap[T]) Contains(elem T) bool {
 	return h.arr.Contains(elem)
-}
-
-type binaryHeapIterator[T any] struct {
-	q     types.Queue[T]
-	index int
-	v     T
-}
-
-func (it *binaryHeapIterator[T]) Next() bool {
-	if it.q.Size() <= 0 {
-		return false
-	}
-	it.index++
-	it.v, _ = it.q.Dequeue()
-	return true
-}
-
-// Index returns current index from iteration order, starting from 0.
-// If Next return false, the number returned is meaningless, it must be guarded by Next
-func (it *binaryHeapIterator[T]) Index() int {
-	return it.index
-}
-
-// Value returns current value.
-// If Next return false, the value returned is meaningless, it must be guarded by Next
-func (it *binaryHeapIterator[T]) Value() T {
-	return it.v
-}
-
-func (h *binaryHeap[T]) Iterator() types.Iterator[T] {
-	return &binaryHeapIterator[T]{h.Clone(), -1, utils.Nil[T]()}
 }
 
 func (h *binaryHeap[T]) Clone() types.Queue[T] {

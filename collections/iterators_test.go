@@ -1,7 +1,9 @@
 package collections
 
 import (
+	"github.com/cuzfrog/tgods/mocks"
 	"github.com/cuzfrog/tgods/types"
+	"github.com/cuzfrog/tgods/utils"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -42,6 +44,7 @@ func TestForStack(t *testing.T) {
 		name string
 		l    types.Stack[int]
 	}{
+		{"arrayStack", newArrayStack[int](3)},
 		{"circularArray", newCircularArrayOf[int]().withRole(stack)},
 		{"linkedList", newLinkedListOf[int]().withRole(stack)},
 	}
@@ -134,4 +137,13 @@ func TestIteratorForDeque(t *testing.T) {
 			assert.False(t, it.Next())
 		})
 	}
+}
+
+func Test_forEach(t *testing.T) {
+	c := mocks.NewMockCollectionOf(3, 4, 5)
+	arr := make([]int, 3)
+	forEach[int](c, func(index int, v int) {
+		arr[index] = v
+	})
+	assert.Equal(t, arr, utils.SliceFrom[int](c))
 }

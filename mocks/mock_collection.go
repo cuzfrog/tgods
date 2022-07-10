@@ -45,6 +45,12 @@ func (mc *mockCollection[T]) Contains(elem T) bool {
 	return false
 }
 
+func (mc *mockCollection[T]) Each(fn func(index int, elem T)) {
+	for i, t := range mc.arr {
+		fn(i, t)
+	}
+}
+
 func (mc *mockCollection[T]) Iterator() types.Iterator[T] {
 	return &mockIterator[T]{mc.arr, -1}
 }
