@@ -1,22 +1,35 @@
-package utils
+//go:build test
+
+package mocks
 
 import (
 	"github.com/cuzfrog/tgods/funcs"
 	"github.com/cuzfrog/tgods/types"
 )
 
-type mockCollection[T any] struct {
+type MockCollection[T comparable] interface {
+	types.Collection[T]
+	SetElems(values ...T)
+}
+
+type mockCollection[T comparable] struct {
 	arr  []T
 	size int
 	eq   funcs.Equal[T]
 }
 
-func newMockCollectionOf[T any](value ...T) *mockCollection[T] {
-	return &mockCollection[T]{value, len(value), nil}
+func NewMockCollectionOf[T comparable](values ...T) MockCollection[T] {
+	return &mockCollection[T]{values, len(values), funcs.ValueEqual[T]}
 }
 
-func newMockCollection[T any](eq funcs.Equal[T], value ...T) *mockCollection[T] {
-	return &mockCollection[T]{value, len(value), eq}
+func NewMockCollection[T comparable](size int) MockCollection[T] {
+	arr := make([]T, size)
+	return &mockCollection[T]{arr, 0, funcs.ValueEqual[T]}
+}
+
+func (mc *mockCollection[T]) SetElems(values ...T) {
+	mc.arr = values
+	mc.size = len(values)
 }
 
 func (mc *mockCollection[T]) Size() int {
@@ -30,6 +43,12 @@ func (mc *mockCollection[T]) Contains(elem T) bool {
 		}
 	}
 	return false
+}
+
+func (mc *mockCollection[T]) Each(fn func(index int, elem T)) {
+	for i, t := range mc.arr {
+		fn(i, t)
+	}
 }
 
 func (mc *mockCollection[T]) Iterator() types.Iterator[T] {

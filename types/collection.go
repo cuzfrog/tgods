@@ -4,6 +4,7 @@ type Collection[T any] interface {
 	Size() int
 	Contains(elem T) bool // typical time complexity O(n)
 	Iterator() Iterator[T]
+	Each(func(index int, elem T))
 	Clear()
 }
 

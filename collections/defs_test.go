@@ -1,6 +1,8 @@
 package collections
 
-import "github.com/cuzfrog/tgods/funcs"
+import (
+	"github.com/cuzfrog/tgods/funcs"
+)
 
 type intStruct struct {
 	v int

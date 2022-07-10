@@ -1,7 +1,6 @@
 package collections
 
 import (
-	"github.com/cuzfrog/tgods/types"
 	"github.com/cuzfrog/tgods/utils"
 )
 
@@ -60,26 +59,4 @@ func (s *arrayStack[T]) Contains(elem T) bool {
 		}
 	}
 	return false
-}
-
-func (s *arrayStack[T]) Iterator() types.Iterator[T] {
-	return &arrayStackIterator[T]{s, s.cur + 1}
-}
-
-type arrayStackIterator[T comparable] struct {
-	s   *arrayStack[T]
-	cur int
-}
-
-func (it *arrayStackIterator[T]) Next() bool {
-	it.cur--
-	return it.cur >= 0
-}
-
-func (it *arrayStackIterator[T]) Index() int {
-	return it.s.Size() - 1 - it.cur
-}
-
-func (it *arrayStackIterator[T]) Value() T {
-	return it.s.arr[it.cur]
 }
