@@ -1,4 +1,4 @@
-package stacks
+package collections
 
 import (
 	"github.com/stretchr/testify/assert"

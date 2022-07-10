@@ -1,4 +1,4 @@
-package lists
+package collections
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -13,14 +13,14 @@ type obj struct {
 
 func TestLinkedList_New(t *testing.T) {
 	comp := func(a string, b string) bool { return strings.Contains(a, b) }
-	l := NewLinkedListOfEqual(comp)
+	l := newLinkedListOfEq(comp)
 	l.Add("abc")
 	assert.True(t, l.Contains("ab"))
 	assert.False(t, l.Contains("bcd"))
 }
 
 func TestLinkedList_Clear(t *testing.T) {
-	l := NewLinkedList("a", "d")
+	l := newLinkedListOf("a", "d")
 	l.Clear()
 	assert.Equal(t, 0, l.size)
 	assert.Nil(t, l.head)
@@ -28,13 +28,13 @@ func TestLinkedList_Clear(t *testing.T) {
 }
 
 func TestLinkedList_Contains(t *testing.T) {
-	l := NewLinkedList("a", "d")
+	l := newLinkedListOf("a", "d")
 	assert.True(t, l.Contains("d"))
 	assert.False(t, l.Contains("ds"))
 }
 
 func TestLinkedList_Head_Tail(t *testing.T) {
-	l := NewLinkedList[int]()
+	l := newLinkedListOf[int]()
 	_, okh := l.Head()
 	assert.False(t, okh)
 	_, okt := l.Tail()
@@ -55,7 +55,7 @@ func TestLinkedList_Head_Tail(t *testing.T) {
 }
 
 func TestLinkedList_Add(t *testing.T) {
-	l := NewLinkedList[int]()
+	l := newLinkedListOf[int]()
 	l.Add(1)
 	l.Add(5)
 	assert.Equal(t, 2, l.Size())
@@ -66,13 +66,13 @@ func TestLinkedList_Add(t *testing.T) {
 	assert.Nil(t, l.head.prev)
 	assert.Nil(t, l.tail.next)
 
-	l2 := NewLinkedList[*obj]()
+	l2 := newLinkedListOf[*obj]()
 	l2.Add(nil)
 	assert.Nil(t, l2.head.v)
 }
 
 func TestLinkedList_AddHead(t *testing.T) {
-	l := NewLinkedList[int]()
+	l := newLinkedListOf[int]()
 	l.AddHead(5)
 	l.Add(1)
 	assert.Equal(t, 2, l.Size())
@@ -90,12 +90,13 @@ func TestLinkedList_AddHead(t *testing.T) {
 	assert.Nil(t, l.head.prev)
 }
 
-func TestLinkedList_Pop(t *testing.T) {
-	l := NewLinkedList[int]()
+func TestLinkedList_Remove(t *testing.T) {
+	l := newLinkedListOf[int]()
 	l.Add(1)
 	l.Add(5)
 	v1, _ := l.Remove()
 	assert.Equal(t, 5, v1)
+	assert.Nil(t, l.tail.next)
 	v2, _ := l.Remove()
 	assert.Equal(t, 1, v2)
 	assert.Equal(t, 0, l.Size())
@@ -104,18 +105,19 @@ func TestLinkedList_Pop(t *testing.T) {
 	assert.Nil(t, l.head)
 	assert.Nil(t, l.tail)
 
-	l2 := NewLinkedList[*obj]()
+	l2 := newLinkedListOf[*obj]()
 	v3, _ := l2.Remove()
 	assert.Nil(t, v3)
 }
 
 func TestLinkedList_PopHead(t *testing.T) {
-	l := NewLinkedList[int]()
+	l := newLinkedListOf[int]()
 	l.Add(1)
 	l.Add(5)
 	v, found := l.RemoveHead()
 	assert.True(t, found)
 	assert.Equal(t, 1, v)
+	assert.Nil(t, l.head.prev)
 	v, found = l.RemoveHead()
 	assert.True(t, found)
 	assert.Equal(t, 5, v)
@@ -124,7 +126,7 @@ func TestLinkedList_PopHead(t *testing.T) {
 }
 
 func TestLinkedList_Iterator(t *testing.T) {
-	l := NewLinkedList(3, 4, 6)
+	l := newLinkedListOf(3, 4, 6)
 	iter := l.Iterator()
 	assert.True(t, iter.Next())
 	i, v := iter.Index(), iter.Value()
@@ -145,7 +147,7 @@ func TestLinkedList_Iterator(t *testing.T) {
 	assert.PanicsWithValue(t, "index(3) out of range", func() { iter.Index() })
 	assert.PanicsWithValue(t, "index(3) out of range", func() { iter.Value() })
 
-	l = NewLinkedList[int]()
+	l = newLinkedListOf[int]()
 	iter = l.Iterator()
 	assert.False(t, iter.Next())
 }

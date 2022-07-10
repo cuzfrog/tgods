@@ -1,15 +1,16 @@
 package utils
 
 import (
-	"github.com/cuzfrog/tgods/lists"
 	"github.com/stretchr/testify/assert"
 	"math/rand"
 	"testing"
 )
 
 func TestSlice(t *testing.T) {
-	l := lists.NewLinkedList(1, 4, 3, 2)
-	arr := SliceFrom[int](l)
+	c := &mockCollection[int]{}
+	c.arr = []int{1, 4, 3, 2}
+	c.size = 4
+	arr := SliceFrom[int](c)
 	assert.Equal(t, []int{1, 4, 3, 2}, arr)
 }
 

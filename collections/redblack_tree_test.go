@@ -1,16 +1,13 @@
-package trees
+package collections
 
 import (
-	"github.com/cuzfrog/tgods/core"
 	"github.com/cuzfrog/tgods/utils"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
-var comp = core.CompareOrdered[int]
-
 func Test_rbNode_insert_root(t *testing.T) {
-	r, found, nn := insert(nil, 3, comp)
+	r, found, nn := insert(nil, 3, compInt)
 	assert.False(t, found)
 	assert.Equal(t, rbNode[int]{3, nil, nil, nil, true}, *r)
 	assert.Equal(t, r, nn)
@@ -34,12 +31,12 @@ func Test_rbNode_insert(t *testing.T) {
 	n60 := newRbNode(60, n50)
 	n50.b = n60
 
-	r, found, n20 := insert(n70, 20, comp)
+	r, found, n20 := insert(n70, 20, compInt)
 	assert.True(t, found)
 	assert.Equal(t, n70, r)
 	assert.Equal(t, n20, n20)
 
-	r, found, n10 := insert(n70, 10, comp)
+	r, found, n10 := insert(n70, 10, compInt)
 	assert.Equal(t, n10, n20.a)
 	assert.Equal(t, n20, n10.p)
 	assert.Equal(t, 10, n10.v)
@@ -48,15 +45,15 @@ func Test_rbNode_insert(t *testing.T) {
 		20      50
 	   10     40 60
 	*/
-	r, found, n15 := insert(n20, 15, comp)
+	r, found, n15 := insert(n20, 15, compInt)
 	assert.Equal(t, n15, n10.b)
 	assert.Equal(t, n10, n15.p)
 
-	r, found, n45 := insert(n30, 45, comp)
+	r, found, n45 := insert(n30, 45, compInt)
 	assert.Equal(t, n45, n40.b)
 	assert.Equal(t, n40, n45.p)
 
-	r, found, n35 := insert(n70, 35, comp)
+	r, found, n35 := insert(n70, 35, compInt)
 	assert.Equal(t, n40, n35.p)
 	assert.Equal(t, n35, n40.a)
 }

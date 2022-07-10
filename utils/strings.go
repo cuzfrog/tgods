@@ -2,11 +2,11 @@ package utils
 
 import (
 	"fmt"
-	"github.com/cuzfrog/tgods/core"
+	"github.com/cuzfrog/tgods/types"
 	"strings"
 )
 
-func StringFrom[T any](b core.Collection[T]) *string {
+func StringFrom[T any](b types.Collection[T]) *string {
 	str := "["
 	var values []string
 	iter := b.Iterator()

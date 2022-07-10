@@ -1,18 +1,18 @@
-package trees
+package collections
 
 import (
-	"github.com/cuzfrog/tgods/core"
+	"github.com/cuzfrog/tgods/funcs"
 )
 
 const red, black = true, false
 
 // assert rbTree implementation
-var _ Tree[int] = (*rbTree[int])(nil)
+var _ tree[int] = (*rbTree[int])(nil)
 
 type rbTree[T any] struct {
 	root *rbNode[T]
 	size int
-	comp core.Compare[T]
+	comp funcs.Compare[T]
 }
 
 // assert rbNode implementation
@@ -51,7 +51,7 @@ insert returns:
 	found - if found an existing node
 	nn - the newly created or found node
 */
-func insert[T any](n *rbNode[T], d T, comp core.Compare[T]) (r *rbNode[T], found bool, nn *rbNode[T]) {
+func insert[T any](n *rbNode[T], d T, comp funcs.Compare[T]) (r *rbNode[T], found bool, nn *rbNode[T]) {
 	if n == nil {
 		r, found = newRbNode(d, nil), false
 		nn = r

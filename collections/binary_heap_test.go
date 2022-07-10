@@ -1,8 +1,7 @@
-package queues
+package collections
 
 import (
-	"github.com/cuzfrog/tgods/core"
-	"github.com/cuzfrog/tgods/lists"
+	"github.com/cuzfrog/tgods/funcs"
 	"github.com/cuzfrog/tgods/utils"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -13,7 +12,7 @@ func TestNewHeapPriorityQueue(t *testing.T) {
 		v string
 	}
 
-	c := func(a, b *obj) int8 {
+	comp := func(a, b *obj) int8 {
 		if a.v > b.v {
 			return 1
 		} else if a.v < b.v {
@@ -21,7 +20,7 @@ func TestNewHeapPriorityQueue(t *testing.T) {
 		}
 		return 0
 	}
-	q := NewHeapPriorityQueue[*obj](c)
+	q := newBinaryHeap[*obj](comp)
 	q.Enqueue(&obj{"1"})
 	assert.Equal(t, 1, q.Size())
 	v, _ := q.Peek()
@@ -29,7 +28,7 @@ func TestNewHeapPriorityQueue(t *testing.T) {
 }
 
 func TestHeapPriorityQueue(t *testing.T) {
-	q := NewHeapPriorityQueueForMaxValue[int]()
+	q := NewHeapMaxPriorityQueue[int]()
 	q.Enqueue(6)
 	q.Enqueue(3)
 	assert.Equal(t, []int{6, 3}, utils.SliceFrom[int](q))
@@ -64,8 +63,8 @@ func TestHeapPriorityQueue(t *testing.T) {
 }
 
 func TestHeapPriorityQueue_swim(t *testing.T) {
-	arr := lists.NewCircularArrayListOf("t", "s", "r", "p", "n", "o", "a", "e", "i", "q", "w")
-	q := &binaryHeap[string]{arr, core.CompareOrdered[string]}
+	arr := newCircularArrayOf("t", "s", "r", "p", "n", "o", "a", "e", "i", "q", "w")
+	q := &binaryHeap[string]{arr, funcs.ValueCompare[string]}
 	q.swim()
 	assert.Equal(t, []string{"w", "t", "r", "p", "s", "o", "a", "e", "i", "q", "n"}, utils.SliceFrom[string](arr))
 
@@ -76,39 +75,11 @@ func TestHeapPriorityQueue_swim(t *testing.T) {
 }
 
 func TestHeapPriorityQueue_sink(t *testing.T) {
-	arr := lists.NewCircularArrayListOf("t", "s", "r", "p", "n", "o", "a", "e", "i", "h", "g")
-	q := &binaryHeap[string]{arr, core.CompareOrdered[string]}
+	arr := newCircularArrayOf("t", "s", "r", "p", "n", "o", "a", "e", "i", "h", "g")
+	q := &binaryHeap[string]{arr, funcs.ValueCompare[string]}
 	q.sink()
 	assert.Equal(t, []string{"s", "p", "r", "i", "n", "o", "a", "e", "g", "h", "t"}, utils.SliceFrom[string](arr))
 	arr.RemoveTail()
 	q.sink()
 	assert.Equal(t, []string{"r", "p", "o", "i", "n", "h", "a", "e", "g", "s"}, utils.SliceFrom[string](arr))
-}
-
-func TestHeapPriorityQueue_Iterator(t *testing.T) {
-	q := NewHeapPriorityQueueForMinValue[int]()
-	q.Enqueue(7)
-	q.Enqueue(6)
-	q.Enqueue(11)
-	q.Enqueue(7)
-	q.Enqueue(8)
-	q.Enqueue(3)
-
-	v, ok := q.Peek()
-	assert.True(t, ok)
-	assert.Equal(t, 3, v)
-	v, ok = q.Dequeue()
-	assert.Equal(t, 3, v)
-
-	q.Enqueue(1)
-	assert.Equal(t, []int{1, 6, 7, 7, 8, 11}, utils.SliceFrom[int](q))
-
-	q = NewHeapPriorityQueueForMaxValue[int]()
-	q.Enqueue(7)
-	q.Enqueue(6)
-	q.Enqueue(11)
-	q.Enqueue(7)
-	q.Enqueue(8)
-	q.Enqueue(3)
-	assert.Equal(t, []int{11, 8, 7, 7, 6, 3}, utils.SliceFrom[int](q))
 }

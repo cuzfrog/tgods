@@ -7,8 +7,9 @@ Your brand-new Golang collections implementation with generics.
 
 Go version >= 1.18, currently depends on `golang.org/x/exp` for `Ordered` type constraints.
 
+Data Structures:
 * arrayStack - fixed length first-in-last-out array based stack.
-* circularArrayList - variable length/cap list with fast add/remove at head or tail and random access with index.
+* circularArray - variable length/cap array with fast add/remove at head or tail and random access with index.
 * linkedList - doubly linked list with fast add/remove.
 * binaryHeap - heap based min or max priority queue.
 * rbTree (under implementation..) - red black tree with no recursion but with a parent pointer in the node
@@ -30,9 +31,11 @@ type Collection[T any] interface {
 | Implementation\Interface | Stack              | List               | ArrayList          | Queue              | Deque              |
 |--------------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
 | arrayStack               | :heavy_check_mark: |                    |                    |                    |                    |
-| circularArrayList        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| circularArray            | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | linkedList               | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: | :heavy_check_mark: |
-| heapPriorityQueue        |                    |                    |                    | :heavy_check_mark: |                    |
+| binaryHeap               |                    |                    |                    | :heavy_check_mark: |                    |
+
+
 
 ## Author
 

@@ -1,15 +1,10 @@
-package lists
+package collections
 
 import (
 	"fmt"
-	"github.com/cuzfrog/tgods/core"
+	"github.com/cuzfrog/tgods/funcs"
+	"github.com/cuzfrog/tgods/types"
 )
-
-// assert LinkedList implementation
-var _ core.List[int] = (*LinkedList[int])(nil)
-var _ core.Stack[int] = (*LinkedList[int])(nil)
-var _ core.Queue[int] = (*LinkedList[int])(nil)
-var _ core.Deque[int] = (*LinkedList[int])(nil)
 
 type node[T any] struct {
 	v    T
@@ -17,15 +12,15 @@ type node[T any] struct {
 	next *node[T]
 }
 
-type LinkedList[T any] struct {
+type linkedList[T any] struct {
 	head *node[T]
 	tail *node[T]
 	size int
-	comp core.Equal[T]
+	comp funcs.Equal[T]
 }
 
-func NewLinkedList[T comparable](values ...T) *LinkedList[T] {
-	l := &LinkedList[T]{nil, nil, 0, core.EqualComparable[T]}
+func newLinkedListOf[T comparable](values ...T) *linkedList[T] {
+	l := &linkedList[T]{nil, nil, 0, funcs.ValueEqual[T]}
 	length := len(values)
 	if length == 0 {
 		return l
@@ -43,24 +38,24 @@ func NewLinkedList[T comparable](values ...T) *LinkedList[T] {
 	return l
 }
 
-// NewLinkedListOfEqual creates a new empty list of custom Equal func
+// newLinkedListOfEq creates a new empty list of custom Equal func
 //   param comp - func(elem, value) bool
-func NewLinkedListOfEqual[T any](comp core.Equal[T]) *LinkedList[T] {
-	return &LinkedList[T]{nil, nil, 0, comp}
+func newLinkedListOfEq[T any](eq funcs.Equal[T]) *linkedList[T] {
+	return &linkedList[T]{nil, nil, 0, eq}
 }
 
-func (l *LinkedList[T]) Size() int {
+func (l *linkedList[T]) Size() int {
 	return l.size
 }
 
-func (l *LinkedList[T]) Clear() {
+func (l *linkedList[T]) Clear() {
 	l.size = 0
 	l.head = nil
 	l.tail = nil
 }
 
 // Contains checks if elem is present, O(n)
-func (l *LinkedList[T]) Contains(elem T) bool {
+func (l *linkedList[T]) Contains(elem T) bool {
 	iter := l.Iterator()
 	for iter.Next() {
 		v := iter.Value()
@@ -71,7 +66,7 @@ func (l *LinkedList[T]) Contains(elem T) bool {
 	return false
 }
 
-func (l *LinkedList[T]) Head() (elem T, found bool) {
+func (l *linkedList[T]) Head() (elem T, found bool) {
 	if l.size == 0 {
 		return elem, false
 	}
@@ -79,11 +74,11 @@ func (l *LinkedList[T]) Head() (elem T, found bool) {
 	return elem, true
 }
 
-func (l *LinkedList[T]) First() (elem T, found bool) {
+func (l *linkedList[T]) First() (elem T, found bool) {
 	return l.Head()
 }
 
-func (l *LinkedList[T]) Tail() (elem T, found bool) {
+func (l *linkedList[T]) Tail() (elem T, found bool) {
 	if l.size == 0 {
 		return elem, false
 	}
@@ -92,12 +87,12 @@ func (l *LinkedList[T]) Tail() (elem T, found bool) {
 }
 
 // Peek same as Tail
-func (l *LinkedList[T]) Peek() (elem T, found bool) {
+func (l *linkedList[T]) Peek() (elem T, found bool) {
 	return l.Tail()
 }
 
 // AddHead prepends to the list
-func (l *LinkedList[T]) AddHead(elem T) bool {
+func (l *linkedList[T]) AddHead(elem T) bool {
 	prevHead := l.head
 	l.head = &node[T]{elem, nil, prevHead}
 	if l.size == 0 {
@@ -109,20 +104,23 @@ func (l *LinkedList[T]) AddHead(elem T) bool {
 	return true
 }
 
-func (l *LinkedList[T]) Enqueue(elem T) bool {
+func (l *linkedList[T]) Enqueue(elem T) bool {
 	return l.AddHead(elem)
 }
 
-func (l *LinkedList[T]) Enstack(elem T) bool {
+func (l *linkedList[T]) Enstack(elem T) bool {
 	return l.AddHead(elem)
 }
 
-func (l *LinkedList[T]) RemoveHead() (elem T, found bool) {
+func (l *linkedList[T]) RemoveHead() (elem T, found bool) {
 	if l.size == 0 {
 		return elem, false
 	}
 	elem = l.head.v
 	l.head = l.head.next
+	if l.head != nil {
+		l.head.prev = nil
+	}
 	if l.size == 1 {
 		l.tail = nil
 	}
@@ -130,16 +128,16 @@ func (l *LinkedList[T]) RemoveHead() (elem T, found bool) {
 	return elem, true
 }
 
-func (l *LinkedList[T]) Pop() (elem T, found bool) {
+func (l *linkedList[T]) Pop() (elem T, found bool) {
 	return l.RemoveHead()
 }
 
-func (l *LinkedList[T]) DequeueFirst() (elem T, found bool) {
+func (l *linkedList[T]) DequeueFirst() (elem T, found bool) {
 	return l.RemoveHead()
 }
 
 // Add adds elem to the tail
-func (l *LinkedList[T]) Add(elem T) bool {
+func (l *linkedList[T]) Add(elem T) bool {
 	prevTail := l.tail
 	l.tail = &node[T]{elem, prevTail, nil}
 	if l.size == 0 {
@@ -151,21 +149,24 @@ func (l *LinkedList[T]) Add(elem T) bool {
 	return true
 }
 
-func (l *LinkedList[T]) AddTail(elem T) bool {
+func (l *linkedList[T]) AddTail(elem T) bool {
 	return l.Add(elem)
 }
 
-func (l *LinkedList[T]) EnqueueLast(elem T) bool {
+func (l *linkedList[T]) EnqueueLast(elem T) bool {
 	return l.Add(elem)
 }
 
 // Remove gets and removes the last elem
-func (l *LinkedList[T]) Remove() (elem T, found bool) {
+func (l *linkedList[T]) Remove() (elem T, found bool) {
 	if l.size == 0 {
 		return elem, false
 	}
 	elem = l.tail.v
 	l.tail = l.tail.prev
+	if l.tail != nil {
+		l.tail.next = nil
+	}
 	if l.size == 1 {
 		l.head = nil
 	}
@@ -173,11 +174,11 @@ func (l *LinkedList[T]) Remove() (elem T, found bool) {
 	return elem, true
 }
 
-func (l *LinkedList[T]) RemoveTail() (elem T, found bool) {
+func (l *linkedList[T]) RemoveTail() (elem T, found bool) {
 	return l.Remove()
 }
 
-func (l *LinkedList[T]) Dequeue() (elem T, found bool) {
+func (l *linkedList[T]) Dequeue() (elem T, found bool) {
 	return l.Remove()
 }
 
@@ -187,7 +188,7 @@ type llIterator[T any] struct {
 	cur   *node[T]
 }
 
-func (l *LinkedList[T]) Iterator() core.Iterator[T] {
+func (l *linkedList[T]) Iterator() types.Iterator[T] {
 	return &llIterator[T]{-1, l.head, nil}
 }
 

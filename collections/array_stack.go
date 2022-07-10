@@ -1,18 +1,20 @@
-package stacks
+package collections
 
 import (
 	"fmt"
-	"github.com/cuzfrog/tgods/core"
+	"github.com/cuzfrog/tgods/types"
 	"github.com/cuzfrog/tgods/utils"
 )
-
-// assert arrayStack implementation
-var _ core.Stack[int] = (*arrayStack[int])(nil)
 
 // arrayStack limited size array based stack
 type arrayStack[T comparable] struct {
 	arr []T
 	cur int
+}
+
+func newArrayStack[T comparable](size int) *arrayStack[T] {
+	arr := make([]T, size)
+	return &arrayStack[T]{arr, -1}
 }
 
 func (s *arrayStack[T]) Size() int {
@@ -61,7 +63,7 @@ func (s *arrayStack[T]) Contains(elem T) bool {
 	return false
 }
 
-func (s *arrayStack[T]) Iterator() core.Iterator[T] {
+func (s *arrayStack[T]) Iterator() types.Iterator[T] {
 	return &iterator[T]{s, -1}
 }
 

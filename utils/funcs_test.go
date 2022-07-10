@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"github.com/cuzfrog/tgods/core"
+	"github.com/cuzfrog/tgods/types"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -9,5 +9,5 @@ import (
 func TestNil(t *testing.T) {
 	assert.Equal(t, 0, Nil[int]())
 	assert.Equal(t, "", Nil[string]())
-	assert.Equal(t, nil, Nil[core.Collection[int]]())
+	assert.Equal(t, nil, Nil[types.Collection[int]]())
 }
