@@ -7,9 +7,9 @@ import (
 
 func (l *circularArray[T]) Iterator() types.Iterator[T] {
 	var getArrIndex func(i int) (int, bool)
-	if l.cl == list || l.cl == queue || l.cl == deque {
+	if l.cl == list {
 		getArrIndex = func(i int) (int, bool) { return l.toArrIndex(i) }
-	} else if l.cl == stack {
+	} else if l.cl == stack || l.cl == queue || l.cl == deque {
 		getArrIndex = func(i int) (int, bool) { return l.toArrIndex(l.size - i - 1) }
 	} else {
 		panic(fmt.Sprintf("circularArray only implement classes [list(%d), stack(%d), queue(%d), deque(%d)], but the class is '%d'", list, stack, queue, deque, l.cl))

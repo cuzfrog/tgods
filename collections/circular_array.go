@@ -32,17 +32,17 @@ func newCircularArrayOf[T comparable](values ...T) *circularArray[T] {
 		size = length
 		start = 0
 	}
-	return &circularArray[T]{start, size, arr, size, funcs.ValueEqual[T], list}
+	return &circularArray[T]{start, size, arr, size, funcs.ValueEqual[T], -1}
 }
 
 // newCircularArray creates underlying array eagerly with the init size
 func newCircularArray[T comparable](initSize int) *circularArray[T] {
-	return &circularArray[T]{-1, 0, make([]T, initSize), 0, funcs.ValueEqual[T], list}
+	return &circularArray[T]{-1, 0, make([]T, initSize), 0, funcs.ValueEqual[T], -1}
 }
 
 // newCircularArrayOfEq creates underlying array eagerly with the init size
 func newCircularArrayOfEq[T any](initSize int, eq funcs.Equal[T]) *circularArray[T] {
-	return &circularArray[T]{-1, 0, make([]T, initSize), 0, eq, list}
+	return &circularArray[T]{-1, 0, make([]T, initSize), 0, eq, -1}
 }
 
 func (l *circularArray[T]) Size() int {
