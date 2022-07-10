@@ -1,6 +1,7 @@
 package collections
 
 import (
+	"github.com/cuzfrog/tgods/funcs"
 	"github.com/cuzfrog/tgods/types"
 	"github.com/cuzfrog/tgods/utils"
 	"github.com/stretchr/testify/assert"
@@ -13,8 +14,10 @@ func TestStackProperties(t *testing.T) {
 		s    types.Stack[int]
 	}{
 		{"arrayStack", NewArrayStack[int](5)},
-		{"linkedList", NewLinkedStack[int]()},
+		{"linkedList", NewLinkedListStack[int]()},
+		{"linkedList2", NewLinkedListStackOfEq[int](funcs.ValueEqual[int])},
 		{"circularArray", NewCircularArrayStack[int]()},
+		{"circularArray2", NewCircularArrayStackOfEq[int](10, funcs.ValueEqual[int])},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
