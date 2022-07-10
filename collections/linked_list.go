@@ -1,9 +1,7 @@
 package collections
 
 import (
-	"fmt"
 	"github.com/cuzfrog/tgods/funcs"
-	"github.com/cuzfrog/tgods/types"
 )
 
 type node[T any] struct {
@@ -17,10 +15,11 @@ type linkedList[T any] struct {
 	tail *node[T]
 	size int
 	comp funcs.Equal[T]
+	r    role
 }
 
 func newLinkedListOf[T comparable](values ...T) *linkedList[T] {
-	l := &linkedList[T]{nil, nil, 0, funcs.ValueEqual[T]}
+	l := &linkedList[T]{nil, nil, 0, funcs.ValueEqual[T], list}
 	length := len(values)
 	if length == 0 {
 		return l
@@ -41,7 +40,12 @@ func newLinkedListOf[T comparable](values ...T) *linkedList[T] {
 // newLinkedListOfEq creates a new empty list of custom Equal func
 //   param comp - func(elem, value) bool
 func newLinkedListOfEq[T any](eq funcs.Equal[T]) *linkedList[T] {
-	return &linkedList[T]{nil, nil, 0, eq}
+	return &linkedList[T]{nil, nil, 0, eq, list}
+}
+
+func (l *linkedList[T]) withRole(r role) *linkedList[T] {
+	l.r = r
+	return l
 }
 
 func (l *linkedList[T]) Size() int {
@@ -180,41 +184,4 @@ func (l *linkedList[T]) RemoveTail() (elem T, found bool) {
 
 func (l *linkedList[T]) Dequeue() (elem T, found bool) {
 	return l.Remove()
-}
-
-type linkedListIterator[T any] struct {
-	index int
-	head  *node[T]
-	cur   *node[T]
-}
-
-func (l *linkedList[T]) Iterator() types.Iterator[T] {
-	return &linkedListIterator[T]{-1, l.head, nil}
-}
-
-func (it *linkedListIterator[T]) Next() bool {
-	if it.head == nil {
-		return false
-	}
-	if it.index < 0 {
-		it.cur = it.head
-	} else {
-		it.cur = it.cur.next
-	}
-	it.index++
-	return it.cur != nil
-}
-
-func (it *linkedListIterator[T]) Index() int {
-	if it.cur == nil {
-		panic(fmt.Sprintf("index(%d) out of range", it.index))
-	}
-	return it.index
-}
-
-func (it *linkedListIterator[T]) Value() T {
-	if it.cur == nil {
-		panic(fmt.Sprintf("index(%d) out of range", it.index))
-	}
-	return it.cur.v
 }

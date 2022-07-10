@@ -18,28 +18,21 @@ func NewHeapMinPriorityQueue[T constraints.Ordered]() types.Queue[T] {
 }
 
 func NewLinkedListQueue[T comparable]() types.Queue[T] {
-	l := newLinkedListOf[T]()
-	return l
+	return newLinkedListOf[T]().withRole(queue)
 }
 
 func NewLinkedListQueueOfEq[T any](eq funcs.Equal[T]) types.Queue[T] {
-	return newLinkedListOfEq[T](eq)
+	return newLinkedListOfEq[T](eq).withRole(queue)
 }
 
 func NewArrayListQueue[T comparable]() types.Queue[T] {
-	l := newCircularArrayOf[T]()
-	l.cl = queue
-	return l
+	return newCircularArrayOf[T]().withRole(queue)
 }
 
 func NewArrayListQueueOfSize[T comparable](initSize int) types.Queue[T] {
-	l := newCircularArray[T](initSize)
-	l.cl = queue
-	return l
+	return newCircularArray[T](initSize).withRole(queue)
 }
 
 func NewArrayListQueueOfEq[T any](initSize int, eq funcs.Equal[T]) types.Queue[T] {
-	l := newCircularArrayOfEq[T](initSize, eq)
-	l.cl = queue
-	return l
+	return newCircularArrayOfEq[T](initSize, eq).withRole(queue)
 }

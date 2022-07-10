@@ -9,8 +9,8 @@ type Collection[T any] interface {
 
 type Iterator[T any] interface {
 	Next() bool // checks if there's next elem, and move iterator state to next
-	Index() int
-	Value() T
+	Index() int // returns current index, or undefined value if Next gives false
+	Value() T   // returns current value, or undefined value if Next gives false
 }
 
 type IndexAccess[T any] interface {

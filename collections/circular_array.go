@@ -14,7 +14,7 @@ type circularArray[T any] struct {
 	arr   []T
 	size  int
 	comp  funcs.Equal[T]
-	cl    class
+	r     role
 }
 
 // newCircularArrayOf creates an auto expandable circular array based list, auto shrinkable, but will not shrink if the length is <= defaultInitSize,
@@ -32,17 +32,22 @@ func newCircularArrayOf[T comparable](values ...T) *circularArray[T] {
 		size = length
 		start = 0
 	}
-	return &circularArray[T]{start, size, arr, size, funcs.ValueEqual[T], -1}
+	return &circularArray[T]{start, size, arr, size, funcs.ValueEqual[T], list}
 }
 
 // newCircularArray creates underlying array eagerly with the init size
 func newCircularArray[T comparable](initSize int) *circularArray[T] {
-	return &circularArray[T]{-1, 0, make([]T, initSize), 0, funcs.ValueEqual[T], -1}
+	return &circularArray[T]{-1, 0, make([]T, initSize), 0, funcs.ValueEqual[T], list}
 }
 
 // newCircularArrayOfEq creates underlying array eagerly with the init size
 func newCircularArrayOfEq[T any](initSize int, eq funcs.Equal[T]) *circularArray[T] {
-	return &circularArray[T]{-1, 0, make([]T, initSize), 0, eq, -1}
+	return &circularArray[T]{-1, 0, make([]T, initSize), 0, eq, list}
+}
+
+func (l *circularArray[T]) withRole(r role) *circularArray[T] {
+	l.r = r
+	return l
 }
 
 func (l *circularArray[T]) Size() int {

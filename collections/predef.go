@@ -1,9 +1,9 @@
 package collections
 
-type class int
+type role int
 
 const (
-	list class = iota
+	list role = iota
 	stack
 	queue
 	deque

@@ -124,30 +124,3 @@ func TestLinkedList_PopHead(t *testing.T) {
 	_, found = l.RemoveHead()
 	assert.False(t, found)
 }
-
-func TestLinkedList_Iterator(t *testing.T) {
-	l := newLinkedListOf(3, 4, 6)
-	iter := l.Iterator()
-	assert.True(t, iter.Next())
-	i, v := iter.Index(), iter.Value()
-	assert.Equal(t, 0, i)
-	assert.Equal(t, 3, v)
-
-	assert.True(t, iter.Next())
-	i, v = iter.Index(), iter.Value()
-	assert.Equal(t, 1, i)
-	assert.Equal(t, 4, v)
-
-	assert.True(t, iter.Next())
-	i, v = iter.Index(), iter.Value()
-	assert.Equal(t, 2, i)
-	assert.Equal(t, 6, v)
-
-	assert.False(t, iter.Next())
-	assert.PanicsWithValue(t, "index(3) out of range", func() { iter.Index() })
-	assert.PanicsWithValue(t, "index(3) out of range", func() { iter.Value() })
-
-	l = newLinkedListOf[int]()
-	iter = l.Iterator()
-	assert.False(t, iter.Next())
-}
