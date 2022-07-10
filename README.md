@@ -32,29 +32,30 @@ utils.SliceFrom(list) // []int{1, 2, 3}
 // more...
 ```
 
-### Semantic Iterators:
+### Semantic Iteration:
 Iteration behavior is based on which interface type is constructed.
 ```go
 list := collections.NewLinkedListOf[int]() // interface List[int], implementation linkedList[int]
 list.Add(1)
 list.Add(2)
 list.Add(3)
-utils.SliceFrom(list) // []int{1, 2, 3}
+list.Each(func(i, v int) {fmt.Print(v)}) // 123
 
 stack := collections.NewLinkedListStack[int]() // interface Stack[int], implementation linkedList[int]
 stack.Push(1)
 stack.Push(2)
 stack.Push(3)
-utils.SliceFrom(list) // []int{3, 2, 1}
+stack.Each(func(i, v int) {fmt.Print(v)}) // 321
 ```
 
-## Implementations & Design
+## Interfaces
 
 All implementations implement `Collection`
 ```go
 type Collection[T any] interface {
 	Size() int
 	Contains(elem T) bool
+    Each(func(index int, elem T))
 	Iterator() Iterator[T]
 	Clear()
 }

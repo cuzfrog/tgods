@@ -147,3 +147,37 @@ func Test_forEach(t *testing.T) {
 	})
 	assert.Equal(t, arr, utils.SliceFrom[int](c))
 }
+
+func Test_Each(t *testing.T) {
+	c1 := NewArrayStack[int](3)
+	c1.Push(1)
+	c1.Push(2)
+	c1.Push(3)
+	c2 := NewCircularArrayListOf(1, 2, 3)
+	c3 := NewLinkedListOf(1, 2, 3)
+	c4 := NewHeapMinPriorityQueue[int]()
+	c4.Enqueue(1)
+	c4.Enqueue(2)
+	c4.Enqueue(3)
+
+	tests := []struct {
+		name string
+		c    types.Collection[int]
+	}{
+		{"ArrayStack", c1},
+		{"CircularArrayList", c2},
+		{"LinkedList", c3},
+		{"HeapMinPriorityQueue", c4},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			c := test.c
+			arr := make([]int, 3)
+			c.Each(func(i, v int) {
+				arr[i] = v
+			})
+			//c.Each(func(i, v int) { fmt.Print(v) })
+			assert.Equal(t, arr, utils.SliceFrom(c))
+		})
+	}
+}
