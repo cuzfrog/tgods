@@ -40,9 +40,11 @@ func TestArrayStack_Contains(t *testing.T) {
 
 func TestArrayStack_Peek(t *testing.T) {
 	s := newArrayStack[int](3)
+	v, ok := s.Peek()
+	assert.False(t, ok)
 	s.Enstack(5)
 	s.Enstack(3)
-	v, ok := s.Peek()
+	v, ok = s.Peek()
 	assert.Equal(t, 3, v)
 	assert.True(t, ok)
 	v, ok = s.Peek()

@@ -64,7 +64,7 @@ func TestCircularArrayList_Add(t *testing.T) {
 	assert.Equal(t, 1, l.end)
 	assert.Equal(t, 1, l.size)
 	l.AddHead(7)
-	l.Add(6)
+	l.AddTail(6)
 	assert.Equal(t, 3, l.size)
 	assert.Equal(t, len(l.arr)-1, l.start)
 	assert.Equal(t, 2, l.end)
@@ -167,6 +167,9 @@ func TestCircularArrayList_Peek(t *testing.T) {
 func TestCircularArrayList_Head(t *testing.T) {
 	l := newCircularArrayOf(3, 5)
 	v, ok := l.Head()
+	assert.True(t, ok)
+	assert.Equal(t, 3, v)
+	v, ok = l.First()
 	assert.True(t, ok)
 	assert.Equal(t, 3, v)
 
