@@ -3,6 +3,7 @@ package collections
 import (
 	"fmt"
 	"github.com/cuzfrog/tgods/funcs"
+	"github.com/cuzfrog/tgods/types"
 )
 
 const defaultInitSize = 12
@@ -13,7 +14,7 @@ type circularArray[T any] struct {
 	end   int //exclusive
 	arr   []T
 	size  int
-	comp  funcs.Equal[T]
+	comp  types.Equal[T]
 	r     role
 }
 
@@ -41,7 +42,7 @@ func newCircularArray[T comparable](initSize int) *circularArray[T] {
 }
 
 // newCircularArrayOfEq creates underlying array eagerly with the init size
-func newCircularArrayOfEq[T any](initSize int, eq funcs.Equal[T]) *circularArray[T] {
+func newCircularArrayOfEq[T any](initSize int, eq types.Equal[T]) *circularArray[T] {
 	return &circularArray[T]{-1, 0, make([]T, initSize), 0, eq, list}
 }
 
@@ -216,6 +217,12 @@ func (l *circularArray[T]) Swap(indexA, indexB int) bool {
 	}
 	l.arr[arrIndexA], l.arr[arrIndexB] = l.arr[arrIndexB], l.arr[arrIndexA]
 	return true
+}
+
+func (l *circularArray[T]) clone() *circularArray[T] {
+	arr := make([]T, l.size)
+	copy(arr, l.arr)
+	return &circularArray[T]{l.start, l.end, arr, l.size, l.comp, l.r}
 }
 
 func (l *circularArray[T]) toArrIndex(index int) (int, bool) {

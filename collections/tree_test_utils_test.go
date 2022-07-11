@@ -5,7 +5,7 @@ import (
 )
 
 func bfTraverse[T comparable](n *rbNode[T]) types.List[T] {
-	l := NewLinkedListOf[T]()
+	l := NewLinkedList[T]()
 	if n == nil {
 		return l
 	}

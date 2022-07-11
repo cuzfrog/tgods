@@ -1,11 +1,9 @@
 package funcs
 
-import "golang.org/x/exp/constraints"
-
-// Compare is a func that return 0 when a == b, 1 when a > b, -1 when a < b
-type Compare[T any] func(a, b T) int8
-
-type Equal[T any] func(a, b T) bool
+import (
+	"github.com/cuzfrog/tgods/types"
+	"golang.org/x/exp/constraints"
+)
 
 // ValueCompare bounded by constraints.Ordered
 func ValueCompare[T constraints.Ordered](a, b T) int8 {
@@ -26,11 +24,11 @@ func ValueEqual[T comparable](a, b T) bool {
 // ========== HOF =========
 
 // CompToEq is a high-order function that converts a Compare to an Equal
-func CompToEq[T any](comp Compare[T]) Equal[T] {
+func CompToEq[T any](comp types.Compare[T]) types.Equal[T] {
 	return func(a, b T) bool { return comp(a, b) == 0 }
 }
 
 // InverseComp changes a greater than Compare to a smaller than, and vice versa
-func InverseComp[T any](comp Compare[T]) Compare[T] {
+func InverseComp[T any](comp types.Compare[T]) types.Compare[T] {
 	return func(a, b T) int8 { return comp(b, a) }
 }

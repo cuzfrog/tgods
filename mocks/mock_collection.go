@@ -3,7 +3,6 @@
 package mocks
 
 import (
-	"github.com/cuzfrog/tgods/funcs"
 	"github.com/cuzfrog/tgods/types"
 )
 
@@ -12,25 +11,35 @@ type MockCollection[T comparable] interface {
 	SetElems(values ...T)
 }
 
+type MockList[T comparable] interface {
+	types.List[T]
+	SetElems(values ...T)
+}
+
 type mockCollection[T comparable] struct {
 	arr  []T
 	size int
-	eq   funcs.Equal[T]
 }
 
+// ======== Constructors ========
+
 func NewMockCollectionOf[T comparable](values ...T) MockCollection[T] {
-	return &mockCollection[T]{values, len(values), funcs.ValueEqual[T]}
+	return &mockCollection[T]{values, len(values)}
 }
 
 func NewMockCollection[T comparable](size int) MockCollection[T] {
 	arr := make([]T, size)
-	return &mockCollection[T]{arr, 0, funcs.ValueEqual[T]}
+	return &mockCollection[T]{arr, 0}
 }
+
+// ======== Mocks ========
 
 func (mc *mockCollection[T]) SetElems(values ...T) {
 	mc.arr = values
 	mc.size = len(values)
 }
+
+// ======== Implementations ========
 
 func (mc *mockCollection[T]) Size() int {
 	return mc.size
@@ -38,7 +47,7 @@ func (mc *mockCollection[T]) Size() int {
 
 func (mc *mockCollection[T]) Contains(elem T) bool {
 	for _, v := range mc.arr {
-		if mc.eq(v, elem) {
+		if v == elem {
 			return true
 		}
 	}
@@ -51,13 +60,59 @@ func (mc *mockCollection[T]) Each(fn func(index int, elem T)) {
 	}
 }
 
-func (mc *mockCollection[T]) Iterator() types.Iterator[T] {
-	return &mockIterator[T]{mc.arr, -1}
-}
-
 func (mc *mockCollection[T]) Clear() {
 	mc.arr = make([]T, 0)
 	mc.size = 0
+}
+
+func (mc *mockCollection[T]) AddHead(elem T) bool {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (mc *mockCollection[T]) RemoveHead() (T, bool) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (mc *mockCollection[T]) Head() (T, bool) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (mc *mockCollection[T]) AddTail(elem T) bool {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (mc *mockCollection[T]) RemoveTail() (T, bool) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (mc *mockCollection[T]) Add(elem T) bool {
+	if len(mc.arr) == 0 {
+		mc.arr = make([]T, 32)
+	}
+	mc.arr[mc.size] = elem
+	mc.size++
+	return true
+}
+
+func (mc *mockCollection[T]) Remove() (T, bool) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (mc *mockCollection[T]) Tail() (T, bool) {
+	//TODO implement me
+	panic("implement me")
+}
+
+// ======== Iterator ========
+
+func (mc *mockCollection[T]) Iterator() types.Iterator[T] {
+	return &mockIterator[T]{mc.arr, -1}
 }
 
 type mockIterator[T any] struct {

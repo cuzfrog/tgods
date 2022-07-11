@@ -6,7 +6,7 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
-func NewHeapPriorityQueue[T any](comp funcs.Compare[T]) types.Queue[T] {
+func NewHeapPriorityQueue[T any](comp types.Compare[T]) types.Queue[T] {
 	return &binaryHeap[T]{newCircularArrayOfEq[T](0, funcs.CompToEq(comp)), comp}
 }
 
@@ -21,7 +21,7 @@ func NewLinkedListQueue[T comparable]() types.Queue[T] {
 	return newLinkedListOf[T]().withRole(queue)
 }
 
-func NewLinkedListQueueOfEq[T any](eq funcs.Equal[T]) types.Queue[T] {
+func NewLinkedListQueueOfEq[T any](eq types.Equal[T]) types.Queue[T] {
 	return newLinkedListOfEq[T](eq).withRole(queue)
 }
 
@@ -33,6 +33,6 @@ func NewArrayListQueueOfSize[T comparable](initSize int) types.Queue[T] {
 	return newCircularArray[T](initSize).withRole(queue)
 }
 
-func NewArrayListQueueOfEq[T any](initSize int, eq funcs.Equal[T]) types.Queue[T] {
+func NewArrayListQueueOfEq[T any](initSize int, eq types.Equal[T]) types.Queue[T] {
 	return newCircularArrayOfEq[T](initSize, eq).withRole(queue)
 }

@@ -2,6 +2,7 @@ package collections
 
 import (
 	"github.com/cuzfrog/tgods/funcs"
+	"github.com/cuzfrog/tgods/types"
 )
 
 type node[T any] struct {
@@ -14,12 +15,16 @@ type linkedList[T any] struct {
 	head *node[T]
 	tail *node[T]
 	size int
-	comp funcs.Equal[T]
+	comp types.Equal[T]
 	r    role
 }
 
 func newLinkedListOf[T comparable](values ...T) *linkedList[T] {
-	l := &linkedList[T]{nil, nil, 0, funcs.ValueEqual[T], list}
+	return newLinkedListOfEq(funcs.ValueEqual[T], values...)
+}
+
+func newLinkedListOfEq[T any](eq types.Equal[T], values ...T) *linkedList[T] {
+	l := &linkedList[T]{nil, nil, 0, eq, list}
 	length := len(values)
 	if length == 0 {
 		return l
@@ -35,12 +40,6 @@ func newLinkedListOf[T comparable](values ...T) *linkedList[T] {
 		l.size++
 	}
 	return l
-}
-
-// newLinkedListOfEq creates a new empty list of custom Equal func
-//   param comp - func(elem, value) bool
-func newLinkedListOfEq[T any](eq funcs.Equal[T]) *linkedList[T] {
-	return &linkedList[T]{nil, nil, 0, eq, list}
 }
 
 func (l *linkedList[T]) withRole(r role) *linkedList[T] {

@@ -1,6 +1,7 @@
 package collections
 
 import (
+	"github.com/cuzfrog/tgods/utils"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -219,6 +220,13 @@ func TestCircularArrayList_RemoveHead(t *testing.T) {
 	assert.Equal(t, 5, v)
 	v, ok = l.RemoveHead()
 	assert.False(t, ok)
+}
+
+func TestCircularArrayList_Clone(t *testing.T) {
+	l := newCircularArrayOf(3, 5, 7)
+	nl := l.clone()
+	assert.NotSame(t, l, nl)
+	assert.Equal(t, utils.SliceFrom[int](l), utils.SliceFrom[int](nl))
 }
 
 func TestCircularArray_toArrIndex(t *testing.T) {

@@ -1,10 +1,11 @@
 package types
 
 type Collection[T any] interface {
-	Size() int
+	Add(elem T) bool
 	Contains(elem T) bool // typical time complexity O(n)
 	Iterator() Iterator[T]
 	Each(func(index int, elem T))
+	Size() int
 	Clear()
 }
 
@@ -45,7 +46,10 @@ type Stack[T any] interface {
 type ArrayList[T any] interface {
 	List[T]
 	IndexAccess[T]
-	Cloneable[T, ArrayList[T]]
+}
+
+type LinkedList[T any] interface {
+	List[T]
 }
 
 type List[T any] interface {
@@ -55,7 +59,6 @@ type List[T any] interface {
 	Head() (T, bool)
 	AddTail(elem T) bool
 	RemoveTail() (T, bool)
-	Add(elem T) bool   // alias for AddTail
 	Remove() (T, bool) // alias for RemoveTail
 	Tail() (T, bool)
 }
