@@ -43,7 +43,7 @@ func TestArrayStack_Peek(t *testing.T) {
 	v, ok := s.Peek()
 	assert.False(t, ok)
 	s.Push(5)
-	s.Push(3)
+	s.Add(3)
 	v, ok = s.Peek()
 	assert.Equal(t, 3, v)
 	assert.True(t, ok)
