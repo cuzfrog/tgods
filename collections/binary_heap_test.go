@@ -30,7 +30,7 @@ func TestNewHeapPriorityQueue(t *testing.T) {
 func TestHeapPriorityQueue(t *testing.T) {
 	q := NewHeapMaxPriorityQueue[int]()
 	q.Enqueue(6)
-	q.Enqueue(3)
+	q.Add(3)
 	assert.Equal(t, []int{6, 3}, utils.SliceFrom[int](q))
 	q.Enqueue(7)
 	assert.Equal(t, []int{7, 6, 3}, utils.SliceFrom[int](q))

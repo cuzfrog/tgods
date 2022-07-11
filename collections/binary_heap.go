@@ -6,11 +6,11 @@ import (
 )
 
 type binaryHeap[T any] struct {
-	arr  types.ArrayList[T]
-	comp funcs.Compare[T]
+	arr  *circularArray[T]
+	comp types.Compare[T]
 }
 
-func newBinaryHeap[T any](comp funcs.Compare[T]) *binaryHeap[T] {
+func newBinaryHeap[T any](comp types.Compare[T]) *binaryHeap[T] {
 	return &binaryHeap[T]{newCircularArrayOfEq(0, funcs.CompToEq(comp)), comp}
 }
 
@@ -28,6 +28,10 @@ func (h *binaryHeap[T]) Enqueue(elem T) bool {
 	return ret
 }
 
+func (h *binaryHeap[T]) Add(elem T) bool {
+	return h.Enqueue(elem)
+}
+
 func (h *binaryHeap[T]) Dequeue() (T, bool) {
 	h.sink()
 	return h.arr.Remove()
@@ -43,7 +47,7 @@ func (h *binaryHeap[T]) Contains(elem T) bool {
 }
 
 func (h *binaryHeap[T]) Clone() types.Queue[T] {
-	return &binaryHeap[T]{h.arr.Clone(), h.comp}
+	return &binaryHeap[T]{h.arr.clone(), h.comp}
 }
 
 // swim reheapifies by checking and moving up the last element of the arr, this should be called after adding

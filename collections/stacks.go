@@ -1,7 +1,6 @@
 package collections
 
 import (
-	"github.com/cuzfrog/tgods/funcs"
 	"github.com/cuzfrog/tgods/types"
 )
 
@@ -16,7 +15,7 @@ func NewLinkedListStack[T comparable]() types.Stack[T] {
 }
 
 // NewLinkedListStackOfEq creates a stack from a linkedList with custom Equal
-func NewLinkedListStackOfEq[T any](eq funcs.Equal[T]) types.Stack[T] {
+func NewLinkedListStackOfEq[T any](eq types.Equal[T]) types.Stack[T] {
 	return newLinkedListOfEq[T](eq).withRole(stack)
 }
 
@@ -26,6 +25,6 @@ func NewCircularArrayStack[T comparable]() types.Stack[T] {
 }
 
 // NewCircularArrayStackOfEq creates a stack from an auto-recap circularArray with initSize and custom Equal
-func NewCircularArrayStackOfEq[T any](initSize int, eq funcs.Equal[T]) types.Stack[T] {
+func NewCircularArrayStackOfEq[T any](initSize int, eq types.Equal[T]) types.Stack[T] {
 	return newCircularArrayOfEq[T](initSize, eq).withRole(stack)
 }

@@ -35,6 +35,10 @@ func (s *arrayStack[T]) Push(elem T) bool {
 	return true
 }
 
+func (s *arrayStack[T]) Add(elem T) bool {
+	return s.Push(elem)
+}
+
 func (s *arrayStack[T]) Pop() (elem T, found bool) {
 	if s.cur < 0 {
 		return elem, false

@@ -1,30 +1,29 @@
 package collections
 
 import (
-	"github.com/cuzfrog/tgods/funcs"
 	"github.com/cuzfrog/tgods/types"
 )
 
-// NewCircularArrayListOf creates an auto expandable circular array based list, auto shrinkable, but will not shrink if the length is <= defaultInitSize,
+// NewCircularArrayList creates an auto expandable circular array based list, auto shrinkable, but will not shrink if the length is <= defaultInitSize,
 // the underlying array will be lazily created unless init values are provided, the init arr size is the same as init values'
-func NewCircularArrayListOf[T comparable](values ...T) types.ArrayList[T] {
+func NewCircularArrayList[T comparable](values ...T) types.ArrayList[T] {
 	return newCircularArrayOf[T](values...).withRole(list)
 }
 
-// NewCircularArrayList creates underlying array eagerly with the init size
-func NewCircularArrayList[T comparable](initSize int) types.ArrayList[T] {
+// NewCircularArrayListOfSize creates underlying array eagerly with the init size
+func NewCircularArrayListOfSize[T comparable](initSize int) types.ArrayList[T] {
 	return newCircularArray[T](initSize).withRole(list)
 }
 
 // NewCircularArrayListOfEq creates underlying array eagerly with the init size
-func NewCircularArrayListOfEq[T any](initSize int, comp funcs.Equal[T]) types.ArrayList[T] {
+func NewCircularArrayListOfEq[T any](initSize int, comp types.Equal[T]) types.ArrayList[T] {
 	return newCircularArrayOfEq(initSize, comp).withRole(list)
 }
 
-func NewLinkedListOf[T comparable](values ...T) types.List[T] {
+func NewLinkedList[T comparable](values ...T) types.LinkedList[T] {
 	return newLinkedListOf[T](values...).withRole(list)
 }
 
-func NewLinkedListOfEq[T any](equal funcs.Equal[T]) types.List[T] {
-	return newLinkedListOfEq[T](equal).withRole(list)
+func NewLinkedListOfEq[T any](equal types.Equal[T], values ...T) types.LinkedList[T] {
+	return newLinkedListOfEq[T](equal, values...).withRole(list)
 }

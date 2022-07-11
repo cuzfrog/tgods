@@ -13,10 +13,10 @@ func TestListProperties(t *testing.T) {
 		name string
 		l    types.List[int]
 	}{
-		{"circularArrayList1", NewCircularArrayListOf[int]()},
-		{"circularArrayList2", NewCircularArrayList[int](0)},
+		{"circularArrayList1", NewCircularArrayList[int]()},
+		{"circularArrayList2", NewCircularArrayListOfSize[int](0)},
 		{"circularArrayList3", NewCircularArrayListOfEq[int](0, funcs.ValueEqual[int])},
-		{"linkedList1", NewLinkedListOf[int]()},
+		{"linkedList1", NewLinkedList[int]()},
 		{"linkedList2", NewLinkedListOfEq[int](funcs.ValueEqual[int])},
 	}
 	for _, test := range tests {
