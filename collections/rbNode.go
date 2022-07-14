@@ -6,39 +6,12 @@ import (
 
 const red, black = true, false
 
-// assert rbTree implementation
-var _ tree[int] = (*rbTree[int])(nil)
-
-type rbTree[T any] struct {
-	root *rbNode[T]
-	size int
-	comp types.Compare[T]
-}
-
-// assert rbNode implementation
-//var _ node[int] = (*rbNode[int])(nil)
-
 type rbNode[T any] struct {
 	v T
 	a *rbNode[T]
 	b *rbNode[T]
 	p *rbNode[T]
 	c bool
-}
-
-func (t *rbTree[T]) Insert(d T) bool {
-	r, found, nn := insert(t.root, d, t.comp)
-	t.root = r
-	for true {
-		nn = rebalance(nn)
-		if nn == nil {
-			break
-		}
-	}
-	if !found {
-		t.size++
-	}
-	return found
 }
 
 func newRbNode[T any](d T, p *rbNode[T]) *rbNode[T] {
