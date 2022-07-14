@@ -201,6 +201,72 @@ func Test_rbNode_rebalance_rotateLR(t *testing.T) {
 	assert.Equal(t, []int{25, 20, 30, 50}, utils.SliceFrom[int](l))
 }
 
+func Test_rbNode_rebalance_rotateRR(t *testing.T) {
+	/*
+		    30b
+		20b      50r
+		            55r
+	*/
+	n30 := newRbNode(30, nil)
+	n30.c = black
+	n20 := newRbNode(20, n30)
+	n20.c = black
+	n30.a = n20
+	n50 := newRbNode(50, n30)
+	n50.c = red
+	n30.b = n50
+	n55 := newRbNode(55, n50)
+	n55.c = red
+	n50.b = n55
+
+	r := rebalance(n55)
+	/*
+			    50b
+			30r      55r
+		  20b
+	*/
+	assert.Equal(t, n50, r)
+	assert.Equal(t, black, n50.c)
+	assert.Equal(t, red, n30.c)
+	assert.Equal(t, black, n20.c)
+	assert.Equal(t, red, n55.c)
+	l := bfTraverse[int](r)
+	assert.Equal(t, []int{50, 30, 55, 20}, utils.SliceFrom[int](l))
+}
+
+func Test_rbNode_rebalance_rotateRL(t *testing.T) {
+	/*
+		    30b
+		20b      50r
+		       45r
+	*/
+	n30 := newRbNode(30, nil)
+	n30.c = black
+	n20 := newRbNode(20, n30)
+	n20.c = black
+	n30.a = n20
+	n50 := newRbNode(50, n30)
+	n50.c = red
+	n30.b = n50
+	n45 := newRbNode(45, n50)
+	n45.c = red
+	n50.a = n45
+
+	r := rebalance(n45)
+	/*
+			    45b
+			30r      50r
+		  20b
+	*/
+	assert.Equal(t, n45, r)
+	assert.Equal(t, red, n50.c)
+	assert.Equal(t, red, n30.c)
+	assert.Equal(t, black, n20.c)
+	assert.Equal(t, black, n45.c)
+	l := bfTraverse[int](r)
+	assert.Equal(t, []int{45, 30, 50, 20}, utils.SliceFrom[int](l))
+}
+
 func Test_swapLR(t *testing.T) {
 	/*
 				    30b

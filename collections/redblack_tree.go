@@ -112,7 +112,7 @@ func rebalance[T any](n *rbNode[T]) (r *rbNode[T]) {
 			swapColor(r, r.b)
 		} else { // right branch
 			if n == n.p.a {
-				rotateRight(n)
+				rotateRight(np)
 			}
 			r = rotateLeft(ngp)
 			swapColor(r, r.a)
