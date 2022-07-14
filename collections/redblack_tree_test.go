@@ -135,6 +135,39 @@ func Test_rbNode_rebalance_recolorLeft(t *testing.T) {
 	assert.Equal(t, []int{30, 20, 50, 25}, utils.SliceFrom[int](l))
 }
 
+func Test_rbNode_rebalance_rotateLL(t *testing.T) {
+	/*
+			    30b
+			20r      50b
+		  15r
+	*/
+	n30 := newRbNode(30, nil)
+	n30.c = black
+	n20 := newRbNode(20, n30)
+	n20.c = red
+	n15 := newRbNode(15, n20)
+	n15.c = red
+	n20.a = n15
+	n30.a = n20
+	n50 := newRbNode(50, n30)
+	n50.c = black
+	n30.b = n50
+
+	r := rebalance(n15)
+	/*
+		    20b
+		15r     30r
+		            50b
+	*/
+	assert.Equal(t, n20, r)
+	assert.Equal(t, black, n20.c)
+	assert.Equal(t, red, n15.c)
+	assert.Equal(t, black, n50.c)
+	assert.Equal(t, red, n30.c)
+	l := bfTraverse[int](r)
+	assert.Equal(t, []int{20, 15, 30, 50}, utils.SliceFrom[int](l))
+}
+
 func Test_rbNode_rebalance_rotateLR(t *testing.T) {
 	/*
 		    30b
