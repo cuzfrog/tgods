@@ -4,7 +4,7 @@
 
 # Typesafe Go Data Structures
 
-Your brand-new Golang collections implementation with generics. Go version >= 1.18.
+Your brand-new Golang collections implementation with generics. Go version >= [1.18](https://tip.golang.org/doc/go1.18).
 
 ### Data Structures:
 
