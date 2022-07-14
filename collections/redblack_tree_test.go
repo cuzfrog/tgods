@@ -152,12 +152,13 @@ func Test_rbNode_rebalance_rotateLR(t *testing.T) {
 	n50 := newRbNode(50, n30)
 	n50.c = black
 	n30.b = n50
+
+	r := rebalance(n25)
 	/*
 		    25b
 		20r      30r
 		            50b
 	*/
-	r := rebalance(n25)
 	assert.Equal(t, n25, r)
 	assert.Equal(t, black, n25.c)
 	assert.Equal(t, red, n20.c)
@@ -195,7 +196,7 @@ func Test_swapLR(t *testing.T) {
 			     20r   27
 		           23
 	*/
-	swapLR(n25)
+	rotateLeft(n20)
 	l := bfTraverse[int](n30)
 	assert.Equal(t, []int{30, 25, 50, 20, 27, 23}, utils.SliceFrom[int](l))
 	assert.Equal(t, n25, n30.a)
@@ -238,7 +239,7 @@ func Test_swapRL(t *testing.T) {
 			                35   50r
 		                        45
 	*/
-	swapRL(n40)
+	rotateRight(n50)
 	l = bfTraverse[int](n30)
 	assert.Equal(t, n20, n30.a)
 	assert.Equal(t, n40, n30.b)

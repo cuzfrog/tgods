@@ -87,26 +87,35 @@ func insert[T any](n *rbNode[T], d T, comp types.Compare[T]) (r *rbNode[T], foun
 
 // rebalance recolors and/or rotates when necessary, returns next rectifiable node or nil if finishes
 func rebalance[T any](n *rbNode[T]) (r *rbNode[T]) {
-	if n.p == nil {
+	np := n.p
+	if np == nil {
 		n.c = black
 		return nil
 	}
-	if n.p.c == black {
+	if np.c == black {
 		return nil
 	}
 	// when np is red, ngp must exist
-	ngp := n.p.p
+	ngp := np.p
 	nu := n.uncle()
 	if nu.color() == red {
-		n.p.setColor(black)
+		np.setColor(black)
 		nu.setColor(black)
 		ngp.setColor(red)
 		r = ngp
 	} else {
-		if n.p == ngp { // left branch
+		if n.p == ngp.a { // left branch
+			if n == n.p.b {
+				rotateLeft(np)
+			}
 			r = rotateRight(ngp)
+			swapColor(r, r.b)
 		} else { // right branch
+			if n == n.p.a {
+				rotateRight(n)
+			}
 			r = rotateLeft(ngp)
+			swapColor(r, r.a)
 		}
 	}
 	return r
@@ -124,28 +133,8 @@ func (n *rbNode[T]) uncle() *rbNode[T] {
 	}
 }
 
-// swapLR changes LR to LL; contract is ngp exists, np is the left child of ngp
-func swapLR[T any](n *rbNode[T]) {
-	p := n.p
-	if n != p.b {
-		return
-	}
-	ngp := p.p
-	ngp.a, n.p = n, ngp
-	p.b, n.a, n.a.p = n.a, p, p
-	p.p = n
-}
-
-// swapRL changes RL to RR; contract is ngp exists, np is the right child of ngp
-func swapRL[T any](n *rbNode[T]) {
-	p := n.p
-	if n != p.a {
-		return
-	}
-	ngp := p.p
-	ngp.b, n.p = n, ngp
-	p.a, n.b, n.b.p = n.b, p, p
-	p.p = n
+func swapColor[T any](a, b *rbNode[T]) {
+	a.c, b.c = b.c, a.c
 }
 
 func rotateLeft[T any](n *rbNode[T]) (r *rbNode[T]) {
