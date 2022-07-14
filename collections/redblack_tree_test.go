@@ -172,7 +172,7 @@ func Test_swapLR(t *testing.T) {
 				    30b
 				20r      50b
 			      25r
-		         23
+		         23 27
 	*/
 	n30 := newRbNode(30, nil)
 	n30.c = black
@@ -187,21 +187,69 @@ func Test_swapLR(t *testing.T) {
 	n50 := newRbNode(50, n30)
 	n50.c = black
 	n30.b = n50
+	n27 := newRbNode(27, n25)
+	n25.b = n27
 	/*
 					    30b
 					25r      50b
-			     20r
-		          23
+			     20r   27
+		           23
 	*/
 	swapLR(n25)
 	l := bfTraverse[int](n30)
-	assert.Equal(t, []int{30, 25, 50, 20, 23}, utils.SliceFrom[int](l))
+	assert.Equal(t, []int{30, 25, 50, 20, 27, 23}, utils.SliceFrom[int](l))
 	assert.Equal(t, n25, n30.a)
 	assert.Equal(t, n30, n25.p)
 	assert.Equal(t, n20, n25.a)
 	assert.Equal(t, n25, n20.p)
 	assert.Equal(t, n23, n20.b)
 	assert.Equal(t, n20, n23.p)
+	assert.Equal(t, n27, n25.b)
+	assert.Equal(t, n25, n27.p)
+}
+
+func Test_swapRL(t *testing.T) {
+	/*
+				    30b
+				20b      50r
+			           40r
+		              35  45
+	*/
+	n30 := newRbNode(30, nil)
+	n30.c = black
+	n20 := newRbNode(20, n30)
+	n20.c = red
+	n30.a = n20
+	n50 := newRbNode(50, n30)
+	n50.c = black
+	n30.b = n50
+	n40 := newRbNode(40, n50)
+	n50.a = n40
+	n40.c = red
+	n35 := newRbNode(35, n40)
+	n40.a = n35
+	n45 := newRbNode(45, n40)
+	n40.b = n45
+	l := bfTraverse[int](n30)
+	assert.Equal(t, []int{30, 20, 50, 40, 35, 45}, utils.SliceFrom[int](l))
+	/*
+					    30b
+					20b        40b
+			                35   50r
+		                        45
+	*/
+	swapRL(n40)
+	l = bfTraverse[int](n30)
+	assert.Equal(t, n20, n30.a)
+	assert.Equal(t, n40, n30.b)
+	assert.Equal(t, n30, n40.p)
+	assert.Equal(t, n35, n40.a)
+	assert.Equal(t, n40, n35.p)
+	assert.Equal(t, n50, n40.b)
+	assert.Equal(t, n40, n50.p)
+	assert.Equal(t, n45, n50.a)
+	assert.Equal(t, n50, n45.p)
+	assert.Equal(t, []int{30, 20, 40, 35, 50, 45}, utils.SliceFrom[int](l))
 }
 
 func Test_rbNode_rotate(t *testing.T) {
