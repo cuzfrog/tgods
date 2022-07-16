@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestRbTree_Insert(t *testing.T) {
+func TestRbTree_Properties(t *testing.T) {
 	tree := newRbTree(funcs.ValueCompare[int])
 	assert.False(t, tree.Insert(10))
 	assert.False(t, tree.Insert(20))
@@ -88,4 +88,18 @@ func TestRbTree_Insert(t *testing.T) {
 	*/
 	l = bfTraverse[int](r)
 	assert.Equal(t, []int{40, 20, 60, 10, 30, 50, 70}, utils.SliceFrom[int](l))
+
+	dd, found := tree.Delete(5)
+	assert.False(t, found)
+	dd, found = tree.Delete(40)
+	assert.Equal(t, 40, dd)
+	assert.Equal(t, 6, tree.size)
+	assert.True(t, found)
+	tree.Delete(10)
+	tree.Delete(20)
+	tree.Delete(30)
+	tree.Delete(50)
+	tree.Delete(60)
+	l = bfTraverse[int](tree.root)
+	assert.Equal(t, []int{70}, utils.SliceFrom[int](l))
 }
