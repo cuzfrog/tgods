@@ -59,10 +59,10 @@ func insert[T any](n *rbNode[T], d T, comp types.Compare[T]) (r *rbNode[T], foun
 	return n, found, nn
 }
 
-// delete removes a node with given value d returns:
+// deleteNode removes a node with given value d returns:
 //  found true if there's a node deleted
 //  nd the removed node
-func delete[T any](r *rbNode[T], d T, comp types.Compare[T]) (nd *rbNode[T], found bool) {
+func deleteNode[T any](r *rbNode[T], d T, comp types.Compare[T]) (nd *rbNode[T], found bool) {
 	nd = r
 	for true {
 		if nd == nil {
@@ -89,16 +89,21 @@ func delete[T any](r *rbNode[T], d T, comp types.Compare[T]) (nd *rbNode[T], fou
 							nds.b.setColor(black)
 							rotateLeft(ndp)
 						} else if nds.a.color() == red { // RL
-
+							nds.a.setColor(black)
+							rotateRight(nds)
+							rotateLeft(ndp)
 						} else { // black nds children
 
 						}
 					} else {
 						nds := ndp.a
 						if nds.a.color() == red { // LL
-
+							nds.a.setColor(black)
+							rotateRight(ndp)
 						} else if nds.b.color() == red { // LR
-
+							nds.b.setColor(black)
+							rotateLeft(nds)
+							rotateRight(ndp)
 						} else { // black nds children
 
 						}
