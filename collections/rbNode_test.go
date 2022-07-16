@@ -171,7 +171,7 @@ func Test_rbNode_delete(t *testing.T) {
 			n25 := newRbNode(25, n20, right, black)
 			n15 := newRbNode(15, n20, left, black)
 			newRbNode(50, n30, right, black)
-			n13 := newRbNode(23, n15, left, red)
+			n13 := newRbNode(13, n15, left, red)
 			nd, _ := deleteNode(n30, 25, compInt)
 			/*
 					    30b
@@ -185,6 +185,33 @@ func Test_rbNode_delete(t *testing.T) {
 			assert.Equal(t, n15, n30.a)
 			assert.Equal(t, n13, n15.a)
 			assert.Equal(t, n20, n15.b)
+		})
+		t.Run("sibling black, red child LR", func(t *testing.T) {
+			/*
+						    30b
+						20b      50b
+					  15b  25b      ...
+				        17r
+			*/
+			n30 := newRbNode(30, nil, false, black)
+			n20 := newRbNode(20, n30, left, black)
+			n25 := newRbNode(25, n20, right, black)
+			n15 := newRbNode(15, n20, left, black)
+			newRbNode(50, n30, right, black)
+			n17 := newRbNode(17, n15, right, red)
+			nd, _ := deleteNode(n30, 25, compInt)
+			/*
+					    30b
+					17b      50b
+				 15b  20b        ...
+			*/
+			assert.Same(t, n25, nd)
+			assert.Equal(t, black, n20.c)
+			assert.Equal(t, black, n15.c)
+			assert.Equal(t, black, n17.c)
+			assert.Equal(t, n17, n30.a)
+			assert.Equal(t, n15, n17.a)
+			assert.Equal(t, n20, n17.b)
 		})
 		t.Run("sibling black, with black children", func(t *testing.T) {
 
