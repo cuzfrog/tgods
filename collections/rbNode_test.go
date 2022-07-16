@@ -19,17 +19,12 @@ func Test_rbNode_insert(t *testing.T) {
 	20      50
 	      40 60
 	*/
-	n70 := newRbNode(70, nil)
-	n30 := newRbNode(30, n70)
-	n70.a = n30
-	n20 := newRbNode(20, n30)
-	n30.a = n20
-	n50 := newRbNode(50, n30)
-	n30.b = n50
-	n40 := newRbNode(40, n50)
-	n50.a = n40
-	n60 := newRbNode(60, n50)
-	n50.b = n60
+	n70 := newRbNode(70, nil, false, false)
+	n30 := newRbNode(30, n70, left, false)
+	n20 := newRbNode(20, n30, left, false)
+	n50 := newRbNode(50, n30, right, false)
+	n40 := newRbNode(40, n50, left, false)
+	newRbNode(60, n50, right, false)
 
 	r, found, n20 := insert(n70, 20, compInt)
 	assert.True(t, found)
@@ -65,20 +60,11 @@ func Test_rbNode_delete(t *testing.T) {
 				20b      50b
 			  15r  25r
 		*/
-		n30 := newRbNode(30, nil)
-		n30.c = black
-		n20 := newRbNode(20, n30)
-		n20.c = black
-		n25 := newRbNode(25, n20)
-		n25.c = red
-		n20.b = n25
-		n30.a = n20
-		n15 := newRbNode(15, n20)
-		n20.a = n15
-		n15.c = red
-		n50 := newRbNode(50, n30)
-		n50.c = black
-		n30.b = n50
+		n30 := newRbNode(30, nil, false, black)
+		n20 := newRbNode(20, n30, left, black)
+		n25 := newRbNode(25, n20, right, red)
+		n15 := newRbNode(15, n20, left, red)
+		newRbNode(50, n30, right, black)
 		nd, found := deleteNode(n30, 15, compInt)
 		/*
 				    30b
@@ -98,20 +84,11 @@ func Test_rbNode_delete(t *testing.T) {
 				20r      50b
 			  15b  25b
 		*/
-		n30 := newRbNode(30, nil)
-		n30.c = black
-		n20 := newRbNode(20, n30)
-		n20.c = red
-		n25 := newRbNode(25, n20)
-		n25.c = black
-		n20.b = n25
-		n30.a = n20
-		n15 := newRbNode(15, n20)
-		n20.a = n15
-		n15.c = black
-		n50 := newRbNode(50, n30)
-		n50.c = black
-		n30.b = n50
+		n30 := newRbNode(30, nil, false, black)
+		n20 := newRbNode(20, n30, left, red)
+		n25 := newRbNode(25, n20, right, black)
+		n15 := newRbNode(15, n20, left, black)
+		newRbNode(50, n30, right, black)
 		nd, found := deleteNode(n30, 15, compInt)
 		/*
 				    30b
@@ -133,23 +110,12 @@ func Test_rbNode_delete(t *testing.T) {
 				  15b  25b      ...
 					     27r
 			*/
-			n30 := newRbNode(30, nil)
-			n30.c = black
-			n20 := newRbNode(20, n30)
-			n20.c = black
-			n25 := newRbNode(25, n20)
-			n25.c = black
-			n20.b = n25
-			n30.a = n20
-			n15 := newRbNode(15, n20)
-			n20.a = n15
-			n15.c = black
-			n50 := newRbNode(50, n30)
-			n50.c = black
-			n30.b = n50
-			n27 := newRbNode(27, n25)
-			n27.c = red
-			n25.b = n27
+			n30 := newRbNode(30, nil, false, black)
+			n20 := newRbNode(20, n30, left, black)
+			n25 := newRbNode(25, n20, right, black)
+			n15 := newRbNode(15, n20, left, black)
+			newRbNode(50, n30, right, black)
+			n27 := newRbNode(27, n25, right, red)
 			nd, _ := deleteNode(n30, 15, compInt)
 			/*
 					    30b
@@ -172,23 +138,12 @@ func Test_rbNode_delete(t *testing.T) {
 				  15b  25b      ...
 					  23r
 			*/
-			n30 := newRbNode(30, nil)
-			n30.c = black
-			n20 := newRbNode(20, n30)
-			n20.c = black
-			n25 := newRbNode(25, n20)
-			n25.c = black
-			n20.b = n25
-			n30.a = n20
-			n15 := newRbNode(15, n20)
-			n20.a = n15
-			n15.c = black
-			n50 := newRbNode(50, n30)
-			n50.c = black
-			n30.b = n50
-			n23 := newRbNode(23, n25)
-			n23.c = red
-			n25.a = n23
+			n30 := newRbNode(30, nil, false, black)
+			n20 := newRbNode(20, n30, left, black)
+			n25 := newRbNode(25, n20, right, black)
+			n15 := newRbNode(15, n20, left, black)
+			newRbNode(50, n30, right, black)
+			n23 := newRbNode(23, n25, left, red)
 			nd, _ := deleteNode(n30, 15, compInt)
 			/*
 					    30b
@@ -211,23 +166,12 @@ func Test_rbNode_delete(t *testing.T) {
 					  15b  25b      ...
 				    13r
 			*/
-			n30 := newRbNode(30, nil)
-			n30.c = black
-			n20 := newRbNode(20, n30)
-			n20.c = black
-			n25 := newRbNode(25, n20)
-			n25.c = black
-			n20.b = n25
-			n30.a = n20
-			n15 := newRbNode(15, n20)
-			n20.a = n15
-			n15.c = black
-			n50 := newRbNode(50, n30)
-			n50.c = black
-			n30.b = n50
-			n13 := newRbNode(23, n15)
-			n13.c = red
-			n15.a = n13
+			n30 := newRbNode(30, nil, false, black)
+			n20 := newRbNode(20, n30, left, black)
+			n25 := newRbNode(25, n20, right, black)
+			n15 := newRbNode(15, n20, left, black)
+			newRbNode(50, n30, right, black)
+			n13 := newRbNode(23, n15, left, red)
 			nd, _ := deleteNode(n30, 25, compInt)
 			/*
 					    30b
@@ -253,21 +197,17 @@ func Test_rbNode_delete(t *testing.T) {
 
 func Test_rbNode_rebalance(t *testing.T) {
 	t.Run("noAction", func(t *testing.T) {
-		n := newRbNode(3, nil)
+		n := newRbNode(3, nil, false, black)
 		r := rebalance(n)
-		assert.Equal(t, black, n.c) // root color as black
-		assert.Nil(t, r)            // no next node for rectification
+		assert.Nil(t, r) // no next node for rectification
 
 		/*
 			    30b
 			20b      50r
 		*/
-		n30 := newRbNode(30, nil)
-		n30.c = black
-		n20 := newRbNode(20, n30)
-		n30.a = n20
-		n20.c = black
-		n50 := newRbNode(50, n30)
+		n30 := newRbNode(30, nil, false, black)
+		newRbNode(20, n30, left, black)
+		n50 := newRbNode(50, n30, right, false)
 		n30.b = n50
 		r = rebalance(n50)
 		assert.Nil(t, r)
@@ -281,17 +221,10 @@ func Test_rbNode_rebalance(t *testing.T) {
 			20r      50r
 			      40r
 		*/
-		n30 := newRbNode(30, nil)
-		n30.c = black
-		n20 := newRbNode(20, n30)
-		n20.c = red
-		n30.a = n20
-		n50 := newRbNode(50, n30)
-		n50.c = red
-		n30.b = n50
-		n40 := newRbNode(40, n50)
-		n40.c = red
-		n50.a = n40
+		n30 := newRbNode(30, nil, false, black)
+		n20 := newRbNode(20, n30, left, red)
+		n50 := newRbNode(50, n30, right, red)
+		n40 := newRbNode(40, n50, left, red)
 		r := rebalance(n40)
 		assert.Equal(t, n30, r)
 		assert.Equal(t, red, n40.c)
@@ -307,17 +240,10 @@ func Test_rbNode_rebalance(t *testing.T) {
 			20r      50r
 			  25r
 		*/
-		n30 := newRbNode(30, nil)
-		n30.c = black
-		n20 := newRbNode(20, n30)
-		n20.c = red
-		n25 := newRbNode(25, n20)
-		n25.c = red
-		n20.b = n25
-		n30.a = n20
-		n50 := newRbNode(50, n30)
-		n50.c = red
-		n30.b = n50
+		n30 := newRbNode(30, nil, false, black)
+		n20 := newRbNode(20, n30, left, red)
+		n25 := newRbNode(25, n20, right, red)
+		n50 := newRbNode(50, n30, right, red)
 		r := rebalance(n25)
 		assert.Equal(t, n30, r)
 		assert.Equal(t, red, n25.c)
@@ -334,17 +260,10 @@ func Test_rbNode_rebalance(t *testing.T) {
 				20r      50b
 			  15r
 		*/
-		n30 := newRbNode(30, nil)
-		n30.c = black
-		n20 := newRbNode(20, n30)
-		n20.c = red
-		n15 := newRbNode(15, n20)
-		n15.c = red
-		n20.a = n15
-		n30.a = n20
-		n50 := newRbNode(50, n30)
-		n50.c = black
-		n30.b = n50
+		n30 := newRbNode(30, nil, false, black)
+		n20 := newRbNode(20, n30, left, red)
+		n15 := newRbNode(15, n20, left, red)
+		n50 := newRbNode(50, n30, right, black)
 
 		r := rebalance(n15)
 		/*
@@ -366,17 +285,10 @@ func Test_rbNode_rebalance(t *testing.T) {
 			20r      50b
 			  25r
 		*/
-		n30 := newRbNode(30, nil)
-		n30.c = black
-		n20 := newRbNode(20, n30)
-		n20.c = red
-		n25 := newRbNode(25, n20)
-		n25.c = red
-		n20.b = n25
-		n30.a = n20
-		n50 := newRbNode(50, n30)
-		n50.c = black
-		n30.b = n50
+		n30 := newRbNode(30, nil, false, black)
+		n20 := newRbNode(20, n30, left, red)
+		n25 := newRbNode(25, n20, right, red)
+		n50 := newRbNode(50, n30, right, black)
 
 		r := rebalance(n25)
 		/*
@@ -398,15 +310,10 @@ func Test_rbNode_rebalance(t *testing.T) {
 			20b      50r
 			            55r
 		*/
-		n30 := newRbNode(30, nil)
-		n30.c = black
-		n20 := newRbNode(20, n30)
-		n20.c = black
-		n30.a = n20
-		n50 := newRbNode(50, n30)
-		n50.c = red
-		n30.b = n50
-		n55 := newRbNode(55, n50)
+		n30 := newRbNode(30, nil, false, black)
+		n20 := newRbNode(20, n30, left, black)
+		n50 := newRbNode(50, n30, right, red)
+		n55 := newRbNode(55, n50, right, red)
 		n55.c = red
 		n50.b = n55
 
@@ -430,17 +337,10 @@ func Test_rbNode_rebalance(t *testing.T) {
 			20b      50r
 			       45r
 		*/
-		n30 := newRbNode(30, nil)
-		n30.c = black
-		n20 := newRbNode(20, n30)
-		n20.c = black
-		n30.a = n20
-		n50 := newRbNode(50, n30)
-		n50.c = red
-		n30.b = n50
-		n45 := newRbNode(45, n50)
-		n45.c = red
-		n50.a = n45
+		n30 := newRbNode(30, nil, false, black)
+		n20 := newRbNode(20, n30, left, black)
+		n50 := newRbNode(50, n30, right, red)
+		n45 := newRbNode(45, n50, left, red)
 
 		r := rebalance(n45)
 		/*
@@ -460,9 +360,9 @@ func Test_rbNode_rebalance(t *testing.T) {
 
 func Test_rbNode_rotate(t *testing.T) {
 	t.Run("rotate left and right", func(t *testing.T) {
-		n := &rbNode[int]{3, nil, nil, nil, true}
-		assert.Equal(t, newRbNode(3, nil), rotateLeft(n))
-		assert.Equal(t, newRbNode(3, nil), rotateRight(n))
+		n := &rbNode[int]{3, nil, nil, nil, red}
+		assert.Equal(t, newRbNode(3, nil, false, red), rotateLeft(n))
+		assert.Equal(t, newRbNode(3, nil, false, red), rotateRight(n))
 
 		/*
 			         7
@@ -470,17 +370,12 @@ func Test_rbNode_rotate(t *testing.T) {
 				2     5
 				     4 6
 		*/
-		n7 := newRbNode(7, nil)
-		n3 := newRbNode(3, n7)
-		n7.a = n3
-		n2 := newRbNode(2, n3)
-		n3.a = n2
-		n5 := newRbNode(5, n3)
-		n3.b = n5
-		n4 := newRbNode(4, n5)
-		n5.a = n4
-		n6 := newRbNode(6, n5)
-		n5.b = n6
+		n7 := newRbNode(7, nil, false, false)
+		n3 := newRbNode(3, n7, left, false)
+		n2 := newRbNode(2, n3, left, false)
+		n5 := newRbNode(5, n3, right, false)
+		n4 := newRbNode(4, n5, left, false)
+		n6 := newRbNode(6, n5, right, false)
 		n = n3
 		/*    7
 		    5
@@ -547,21 +442,12 @@ func Test_rbNode_rotate(t *testing.T) {
 				      25r
 			         23 27
 		*/
-		n30 := newRbNode(30, nil)
-		n30.c = black
-		n20 := newRbNode(20, n30)
-		n20.c = red
-		n25 := newRbNode(25, n20)
-		n25.c = red
-		n20.b = n25
-		n30.a = n20
-		n23 := newRbNode(23, n25)
-		n25.a = n23
-		n50 := newRbNode(50, n30)
-		n50.c = black
-		n30.b = n50
-		n27 := newRbNode(27, n25)
-		n25.b = n27
+		n30 := newRbNode(30, nil, false, black)
+		n20 := newRbNode(20, n30, left, red)
+		n25 := newRbNode(25, n20, right, red)
+		n23 := newRbNode(23, n25, left, false)
+		newRbNode(50, n30, right, black)
+		n27 := newRbNode(27, n25, right, false)
 		/*
 						    30b
 						25r      50b
@@ -588,21 +474,12 @@ func Test_rbNode_rotate(t *testing.T) {
 				           40r
 			              35  45
 		*/
-		n30 := newRbNode(30, nil)
-		n30.c = black
-		n20 := newRbNode(20, n30)
-		n20.c = red
-		n30.a = n20
-		n50 := newRbNode(50, n30)
-		n50.c = black
-		n30.b = n50
-		n40 := newRbNode(40, n50)
-		n50.a = n40
-		n40.c = red
-		n35 := newRbNode(35, n40)
-		n40.a = n35
-		n45 := newRbNode(45, n40)
-		n40.b = n45
+		n30 := newRbNode(30, nil, false, black)
+		n20 := newRbNode(20, n30, left, red)
+		n50 := newRbNode(50, n30, right, black)
+		n40 := newRbNode(40, n50, left, red)
+		n35 := newRbNode(35, n40, left, false)
+		n45 := newRbNode(45, n40, right, false)
 		l := bfTraverse[int](n30)
 		assert.Equal(t, []int{30, 20, 50, 40, 35, 45}, utils.SliceFrom[int](l))
 		/*
@@ -634,21 +511,12 @@ func Test_rbNode_swapDown(t *testing.T) {
 				            40r
 			              35  45
 		*/
-		n30 := newRbNode(30, nil)
-		n30.c = black
-		n20 := newRbNode(20, n30)
-		n20.c = red
-		n30.a = n20
-		n50 := newRbNode(50, n30)
-		n50.c = black
-		n30.b = n50
-		n40 := newRbNode(40, n50)
-		n50.a = n40
-		n40.c = red
-		n35 := newRbNode(35, n40)
-		n40.a = n35
-		n45 := newRbNode(45, n40)
-		n40.b = n45
+		n30 := newRbNode(30, nil, false, black)
+		newRbNode(20, n30, left, red)
+		n50 := newRbNode(50, n30, right, black)
+		n40 := newRbNode(40, n50, left, red)
+		n35 := newRbNode(35, n40, left, false)
+		newRbNode(45, n40, right, false)
 		r := n30
 		/*
 					     35b
@@ -670,21 +538,12 @@ func Test_rbNode_swapDown(t *testing.T) {
 				                  45
 			                       46
 		*/
-		n30 := newRbNode(30, nil)
-		n30.c = black
-		n20 := newRbNode(20, n30)
-		n20.c = red
-		n30.a = n20
-		n50 := newRbNode(50, n30)
-		n50.c = black
-		n30.b = n50
-		n40 := newRbNode(40, n50)
-		n50.a = n40
-		n40.c = red
-		n45 := newRbNode(45, n40)
-		n40.b = n45
-		n46 := newRbNode(46, n45)
-		n45.b = n46
+		n30 := newRbNode(30, nil, false, black)
+		newRbNode(20, n30, left, red)
+		n50 := newRbNode(50, n30, right, black)
+		n40 := newRbNode(40, n50, left, red)
+		n45 := newRbNode(45, n40, right, false)
+		n46 := newRbNode(46, n45, right, false)
 		r := n30
 		/*
 						     40b

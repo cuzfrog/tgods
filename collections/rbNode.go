@@ -14,8 +14,16 @@ type rbNode[T any] struct {
 	c bool
 }
 
-func newRbNode[T any](d T, p *rbNode[T]) *rbNode[T] {
-	return &rbNode[T]{d, nil, nil, p, red}
+func newRbNode[T any](d T, p *rbNode[T], branch bool, color bool) *rbNode[T] {
+	n := &rbNode[T]{d, nil, nil, p, color}
+	if p != nil {
+		if branch == left {
+			p.a = n
+		} else {
+			p.b = n
+		}
+	}
+	return n
 }
 
 /*
@@ -26,7 +34,7 @@ insert returns:
 */
 func insert[T any](n *rbNode[T], d T, comp types.Compare[T]) (r *rbNode[T], found bool, nn *rbNode[T]) {
 	if n == nil {
-		r, found = newRbNode(d, nil), false
+		r, found = newRbNode(d, nil, false, red), false
 		nn = r
 		return
 	}
@@ -35,16 +43,14 @@ func insert[T any](n *rbNode[T], d T, comp types.Compare[T]) (r *rbNode[T], foun
 		compRes := comp(d, ni.v)
 		if compRes < 0 {
 			if ni.a == nil {
-				ni.a = newRbNode(d, ni)
-				nn = ni.a
+				nn = newRbNode(d, ni, left, red)
 				break
 			} else {
 				ni = ni.a
 			}
 		} else if compRes > 0 {
 			if ni.b == nil {
-				ni.b = newRbNode(d, ni)
-				nn = ni.b
+				nn = newRbNode(d, ni, right, red)
 				break
 			} else {
 				ni = ni.b
