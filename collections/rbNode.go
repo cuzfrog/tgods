@@ -75,18 +75,34 @@ func delete[T any](r *rbNode[T], d T, comp types.Compare[T]) (nd *rbNode[T], fou
 			nd = nd.b
 		} else {
 			found = true
-			nd = swapDown(nd) // nd becomes a leaf
-			ndp, left := removeFromParent(nd)
+			nd = swapDown(nd) // nd is a leaf now
+			ndp, ndBranch := removeFromParent(nd)
 
 			if nd.c == black {
 				if ndp.c == red {
 					ndp.c = black
-					if left {
-						ndp.b.setColor(red)
-					} else {
-						ndp.a.setColor(red)
-					}
+					childNode(ndp, !ndBranch).setColor(red)
 				} else {
+					if ndBranch == left {
+						nds := ndp.b
+						if nds.b.color() == red { // RR
+							nds.b.setColor(black)
+							rotateLeft(ndp)
+						} else if nds.a.color() == red { // RL
+
+						} else { // black nds children
+
+						}
+					} else {
+						nds := ndp.a
+						if nds.a.color() == red { // LL
+
+						} else if nds.b.color() == red { // LR
+
+						} else { // black nds children
+
+						}
+					}
 
 				}
 			}
@@ -94,6 +110,14 @@ func delete[T any](r *rbNode[T], d T, comp types.Compare[T]) (nd *rbNode[T], fou
 		}
 	}
 	return
+}
+
+func childNode[T any](np *rbNode[T], branch bool) *rbNode[T] {
+	if branch == left {
+		return np.a
+	} else {
+		return np.b
+	}
 }
 
 // rebalance recolors and/or rotates when necessary, returns next rectifiable node or nil if finishes
@@ -194,15 +218,15 @@ func updateParentChild[T any](n *rbNode[T], nn *rbNode[T]) {
 }
 
 // removeFromParent returns parent, np must exist
-func removeFromParent[T any](n *rbNode[T]) (np *rbNode[T], left bool) {
+func removeFromParent[T any](n *rbNode[T]) (np *rbNode[T], branch bool) {
 	np = n.p
 	n.p = nil
 	if n == np.a {
 		np.a = nil
-		left = true
+		branch = left
 	} else {
 		np.b = nil
-		left = false
+		branch = right
 	}
 	return
 }
