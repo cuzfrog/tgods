@@ -432,3 +432,77 @@ func Test_rbNode_rotate(t *testing.T) {
 	assert.Equal(t, n6, n5.b)
 	assert.Equal(t, n5, n6.p)
 }
+
+func Test_rbNode_swapDown(t *testing.T) {
+	t.Run("1 round to successor", func(t *testing.T) {
+		/*
+					     30b
+					20b        50r
+				            40r
+			              35  45
+		*/
+		n30 := newRbNode(30, nil)
+		n30.c = black
+		n20 := newRbNode(20, n30)
+		n20.c = red
+		n30.a = n20
+		n50 := newRbNode(50, n30)
+		n50.c = black
+		n30.b = n50
+		n40 := newRbNode(40, n50)
+		n50.a = n40
+		n40.c = red
+		n35 := newRbNode(35, n40)
+		n40.a = n35
+		n45 := newRbNode(45, n40)
+		n40.b = n45
+		r := n30
+		/*
+					     35b
+					20b        50r
+				            40r
+			              30  45
+		*/
+		ns := swapDown(r)
+		assert.Same(t, ns, n35)
+		l := bfTraverse[int](r)
+		assert.Equal(t, []int{35, 20, 50, 40, 30, 45}, utils.SliceFrom[int](l))
+	})
+
+	t.Run("3 round to successor", func(t *testing.T) {
+		/*
+						     30b
+						20b        50r
+					            40r
+				                  45
+			                       46
+		*/
+		n30 := newRbNode(30, nil)
+		n30.c = black
+		n20 := newRbNode(20, n30)
+		n20.c = red
+		n30.a = n20
+		n50 := newRbNode(50, n30)
+		n50.c = black
+		n30.b = n50
+		n40 := newRbNode(40, n50)
+		n50.a = n40
+		n40.c = red
+		n45 := newRbNode(45, n40)
+		n40.b = n45
+		n46 := newRbNode(46, n45)
+		n45.b = n46
+		r := n30
+		/*
+						     40b
+						20b        50r
+					            45r
+				                  46
+			                       30
+		*/
+		ns := swapDown(r)
+		assert.Same(t, ns, n46)
+		l := bfTraverse[int](r)
+		assert.Equal(t, []int{40, 20, 50, 45, 46, 30}, utils.SliceFrom[int](l))
+	})
+}

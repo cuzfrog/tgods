@@ -32,7 +32,8 @@ func insert[T any](n *rbNode[T], d T, comp types.Compare[T]) (r *rbNode[T], foun
 	}
 	ni := n
 	for true {
-		if comp(d, ni.v) < 0 {
+		compRes := comp(d, ni.v)
+		if compRes < 0 {
 			if ni.a == nil {
 				ni.a = newRbNode(d, ni)
 				nn = ni.a
@@ -40,7 +41,7 @@ func insert[T any](n *rbNode[T], d T, comp types.Compare[T]) (r *rbNode[T], foun
 			} else {
 				ni = ni.a
 			}
-		} else if comp(d, ni.v) > 0 {
+		} else if compRes > 0 {
 			if ni.b == nil {
 				ni.b = newRbNode(d, ni)
 				nn = ni.b
@@ -56,6 +57,30 @@ func insert[T any](n *rbNode[T], d T, comp types.Compare[T]) (r *rbNode[T], foun
 		}
 	}
 	return n, found, nn
+}
+
+// delete removes a node with given value d returns:
+//  r the new root
+//  found true if there's a node deleted
+//  nd the removed node
+func delete[T any](n *rbNode[T], d T, comp types.Compare[T]) (r *rbNode[T], found bool, nd *rbNode[T]) {
+	nd = n
+	for true {
+		if n == nil {
+			return nil, false, nil
+		}
+		compRes := comp(nd.v, d)
+		if compRes < 0 {
+			nd = n.a
+		} else if compRes > 0 {
+			nd = n.b
+		} else {
+			found = true
+
+			break
+		}
+	}
+	return //TODO
 }
 
 // rebalance recolors and/or rotates when necessary, returns next rectifiable node or nil if finishes
@@ -155,6 +180,42 @@ func updateParentChild[T any](n *rbNode[T], nn *rbNode[T]) {
 	n.p = nn
 }
 
+func swapDown[T any](n *rbNode[T]) *rbNode[T] {
+	ns := n
+	for !ns.isLeaf() {
+		if ns.b != nil { // TODO, here we prefer to to right branch, but we can use flag to save tree leaning info to decide which branch to go
+			ns = swapInorderSuccessor(ns)
+		} else {
+			ns = swapInorderPredecessor(ns)
+		}
+	}
+	return ns
+}
+
+func swapInorderSuccessor[T any](n *rbNode[T]) *rbNode[T] {
+	if n.b == nil {
+		return n
+	}
+	ns := n.b
+	for ns.a != nil {
+		ns = ns.a
+	}
+	n.v, ns.v = ns.v, n.v
+	return ns
+}
+
+func swapInorderPredecessor[T any](n *rbNode[T]) *rbNode[T] {
+	if n.a == nil {
+		return n
+	}
+	ns := n.a
+	for ns.b != nil {
+		ns = ns.b
+	}
+	n.v, ns.v = ns.v, n.v
+	return ns
+}
+
 func (n *rbNode[T]) color() bool {
 	if n == nil {
 		return black
@@ -166,4 +227,11 @@ func (n *rbNode[T]) setColor(c bool) {
 	if n != nil {
 		n.c = c
 	}
+}
+
+func (n *rbNode[T]) isLeaf() bool {
+	if n == nil {
+		return true
+	}
+	return n.a == nil && n.b == nil
 }
