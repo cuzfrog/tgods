@@ -70,13 +70,13 @@ func (it *circularArrayIterator[T]) Value() T {
 // ======== linkedList ========
 
 func (l *linkedList[T]) Iterator() types.Iterator[T] {
-	var next func(n *node[T]) *node[T]
-	var start *node[T]
+	var next func(n *dlNode[T]) *dlNode[T]
+	var start *dlNode[T]
 	if l.r == list || l.r == stack {
-		next = func(n *node[T]) *node[T] { return n.next }
+		next = func(n *dlNode[T]) *dlNode[T] { return n.next }
 		start = l.head
 	} else if l.r == queue || l.r == deque {
-		next = func(n *node[T]) *node[T] { return n.prev }
+		next = func(n *dlNode[T]) *dlNode[T] { return n.prev }
 		start = l.tail
 	} else {
 		panic(fmt.Sprintf("linkedList only implement classes [list(%d), stack(%d), queue(%d), deque(%d)], but the role is '%d'", list, stack, queue, deque, l.r))
@@ -86,9 +86,9 @@ func (l *linkedList[T]) Iterator() types.Iterator[T] {
 
 type linkedListIterator[T any] struct {
 	index int
-	start *node[T]
-	cur   *node[T]
-	next  func(n *node[T]) *node[T]
+	start *dlNode[T]
+	cur   *dlNode[T]
+	next  func(n *dlNode[T]) *dlNode[T]
 }
 
 func (it *linkedListIterator[T]) Next() bool {
