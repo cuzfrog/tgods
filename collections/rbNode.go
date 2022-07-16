@@ -69,58 +69,91 @@ func insert[T any](n *rbNode[T], d T, comp types.Compare[T]) (r *rbNode[T], foun
 //  found true if there's a node deleted
 //  nd the removed node
 func deleteNode[T any](r *rbNode[T], d T, comp types.Compare[T]) (nd *rbNode[T], found bool) {
-	nd = r
+	n := r
 	for true {
-		if nd == nil {
+		if n == nil {
 			return nil, false
 		}
-		compRes := comp(d, nd.v)
+		compRes := comp(d, n.v)
 		if compRes < 0 {
-			nd = nd.a
+			n = n.a
 		} else if compRes > 0 {
-			nd = nd.b
+			n = n.b
 		} else {
 			found = true
-			nd = swapDown(nd) // nd is a leaf now
-			ndp, ndBranch := removeFromParent(nd)
-
-			if nd.c == black {
-				if ndp.c == red {
-					ndp.c = black
-					childNode(ndp, !ndBranch).setColor(red)
-				} else {
-					if ndBranch == left {
-						nds := ndp.b
-						if nds.b.color() == red { // RR
-							nds.b.setColor(black)
-							rotateLeft(ndp)
-						} else if nds.a.color() == red { // RL
-							nds.a.setColor(black)
-							rotateRight(nds)
-							rotateLeft(ndp)
-						} else { // black nds children
-
-						}
-					} else {
-						nds := ndp.a
-						if nds.a.color() == red { // LL
-							nds.a.setColor(black)
-							rotateRight(ndp)
-						} else if nds.b.color() == red { // LR
-							nds.b.setColor(black)
-							rotateLeft(nds)
-							rotateRight(ndp)
-						} else { // black nds children
-
-						}
-					}
-
-				}
-			}
+			n = swapDown(n) // n is a leaf now
+			nd = n
+			ndp, ndBranch := removeFromParent(n)
+			deletionRebalance(ndp, nd, ndBranch)
 			break
 		}
 	}
 	return
+}
+
+// deletionRebalance params:
+//  ndp - the deleted node's parent
+//  ndBranch - left or right of the nd's position
+func deletionRebalance[T any](ndp, nd *rbNode[T], ndBranch bool) {
+	n, np, nBranch := nd, ndp, ndBranch
+
+	for true {
+		if np == nil { // reach root
+			n.setColor(black)
+			break
+		}
+		if n.c == red { // simple red
+			break
+		}
+		if np.c == red { // simple parent red
+			np.c = black
+			childNode(np, !nBranch).setColor(red)
+			break
+		}
+		// parent black
+		if nBranch == left {
+			nds := np.b
+			if nds.color() == black {
+				if nds.b.color() == red { // RR
+					nds.b.setColor(black)
+					rotateLeft(np)
+					break
+				} else if nds.a.color() == red { // RL
+					nds.a.setColor(black)
+					rotateRight(nds)
+					rotateLeft(np)
+					break
+				} else { // black nds children
+					nds.setColor(red)
+					n, np = np, np.p
+					nBranch = n == np.a
+				}
+			} else { // nds red
+				panic("not implemented")
+			}
+		} else {
+			nds := np.a
+			if nds.color() == black {
+				if nds.a.color() == red { // LL
+					nds.a.setColor(black)
+					rotateRight(np)
+					break
+				} else if nds.b.color() == red { // LR
+					nds.b.setColor(black)
+					rotateLeft(nds)
+					rotateRight(np)
+					break
+				} else { // black nds children
+					nds.setColor(red)
+					n, np = np, np.p
+					nBranch = n == np.a
+				}
+			} else { // nds red
+				panic("not implemented")
+			}
+		}
+	}
+
 }
 
 func childNode[T any](np *rbNode[T], branch bool) *rbNode[T] {
@@ -131,8 +164,8 @@ func childNode[T any](np *rbNode[T], branch bool) *rbNode[T] {
 	}
 }
 
-// rebalance recolors and/or rotates when necessary, returns next rectifiable node or nil if finishes
-func rebalance[T any](n *rbNode[T]) (r *rbNode[T]) {
+// insertionRebalance recolors and/or rotates when necessary, returns next rectifiable node or nil if finishes
+func insertionRebalance[T any](n *rbNode[T]) (r *rbNode[T]) {
 	np := n.p
 	if np == nil {
 		n.c = black

@@ -18,7 +18,7 @@ func newRbTree[T any](comp types.Compare[T]) *rbTree[T] {
 func (t *rbTree[T]) Insert(d T) bool {
 	r, found, nn := insert(t.root, d, t.comp)
 	for true {
-		nn = rebalance(nn)
+		nn = insertionRebalance(nn)
 		if nn == nil {
 			break
 		}

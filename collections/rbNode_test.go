@@ -214,6 +214,33 @@ func Test_rbNode_delete(t *testing.T) {
 			assert.Equal(t, n20, n17.b)
 		})
 		t.Run("sibling black, with black children", func(t *testing.T) {
+			/*                        60r
+				         30b               70b
+				   20b         50b
+			  15b     25b     45b 55b
+			*/
+			n60 := newRbNode(60, nil, false, red)
+			n30 := newRbNode(30, n60, left, black)
+			n20 := newRbNode(20, n30, left, black)
+			n25 := newRbNode(25, n20, right, black)
+			n15 := newRbNode(15, n20, left, black)
+			n50 := newRbNode(50, n30, right, black)
+			newRbNode(45, n50, left, black)
+			newRbNode(55, n50, right, black)
+			n70 := newRbNode(70, n60, right, black)
+			nd, _ := deleteNode(n60, 20, compInt)
+			/*              60b
+				    30b           70r
+				25b      50r
+			 15r       45b 55b
+			*/
+			assert.Same(t, n25, nd)
+			assert.Equal(t, black, n60.c)
+			assert.Equal(t, red, n70.c)
+			assert.Equal(t, red, n50.c)
+			assert.Equal(t, red, n15.c)
+			l := bfTraverse[int](n60)
+			assert.Equal(t, []int{60, 30, 70, 25, 50, 15, 45, 55}, utils.SliceFrom[int](l))
 
 		})
 		t.Run("sibling red", func(t *testing.T) {
@@ -225,7 +252,7 @@ func Test_rbNode_delete(t *testing.T) {
 func Test_rbNode_rebalance(t *testing.T) {
 	t.Run("noAction", func(t *testing.T) {
 		n := newRbNode(3, nil, false, black)
-		r := rebalance(n)
+		r := insertionRebalance(n)
 		assert.Nil(t, r) // no next node for rectification
 
 		/*
@@ -236,7 +263,7 @@ func Test_rbNode_rebalance(t *testing.T) {
 		newRbNode(20, n30, left, black)
 		n50 := newRbNode(50, n30, right, false)
 		n30.b = n50
-		r = rebalance(n50)
+		r = insertionRebalance(n50)
 		assert.Nil(t, r)
 		assert.Equal(t, black, n30.c)
 		assert.Equal(t, n50, n30.b)
@@ -252,7 +279,7 @@ func Test_rbNode_rebalance(t *testing.T) {
 		n20 := newRbNode(20, n30, left, red)
 		n50 := newRbNode(50, n30, right, red)
 		n40 := newRbNode(40, n50, left, red)
-		r := rebalance(n40)
+		r := insertionRebalance(n40)
 		assert.Equal(t, n30, r)
 		assert.Equal(t, red, n40.c)
 		assert.Equal(t, black, n20.c)
@@ -271,7 +298,7 @@ func Test_rbNode_rebalance(t *testing.T) {
 		n20 := newRbNode(20, n30, left, red)
 		n25 := newRbNode(25, n20, right, red)
 		n50 := newRbNode(50, n30, right, red)
-		r := rebalance(n25)
+		r := insertionRebalance(n25)
 		assert.Equal(t, n30, r)
 		assert.Equal(t, red, n25.c)
 		assert.Equal(t, black, n20.c)
@@ -292,7 +319,7 @@ func Test_rbNode_rebalance(t *testing.T) {
 		n15 := newRbNode(15, n20, left, red)
 		n50 := newRbNode(50, n30, right, black)
 
-		r := rebalance(n15)
+		r := insertionRebalance(n15)
 		/*
 			    20b
 			15r     30r
@@ -317,7 +344,7 @@ func Test_rbNode_rebalance(t *testing.T) {
 		n25 := newRbNode(25, n20, right, red)
 		n50 := newRbNode(50, n30, right, black)
 
-		r := rebalance(n25)
+		r := insertionRebalance(n25)
 		/*
 			    25b
 			20r      30r
@@ -344,7 +371,7 @@ func Test_rbNode_rebalance(t *testing.T) {
 		n55.c = red
 		n50.b = n55
 
-		r := rebalance(n55)
+		r := insertionRebalance(n55)
 		/*
 				    50b
 				30r      55r
@@ -369,7 +396,7 @@ func Test_rbNode_rebalance(t *testing.T) {
 		n50 := newRbNode(50, n30, right, red)
 		n45 := newRbNode(45, n50, left, red)
 
-		r := rebalance(n45)
+		r := insertionRebalance(n45)
 		/*
 				    45b
 				30r      50r
