@@ -243,8 +243,62 @@ func Test_rbNode_delete(t *testing.T) {
 			assert.Equal(t, []int{60, 30, 70, 25, 50, 15, 45, 55}, utils.SliceFrom[int](l))
 
 		})
-		t.Run("sibling red", func(t *testing.T) {
-
+		t.Run("sibling red L", func(t *testing.T) {
+			/*
+					         30b
+					   20b         50b
+				  15b     25r
+				         23b 27b
+			*/
+			n30 := newRbNode(30, nil, left, black)
+			n20 := newRbNode(20, n30, left, black)
+			n25 := newRbNode(25, n20, right, red)
+			n15 := newRbNode(15, n20, left, black)
+			n23 := newRbNode(23, n25, left, black)
+			newRbNode(27, n25, right, black)
+			newRbNode(50, n30, right, black)
+			nd, _ := deleteNode(n30, 15, compInt)
+			/*
+						         30b
+						   25b         50b
+					  20b     27b
+				        23r
+			*/
+			assert.Same(t, n15, nd)
+			assert.Equal(t, n25, n30.a)
+			assert.Equal(t, black, n25.c)
+			assert.Equal(t, red, n23.c)
+			l := bfTraverse[int](n30)
+			assert.Equal(t, []int{30, 25, 50, 20, 27, 23}, utils.SliceFrom[int](l))
+		})
+		t.Run("sibling red R", func(t *testing.T) {
+			/*
+					         30b
+					   20b         50b
+				  15r     25b
+				13b 16b
+			*/
+			n30 := newRbNode(30, nil, left, black)
+			n20 := newRbNode(20, n30, left, black)
+			n25 := newRbNode(25, n20, right, black)
+			n15 := newRbNode(15, n20, left, red)
+			n13 := newRbNode(13, n15, left, black)
+			n16 := newRbNode(16, n15, right, black)
+			newRbNode(50, n30, right, black)
+			nd, _ := deleteNode(n30, 20, compInt)
+			/*
+						         30b
+						   15b         50b
+					  13b     25b
+				            16r
+			*/
+			assert.Same(t, n25, nd)
+			assert.Equal(t, n15, n30.a)
+			assert.Equal(t, black, n15.c)
+			assert.Equal(t, black, n13.c)
+			assert.Equal(t, red, n16.c)
+			l := bfTraverse[int](n30)
+			assert.Equal(t, []int{30, 15, 50, 13, 25, 16}, utils.SliceFrom[int](l))
 		})
 	})
 }

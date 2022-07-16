@@ -126,10 +126,12 @@ func deletionRebalance[T any](ndp, nd *rbNode[T], ndBranch bool) {
 				} else { // black nds children
 					nds.setColor(red)
 					n, np = np, np.p
-					nBranch = n == np.a
+					nBranch = np != nil && n == np.a
 				}
 			} else { // nds red
-				panic("not implemented")
+				rotateLeft(np)
+				np.setColor(red)
+				nds.setColor(black) // nds is now np.p
 			}
 		} else {
 			nds := np.a
@@ -146,10 +148,12 @@ func deletionRebalance[T any](ndp, nd *rbNode[T], ndBranch bool) {
 				} else { // black nds children
 					nds.setColor(red)
 					n, np = np, np.p
-					nBranch = n == np.a
+					nBranch = np != nil && n == np.a
 				}
 			} else { // nds red
-				panic("not implemented")
+				rotateRight(np)
+				np.setColor(red)
+				nds.setColor(black) // nds is now np.p
 			}
 		}
 	}
