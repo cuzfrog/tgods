@@ -60,27 +60,40 @@ func insert[T any](n *rbNode[T], d T, comp types.Compare[T]) (r *rbNode[T], foun
 }
 
 // delete removes a node with given value d returns:
-//  r the new root
 //  found true if there's a node deleted
 //  nd the removed node
-func delete[T any](n *rbNode[T], d T, comp types.Compare[T]) (r *rbNode[T], found bool, nd *rbNode[T]) {
-	nd = n
+func delete[T any](r *rbNode[T], d T, comp types.Compare[T]) (nd *rbNode[T], found bool) {
+	nd = r
 	for true {
-		if n == nil {
-			return nil, false, nil
+		if nd == nil {
+			return nil, false
 		}
-		compRes := comp(nd.v, d)
+		compRes := comp(d, nd.v)
 		if compRes < 0 {
-			nd = n.a
+			nd = nd.a
 		} else if compRes > 0 {
-			nd = n.b
+			nd = nd.b
 		} else {
 			found = true
+			nd = swapDown(nd) // nd becomes a leaf
+			ndp, left := removeFromParent(nd)
 
+			if nd.c == black {
+				if ndp.c == red {
+					ndp.c = black
+					if left {
+						ndp.b.setColor(red)
+					} else {
+						ndp.a.setColor(red)
+					}
+				} else {
+
+				}
+			}
 			break
 		}
 	}
-	return //TODO
+	return
 }
 
 // rebalance recolors and/or rotates when necessary, returns next rectifiable node or nil if finishes
@@ -180,8 +193,22 @@ func updateParentChild[T any](n *rbNode[T], nn *rbNode[T]) {
 	n.p = nn
 }
 
-func swapDown[T any](n *rbNode[T]) *rbNode[T] {
-	ns := n
+// removeFromParent returns parent, np must exist
+func removeFromParent[T any](n *rbNode[T]) (np *rbNode[T], left bool) {
+	np = n.p
+	n.p = nil
+	if n == np.a {
+		np.a = nil
+		left = true
+	} else {
+		np.b = nil
+		left = false
+	}
+	return
+}
+
+func swapDown[T any](n *rbNode[T]) (ns *rbNode[T]) {
+	ns = n
 	for !ns.isLeaf() {
 		if ns.b != nil { // TODO, here we prefer to to right branch, but we can use flag to save tree leaning info to decide which branch to go
 			ns = swapInorderSuccessor(ns)
