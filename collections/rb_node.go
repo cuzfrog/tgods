@@ -30,9 +30,10 @@ func newRbNode[T any](d T, p *rbNode[T], branch bool, color bool) *rbNode[T] {
 insertNode returns:
 	r - the top node after insertion
 	found - if found an existing node
-	nn - the newly created or found node
+	nn - the newly created
+    old - the existing node's previous value
 */
-func insertNode[T any](n *rbNode[T], d T, comp types.Compare[T]) (r *rbNode[T], found bool, nn *rbNode[T]) {
+func insertNode[T any](n *rbNode[T], d T, comp types.Compare[T]) (r *rbNode[T], found bool, nn *rbNode[T], old T) {
 	if n == nil {
 		r, found = newRbNode(d, nil, false, red), false
 		nn = r
@@ -56,13 +57,14 @@ func insertNode[T any](n *rbNode[T], d T, comp types.Compare[T]) (r *rbNode[T], 
 				ni = ni.b
 			}
 		} else {
+			old = ni.v
 			ni.v = d
 			found = true
 			nn = ni
 			break
 		}
 	}
-	return n, found, nn
+	return n, found, nn, old
 }
 
 func searchNode[T any](r *rbNode[T], d T, comp types.Compare[T]) *rbNode[T] {

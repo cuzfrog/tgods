@@ -1,9 +1,9 @@
 package types
 
 type Collection[T any] interface {
-	Add(elem T) bool      // add elem into the collection, return true if succeeded
-	Contains(elem T) bool // typical time complexity O(n) in array based, O(log(n)) in tree based, and O(c) in hash based implementations.
-	Iterator() Iterator[T]
+	Add(elem T) bool       // add elem into the collection, return true if succeeded
+	Contains(elem T) bool  // typical time complexity O(n) in array based, O(log(n)) in tree based, and O(c) in hash based implementations.
+	Iterator() Iterator[T] // returns a semantic iterator whose behavior is based on the sub-interface
 	Each(func(index int, elem T))
 	Size() int
 	Clear()
@@ -65,7 +65,7 @@ type List[T any] interface {
 
 type Set[T any] interface {
 	Collection[T]
-	Remove(elem T) bool
+	Remove(elem T) bool // removes elem from the set, returns true if found the elem. O(log(n))
 }
 
 // SortedSet The elem order is decided by Compare func.
@@ -85,8 +85,19 @@ type SortedSet[T any] interface {
 	//ReverseSet() SortedSet[T]               // returns a view of the same set with an inverted Compare func and reverted element order. O(c)
 }
 
+type Entry[K any, V any] interface {
+	Key() K
+	Value() V
+}
+
 type Map[K any, V any] interface {
-	Get(k K) V
-	Put(k K, v V) V
-	Remove(k K) V
+	Collection[Entry[K, V]]
+	Get(k K) (V, bool)      // gets the elem by the given key, returns Nil and false if not found
+	Put(k K, v V) (V, bool) // puts a key value pair, returns the old value and true associated with the key if any, or Nil and false if not exists
+	Remove(k K) (V, bool)   // removes the value associated with the given key, returns the moved value and true if found, or Nil and false if not exists
+	ContainsKey(k K) bool
+}
+
+type SortedMap[K any, V any] interface {
+	Map[K, V]
 }

@@ -21,6 +21,7 @@ func TestSortedSetProperties(t *testing.T) {
 			s := test.s
 			s.Add(2)
 			s.Add(2)
+			assert.Equal(t, 1, s.Size())
 			s.Add(3)
 			s.Add(9)
 			s.Add(5)
