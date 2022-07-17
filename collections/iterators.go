@@ -72,12 +72,9 @@ func (it *circularArrayIterator[T]) Value() T {
 func (l *linkedList[T]) Iterator() types.Iterator[T] {
 	var next func(n *dlNode[T]) *dlNode[T]
 	var start *dlNode[T]
-	if l.r == list || l.r == stack {
+	if l.r == list || l.r == stack || l.r == queue || l.r == deque {
 		next = func(n *dlNode[T]) *dlNode[T] { return n.next }
 		start = l.head
-	} else if l.r == queue || l.r == deque {
-		next = func(n *dlNode[T]) *dlNode[T] { return n.prev }
-		start = l.tail
 	} else {
 		panic(fmt.Sprintf("linkedList only implement classes [list(%d), stack(%d), queue(%d), deque(%d)], but the role is '%d'", list, stack, queue, deque, l.r))
 	}
@@ -149,25 +146,44 @@ func (it *binaryHeapIterator[T]) Value() T {
 }
 
 // ======== rbTree ========
+
+func (t *rbTree[T]) Iterator() types.Iterator[T] {
+	s := NewLinkedListStackOfEq[*rbNode[T]](nil)
+	n := t.root
+	return &rbTreeIterator[T]{s, n, nil, -1}
+}
+
 type rbTreeIterator[T any] struct {
-	t *rbTree[T]
+	s     types.Stack[*rbNode[T]]
+	n     *rbNode[T]
+	cur   *rbNode[T]
+	index int
 }
 
 func (it *rbTreeIterator[T]) Next() bool {
-	if it.t.size == 0 {
-		return false
+	if it.n != nil || it.s.Size() > 0 {
+		for it.n != nil {
+			it.s.Push(it.n)
+			it.n = it.n.a
+		}
+		cur, _ := it.s.Pop()
+		it.cur = cur
+		it.index++
+		it.n = cur.b
+		return true
 	}
-	panic("not impl")
+	return false
 }
 
 func (it *rbTreeIterator[T]) Index() int {
-	//TODO implement me
-	panic("implement me")
+	return it.index
 }
 
 func (it *rbTreeIterator[T]) Value() T {
-	//TODO implement me
-	panic("implement me")
+	if it.cur == nil {
+		return utils.Nil[T]()
+	}
+	return it.cur.v
 }
 
 // ======== forEach ========

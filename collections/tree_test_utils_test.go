@@ -14,19 +14,25 @@ func bfTraverse[T comparable](n *rbNode[T]) types.List[T] {
 	if n == nil {
 		return l
 	}
-	nl := newLinkedListOfEq[*rbNode[T]](nodeValueEqual[T])
-	nl.Add(n)
+	nl := NewLinkedListQueueOfEq[*rbNode[T]](nodeValueEqual[T])
+	nl.Enqueue(n)
 	for nl.Size() > 0 {
-		next, _ := nl.RemoveHead()
+		next, _ := nl.Dequeue()
 		l.Add(next.v)
 		if next.a != nil {
-			nl.Add(next.a)
+			nl.Enqueue(next.a)
 		}
 		if next.b != nil {
-			nl.Add(next.b)
+			nl.Enqueue(next.b)
 		}
 	}
 	return l
+}
+
+func Test_bfTraverse(t *testing.T) {
+	tree := newRbTreeOf(1, 2, 3, 4, 5)
+	l := bfTraverse(tree.root)
+	assert.Equal(t, []int{2, 1, 4, 3, 5}, utils.SliceFrom[int](l))
 }
 
 func dfInorderTraverse[T comparable](n *rbNode[T]) types.List[T] {

@@ -8,10 +8,10 @@ import (
 )
 
 func TestRbTree_Properties(t *testing.T) {
-	tree := newRbTree(funcs.ValueCompare[int])
-	assert.False(t, tree.Insert(10))
-	assert.False(t, tree.Insert(20))
-	assert.True(t, tree.Insert(20))
+	tree := newRbTreeOfComp(funcs.ValueCompare[int])
+	assert.False(t, tree.insert(10))
+	assert.False(t, tree.insert(20))
+	assert.True(t, tree.insert(20))
 	r := tree.root
 	/*
 		        10b
@@ -22,7 +22,7 @@ func TestRbTree_Properties(t *testing.T) {
 	assert.Equal(t, 20, r.b.v)
 	assert.Equal(t, red, r.b.c)
 
-	assert.False(t, tree.Insert(30))
+	assert.False(t, tree.insert(30))
 	r = tree.root
 	/*
 	      20b
@@ -35,7 +35,7 @@ func TestRbTree_Properties(t *testing.T) {
 	assert.Equal(t, 30, r.b.v)
 	assert.Equal(t, red, r.b.c)
 
-	assert.False(t, tree.Insert(40))
+	assert.False(t, tree.insert(40))
 	r = tree.root
 	/*
 	      20b
@@ -51,7 +51,7 @@ func TestRbTree_Properties(t *testing.T) {
 	assert.Equal(t, 40, r.b.b.v)
 	assert.Equal(t, red, r.b.b.c)
 
-	assert.False(t, tree.Insert(50))
+	assert.False(t, tree.insert(50))
 	r = tree.root
 	/*
 	      20b
@@ -63,7 +63,7 @@ func TestRbTree_Properties(t *testing.T) {
 	assert.Equal(t, 50, r.b.b.v)
 	assert.Equal(t, red, r.b.b.c)
 
-	assert.False(t, tree.Insert(60))
+	assert.False(t, tree.insert(60))
 	r = tree.root
 	/*
 	      20b
@@ -74,7 +74,7 @@ func TestRbTree_Properties(t *testing.T) {
 	l := bfTraverse[int](r)
 	assert.Equal(t, []int{20, 10, 40, 30, 50, 60}, utils.SliceFrom[int](l))
 
-	assert.False(t, tree.Insert(70))
+	assert.False(t, tree.insert(70))
 	r = tree.root
 	/*
 	      20b
@@ -89,17 +89,17 @@ func TestRbTree_Properties(t *testing.T) {
 	l = bfTraverse[int](r)
 	assert.Equal(t, []int{40, 20, 60, 10, 30, 50, 70}, utils.SliceFrom[int](l))
 
-	dd, found := tree.Delete(5)
+	dd, found := tree.delete(5)
 	assert.False(t, found)
-	dd, found = tree.Delete(40)
+	dd, found = tree.delete(40)
 	assert.Equal(t, 40, dd)
 	assert.Equal(t, 6, tree.size)
 	assert.True(t, found)
-	tree.Delete(10)
-	tree.Delete(20)
-	tree.Delete(30)
-	tree.Delete(50)
-	tree.Delete(60)
+	tree.delete(10)
+	tree.delete(20)
+	tree.delete(30)
+	tree.delete(50)
+	tree.delete(60)
 	l = bfTraverse[int](tree.root)
 	assert.Equal(t, []int{70}, utils.SliceFrom[int](l))
 }

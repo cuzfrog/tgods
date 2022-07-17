@@ -108,7 +108,7 @@ func (l *linkedList[T]) AddHead(elem T) bool {
 }
 
 func (l *linkedList[T]) Enqueue(elem T) bool {
-	return l.AddHead(elem)
+	return l.Add(elem)
 }
 
 func (l *linkedList[T]) Push(elem T) bool {
@@ -136,7 +136,7 @@ func (l *linkedList[T]) Pop() (elem T, found bool) {
 }
 
 func (l *linkedList[T]) DequeueFirst() (elem T, found bool) {
-	return l.RemoveHead()
+	return l.Remove()
 }
 
 // Add adds elem to the tail
@@ -157,7 +157,7 @@ func (l *linkedList[T]) AddTail(elem T) bool {
 }
 
 func (l *linkedList[T]) EnqueueLast(elem T) bool {
-	return l.Add(elem)
+	return l.AddHead(elem)
 }
 
 // Remove gets and removes the last elem
@@ -182,5 +182,5 @@ func (l *linkedList[T]) RemoveTail() (elem T, found bool) {
 }
 
 func (l *linkedList[T]) Dequeue() (elem T, found bool) {
-	return l.Remove()
+	return l.RemoveHead()
 }

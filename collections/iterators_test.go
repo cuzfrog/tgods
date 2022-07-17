@@ -139,6 +139,45 @@ func TestIteratorForDeque(t *testing.T) {
 	}
 }
 
+func TestIteratorForSortedSet(t *testing.T) {
+	tests := []struct {
+		name string
+		s    types.SortedSet[int]
+	}{
+		{"rbTree", newRbTreeOf[int]()},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			s := test.s
+			s.Add(1)
+			s.Add(3)
+			s.Add(2)
+			s.Add(4)
+			ok := s.Add(5)
+			assert.True(t, ok)
+
+			it := s.Iterator()
+			assert.True(t, it.Next())
+			assert.Equal(t, 0, it.Index())
+			assert.Equal(t, 1, it.Value())
+			assert.True(t, it.Next())
+			assert.Equal(t, 1, it.Index())
+			assert.Equal(t, 2, it.Value())
+			assert.True(t, it.Next())
+			assert.Equal(t, 2, it.Index())
+			assert.Equal(t, 3, it.Value())
+			assert.True(t, it.Next())
+			assert.Equal(t, 3, it.Index())
+			assert.Equal(t, 4, it.Value())
+			assert.True(t, it.Next())
+			assert.Equal(t, 4, it.Index())
+			assert.Equal(t, 5, it.Value())
+			assert.False(t, it.Next())
+			assert.False(t, it.Next())
+		})
+	}
+}
+
 func Test_forEach(t *testing.T) {
 	c := mocks.NewMockCollectionOf(3, 4, 5)
 	arr := make([]int, 3)
