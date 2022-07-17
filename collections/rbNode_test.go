@@ -54,6 +54,12 @@ func Test_rbNode_insert(t *testing.T) {
 }
 
 func Test_rbNode_delete(t *testing.T) {
+	t.Run("root", func(t *testing.T) {
+		n30 := newRbNode(30, nil, false, black)
+		nd, found := deleteNode(n30, 30, compInt)
+		assert.True(t, found)
+		assert.Same(t, n30, nd)
+	})
 	t.Run("simple red", func(t *testing.T) {
 		/*
 				    30b

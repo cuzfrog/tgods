@@ -55,6 +55,32 @@ func (t *rbTree[T]) delete(d T) (T, bool) {
 	return utils.Nil[T](), false
 }
 
+func (t *rbTree[T]) searchNode(elem T) *rbNode[T] {
+	return searchNode(t.root, elem, t.comp)
+}
+
+func (t *rbTree[T]) firstNode() *rbNode[T] {
+	if t.size == 0 {
+		return nil
+	}
+	n := t.root
+	for n.a != nil {
+		n = n.a
+	}
+	return n
+}
+
+func (t *rbTree[T]) lastNode() *rbNode[T] {
+	if t.size == 0 {
+		return nil
+	}
+	n := t.root
+	for n.b != nil {
+		n = n.b
+	}
+	return n
+}
+
 // ======== SortedSet ========
 
 func (t *rbTree[T]) Add(elem T) bool {
@@ -63,8 +89,8 @@ func (t *rbTree[T]) Add(elem T) bool {
 }
 
 func (t *rbTree[T]) Contains(elem T) bool {
-	//TODO implement me
-	panic("implement me")
+	n := t.searchNode(elem)
+	return n != nil
 }
 
 func (t *rbTree[T]) Size() int {
@@ -72,33 +98,59 @@ func (t *rbTree[T]) Size() int {
 }
 
 func (t *rbTree[T]) Clear() {
-	//TODO implement me
-	panic("implement me")
+	t.size = 0
+	t.root = nil
 }
 
 func (t *rbTree[T]) Remove(elem T) bool {
-	//TODO implement me
-	panic("implement me")
+	_, found := t.delete(elem)
+	return found
 }
 
 func (t *rbTree[T]) First() (T, bool) {
-	//TODO implement me
-	panic("implement me")
+	if t.size == 0 {
+		return utils.Nil[T](), false
+	}
+	n := t.firstNode()
+	return n.v, true
 }
 
 func (t *rbTree[T]) Last() (T, bool) {
-	//TODO implement me
-	panic("implement me")
+	if t.size == 0 {
+		return utils.Nil[T](), false
+	}
+	n := t.lastNode()
+	return n.v, true
 }
 
 func (t *rbTree[T]) RemoveFirst() (T, bool) {
-	//TODO implement me
-	panic("implement me")
+	if t.size == 0 {
+		return utils.Nil[T](), false
+	}
+	if t.size == 1 {
+		v := t.root.v
+		t.Clear()
+		return v, true
+	}
+	n := t.firstNode()
+	removeNode(n)
+	t.size--
+	return n.v, true
 }
 
 func (t *rbTree[T]) RemoveLast() (T, bool) {
-	//TODO implement me
-	panic("implement me")
+	if t.size == 0 {
+		return utils.Nil[T](), false
+	}
+	if t.size == 1 {
+		v := t.root.v
+		t.Clear()
+		return v, true
+	}
+	n := t.lastNode()
+	removeNode(n)
+	t.size--
+	return n.v, true
 }
 
 func (t *rbTree[T]) HeadSet(toElem T) types.SortedSet[T] {

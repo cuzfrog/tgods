@@ -65,30 +65,42 @@ func insertNode[T any](n *rbNode[T], d T, comp types.Compare[T]) (r *rbNode[T], 
 	return n, found, nn
 }
 
-// deleteNode removes a node with given value d returns:
-//  found true if there's a node deleted
-//  nd the removed node
-func deleteNode[T any](r *rbNode[T], d T, comp types.Compare[T]) (nd *rbNode[T], found bool) {
+func searchNode[T any](r *rbNode[T], d T, comp types.Compare[T]) *rbNode[T] {
 	n := r
-	for true {
-		if n == nil {
-			return nil, false
-		}
+	for n != nil {
 		compRes := comp(d, n.v)
 		if compRes < 0 {
 			n = n.a
 		} else if compRes > 0 {
 			n = n.b
 		} else {
-			found = true
-			n = swapDown(n) // n is a leaf now
-			nd = n
-			ndp, ndBranch := removeFromParent(n)
-			deletionRebalance(ndp, nd, ndBranch)
 			break
 		}
 	}
+	return n
+}
+
+// deleteNode removes a node with given value d returns:
+//  found true if there's a node deleted
+//  nd the removed node
+func deleteNode[T any](r *rbNode[T], d T, comp types.Compare[T]) (nd *rbNode[T], found bool) {
+	n := searchNode(r, d, comp)
+	if n != nil {
+		found = true
+		n = swapDown(n) // n is a leaf now
+		nd = n
+		if n.p != nil {
+			removeNode(nd)
+		}
+	}
 	return
+}
+
+func removeNode[T any](n *rbNode[T]) {
+	if n.p != nil {
+		ndp, ndBranch := removeFromParent(n)
+		deletionRebalance(ndp, n, ndBranch)
+	}
 }
 
 // deletionRebalance params:
