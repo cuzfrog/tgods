@@ -25,8 +25,8 @@ func newRbTreeOf[T constraints.Ordered](values ...T) *rbTree[T] {
 	return t
 }
 
-func (t *rbTree[T]) insert(d T) bool {
-	r, found, nn := insertNode(t.root, d, t.comp)
+func rbTreeInsert[T any](t *rbTree[T], d T) (T, bool) {
+	r, found, nn, old := insertNode(t.root, d, t.comp)
 	for true {
 		nn = insertionRebalance(nn)
 		if nn == nil {
@@ -40,9 +40,15 @@ func (t *rbTree[T]) insert(d T) bool {
 	if !found {
 		t.size++
 	}
+	return old, found
+}
+
+func (t *rbTree[T]) insert(d T) bool {
+	_, found := rbTreeInsert(t, d)
 	return found
 }
 
+// delete returns the old value and true if found an existing entry
 func (t *rbTree[T]) delete(d T) (T, bool) {
 	nd, found := deleteNode[T](t.root, d, t.comp)
 	if found {

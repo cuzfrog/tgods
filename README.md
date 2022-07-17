@@ -6,36 +6,28 @@
 
 Your brand-new Golang collections implementation with generics. Go version >= [1.18](https://tip.golang.org/doc/go1.18).
 
+### Interfaces
+
+| Implementation\Interface | Stack              | List               | Queue              | Deque              | Set                | Map                |
+|--------------------------|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
+| `arrayStack`             | :heavy_check_mark: |                    |                    |                    |                    |                    |
+| `circularArray`          | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
+| `linkedList`             | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
+| `binaryHeap`             |                    |                    | :heavy_check_mark: |                    |                    |                    |
+| `rbTree`                 |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |
+
+Top interface `Collection` contains general methods, sub-interfaces like `ArrayList`, `SortedSet` provide more rich functionalities.
+All interface definitions can be found: [here](./types/collection.go)
+
 ### Data Structures:
 
 * `arrayStack` - fixed length first-in-last-out array based stack.
 * `circularArray` - variable length/cap array with fast add/remove at head or tail and random access with index.
 * `linkedList` - doubly linked list with fast add/remove.
 * `binaryHeap` - binary heap based min or max priority queue.
-* `rbTree` - red black tree implementation with no recursion.
+* `rbTree` - red black tree implementation with no recursions.
 
-### Interfaces
-
-| Implementation\Interface | Stack              | List               | ArrayList          | Queue              | Deque              | Set                | SortedSet          |
-|--------------------------|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
-| `arrayStack`             | :heavy_check_mark: |                    |                    |                    |                    |                    |                    |
-| `circularArray`          | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
-| `linkedList`             | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
-| `binaryHeap`             |                    |                    |                    | :heavy_check_mark: |                    |                    |                    |
-| `rbTree`                 |                    |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |
-
-All implement `Collection`, all interface methods can be found: [here](./types/collection.go)
-
-```go
-type Collection[T any] interface {
-    Add(elem T) bool
-    Contains(elem T) bool
-    Each(func (index int, elem T))
-    Iterator() Iterator[T]
-    Size() int
-    Clear()
-}
-```
+## Usage:
 
 ### Constructors:
 
