@@ -148,6 +148,30 @@ func (it *binaryHeapIterator[T]) Value() T {
 	return it.v
 }
 
+// ======== rbTree ========
+type rbTreeIterator[T any] struct {
+	t *rbTree[T]
+}
+
+func (it *rbTreeIterator[T]) Next() bool {
+	if it.t.size == 0 {
+		return false
+	}
+	panic("not impl")
+}
+
+func (it *rbTreeIterator[T]) Index() int {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (it *rbTreeIterator[T]) Value() T {
+	//TODO implement me
+	panic("implement me")
+}
+
+// ======== forEach ========
+
 func forEach[T any](c types.Collection[T], fn func(index int, v T)) {
 	it := c.Iterator()
 	for it.Next() {
@@ -163,10 +187,14 @@ func (h *binaryHeap[T]) Each(fn func(index int, elem T)) {
 	forEach[T](h, fn)
 }
 
-func (h *circularArray[T]) Each(fn func(index int, elem T)) {
-	forEach[T](h, fn)
+func (a *circularArray[T]) Each(fn func(index int, elem T)) {
+	forEach[T](a, fn)
 }
 
-func (h *linkedList[T]) Each(fn func(index int, elem T)) {
-	forEach[T](h, fn)
+func (l *linkedList[T]) Each(fn func(index int, elem T)) {
+	forEach[T](l, fn)
+}
+
+func (s *rbTree[T]) Each(fn func(index int, elem T)) {
+	forEach[T](s, fn)
 }

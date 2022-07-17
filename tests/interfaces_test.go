@@ -5,5 +5,4 @@ import (
 )
 
 func TestSetInterface(t *testing.T) {
-
 }

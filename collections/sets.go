@@ -1,7 +1,11 @@
 package collections
 
-import "github.com/cuzfrog/tgods/types"
+import (
+	"github.com/cuzfrog/tgods/types"
+	"golang.org/x/exp/constraints"
+)
 
-func NewTreeSetOf[T comparable](values ...T) types.SortedSet[T] {
-	return newTreeSetOf(values...)
+// NewTreeSetOf creates a red black tree backed SortedSet with init values
+func NewTreeSetOf[T constraints.Ordered](values ...T) types.SortedSet[T] {
+	return newRbTreeOf(values...)
 }

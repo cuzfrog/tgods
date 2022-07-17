@@ -22,7 +22,7 @@ Your brand-new Golang collections implementation with generics. Go version >= [1
 | `circularArray`          | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
 | `linkedList`             | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
 | `binaryHeap`             |                    |                    |                    | :heavy_check_mark: |                    |                    |                    |
-| `treeSet`                |                    |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |
+| `rbTree`                 |                    |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |
 
 All implement `Collection`, all interface methods can be found: [here](./types/collection.go)
 
