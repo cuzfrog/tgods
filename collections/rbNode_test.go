@@ -672,3 +672,26 @@ func Test_rbNode_swapDown(t *testing.T) {
 		assert.Equal(t, []int{40, 20, 50, 45, 46, 30}, utils.SliceFrom[int](l))
 	})
 }
+
+func TestRbNode_swapInorderSuccessor_swapInorderPredecessor(t *testing.T) {
+	n30 := newRbNode(30, nil, false, black)
+	assert.Same(t, n30, swapInorderSuccessor[int](n30))
+	assert.Same(t, n30, swapInorderPredecessor[int](n30))
+	/*
+			     30b
+			20b        50r
+		      25    40r
+	*/
+	newRbNode(20, n30, left, red)
+	n50 := newRbNode(50, n30, right, black)
+	n40 := newRbNode(40, n50, left, red)
+	n20 := newRbNode(20, n30, left, black)
+	n25 := newRbNode(25, n20, right, black)
+	assert.Same(t, n25, swapInorderPredecessor(n30))
+	assert.Same(t, n40, swapInorderSuccessor(n30))
+}
+
+func TestRbNode_isLeaf(t *testing.T) {
+	var n *rbNode[int]
+	assert.True(t, n.isLeaf())
+}

@@ -174,6 +174,7 @@ func TestIteratorForSortedSet(t *testing.T) {
 			assert.Equal(t, 5, it.Value())
 			assert.False(t, it.Next())
 			assert.False(t, it.Next())
+			assert.Equal(t, 0, it.Value())
 		})
 	}
 }
@@ -198,6 +199,7 @@ func Test_Each(t *testing.T) {
 	c4.Enqueue(1)
 	c4.Enqueue(2)
 	c4.Enqueue(3)
+	c5 := NewTreeSetOf(1, 2, 3)
 
 	tests := []struct {
 		name string
@@ -207,6 +209,7 @@ func Test_Each(t *testing.T) {
 		{"CircularArrayList", c2},
 		{"LinkedList", c3},
 		{"HeapMinPriorityQueue", c4},
+		{"TreeSet", c5},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {

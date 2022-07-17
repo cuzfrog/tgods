@@ -172,6 +172,7 @@ func (it *rbTreeIterator[T]) Next() bool {
 		it.n = cur.b
 		return true
 	}
+	it.cur = nil
 	return false
 }
 
