@@ -8,3 +8,5 @@ const (
 	queue
 	deque
 )
+
+const left, right = true, false

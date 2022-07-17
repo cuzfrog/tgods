@@ -5,15 +5,15 @@ import (
 	"github.com/cuzfrog/tgods/types"
 )
 
-type node[T any] struct {
+type dlNode[T any] struct {
 	v    T
-	prev *node[T]
-	next *node[T]
+	prev *dlNode[T]
+	next *dlNode[T]
 }
 
 type linkedList[T any] struct {
-	head *node[T]
-	tail *node[T]
+	head *dlNode[T]
+	tail *dlNode[T]
 	size int
 	comp types.Equal[T]
 	r    role
@@ -30,11 +30,11 @@ func newLinkedListOfEq[T any](eq types.Equal[T], values ...T) *linkedList[T] {
 		return l
 	}
 	first := values[0]
-	l.head = &node[T]{first, nil, nil}
+	l.head = &dlNode[T]{first, nil, nil}
 	l.tail = l.head
 	l.size = 1
 	for i := 1; i < length; i++ {
-		n := &node[T]{values[i], l.tail, nil}
+		n := &dlNode[T]{values[i], l.tail, nil}
 		l.tail.next = n
 		l.tail = n
 		l.size++
@@ -97,7 +97,7 @@ func (l *linkedList[T]) Peek() (elem T, found bool) {
 // AddHead prepends to the list
 func (l *linkedList[T]) AddHead(elem T) bool {
 	prevHead := l.head
-	l.head = &node[T]{elem, nil, prevHead}
+	l.head = &dlNode[T]{elem, nil, prevHead}
 	if l.size == 0 {
 		l.tail = l.head
 	} else {
@@ -108,7 +108,7 @@ func (l *linkedList[T]) AddHead(elem T) bool {
 }
 
 func (l *linkedList[T]) Enqueue(elem T) bool {
-	return l.AddHead(elem)
+	return l.Add(elem)
 }
 
 func (l *linkedList[T]) Push(elem T) bool {
@@ -136,13 +136,13 @@ func (l *linkedList[T]) Pop() (elem T, found bool) {
 }
 
 func (l *linkedList[T]) DequeueFirst() (elem T, found bool) {
-	return l.RemoveHead()
+	return l.Remove()
 }
 
 // Add adds elem to the tail
 func (l *linkedList[T]) Add(elem T) bool {
 	prevTail := l.tail
-	l.tail = &node[T]{elem, prevTail, nil}
+	l.tail = &dlNode[T]{elem, prevTail, nil}
 	if l.size == 0 {
 		l.head = l.tail
 	} else {
@@ -157,7 +157,7 @@ func (l *linkedList[T]) AddTail(elem T) bool {
 }
 
 func (l *linkedList[T]) EnqueueLast(elem T) bool {
-	return l.Add(elem)
+	return l.AddHead(elem)
 }
 
 // Remove gets and removes the last elem
@@ -182,5 +182,5 @@ func (l *linkedList[T]) RemoveTail() (elem T, found bool) {
 }
 
 func (l *linkedList[T]) Dequeue() (elem T, found bool) {
-	return l.Remove()
+	return l.RemoveHead()
 }

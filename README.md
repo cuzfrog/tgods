@@ -11,19 +11,20 @@ Your brand-new Golang collections implementation with generics. Go version >= [1
 * `arrayStack` - fixed length first-in-last-out array based stack.
 * `circularArray` - variable length/cap array with fast add/remove at head or tail and random access with index.
 * `linkedList` - doubly linked list with fast add/remove.
-* `binaryHeap` - heap based min or max priority queue.
-* (under implementation..) `rbTree` - red black tree with no recursion but with a parent pointer in the node
+* `binaryHeap` - binary heap based min or max priority queue.
+* `rbTree` - red black tree implementation with no recursion.
 
 ### Interfaces
 
-| Implementation\Interface | Stack              | List               | ArrayList          | Queue              | Deque              |
-|--------------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
-| `arrayStack`             | :heavy_check_mark: |                    |                    |                    |                    |
-| `circularArray`          | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| `linkedList`             | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: | :heavy_check_mark: |
-| `binaryHeap`             |                    |                    |                    | :heavy_check_mark: |                    |
+| Implementation\Interface | Stack              | List               | ArrayList          | Queue              | Deque              | Set                | SortedSet          |
+|--------------------------|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
+| `arrayStack`             | :heavy_check_mark: |                    |                    |                    |                    |                    |                    |
+| `circularArray`          | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
+| `linkedList`             | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
+| `binaryHeap`             |                    |                    |                    | :heavy_check_mark: |                    |                    |                    |
+| `rbTree`                 |                    |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |
 
-All implement `Collection`
+All implement `Collection`, all interface methods can be found: [here](./types/collection.go)
 
 ```go
 type Collection[T any] interface {
