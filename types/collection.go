@@ -71,17 +71,18 @@ type Set[T any] interface {
 // SortedSet The elem order is decided by Compare func.
 type SortedSet[T any] interface {
 	Set[T]
-	First() (T, bool)                // returns the first elem and true if it has, or Nil and false if it hasn't. The elem is not removed from the set.
-	Last() (T, bool)                 // returns the last elem and true if it has, or Nil and false if it hasn't. The elem is not removed from the set.
-	RemoveFirst() (T, bool)          // returns the first elem and true if it has, or Nil and false if it hasn't.
-	RemoveLast() (T, bool)           // returns the last elem and true if it has, or Nil and false if it hasn't.
-	HeadSet(toElem T) SortedSet[T]   // returns a new set contains elements from first to toElem(exclusive).
-	TailSet(fromElem T) SortedSet[T] // returns a new set contains elements from fromElem(inclusive) to the last.
-	Higher(elem T) (T, bool)         // returns the least elem that is greater than the given elem, or Nil and false if no one can be found.
-	Lower(elem T) (T, bool)          // returns the greatest elem that is less than the given elem, or Nil and false if no one can be found.
-	Ceiling(elem T) (T, bool)        // returns the least elem that is greater than or equal to the given elem, or Nil and false if no one can be found.
-	Floor(elem T) (T, bool)          // returns the greatest elem that is less than or equal to the given elem, or Nil and false if no one can be found.
-	ReverseSet() SortedSet[T]        // returns a view of the same set with an inverted Compare func thus reverted element order.
+	First() (T, bool)       // returns the first elem and true if it has, or Nil and false if it hasn't. The elem is not removed from the set. O(log(n))
+	Last() (T, bool)        // returns the last elem and true if it has, or Nil and false if it hasn't. The elem is not removed from the set. O(log(n))
+	RemoveFirst() (T, bool) // returns the first elem and true if it has, or Nil and false if it hasn't. O(log(n))
+	RemoveLast() (T, bool)  // returns the last elem and true if it has, or Nil and false if it hasn't. O(log(n))
+	//HeadSet(toElem T) SortedSet[T]          // returns a new set contains elements from first to toElem(exclusive). O(n*log(n))
+	//TailSet(fromElem T) SortedSet[T]        // returns a new set contains elements from fromElem(inclusive) to the last. O(n*log(n))
+	//SubSet(fromElem, toElem T) SortedSet[T] // returns a new set contains elements from fromElem(inclusive) to toElem(exclusive). O(n*log(n))
+	//Higher(elem T) (T, bool)                // returns the least elem that is greater than the given elem, or Nil and false if no one can be found. O(log(n))
+	//Lower(elem T) (T, bool)                 // returns the greatest elem that is less than the given elem, or Nil and false if no one can be found. O(log(n))
+	//Ceiling(elem T) (T, bool)               // returns the least elem that is greater than or equal to the given elem, or Nil and false if no one can be found. O(log(n))
+	//Floor(elem T) (T, bool)                 // returns the greatest elem that is less than or equal to the given elem, or Nil and false if no one can be found. O(log(n))
+	//ReverseSet() SortedSet[T]               // returns a view of the same set with an inverted Compare func and reverted element order. O(c)
 }
 
 type Map[K any, V any] interface {

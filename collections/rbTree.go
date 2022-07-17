@@ -153,37 +153,47 @@ func (t *rbTree[T]) RemoveLast() (T, bool) {
 	return n.v, true
 }
 
-func (t *rbTree[T]) HeadSet(toElem T) types.SortedSet[T] {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (t *rbTree[T]) TailSet(fromElem T) types.SortedSet[T] {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (t *rbTree[T]) Higher(elem T) (T, bool) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (t *rbTree[T]) Lower(elem T) (T, bool) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (t *rbTree[T]) Ceiling(elem T) (T, bool) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (t *rbTree[T]) Floor(elem T) (T, bool) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (t *rbTree[T]) ReverseSet() types.SortedSet[T] {
-	//TODO implement me
-	panic("implement me")
-}
+//
+//func (t *rbTree[T]) HeadSet(toElem T) types.SortedSet[T] {
+//	nt := newRbTreeOfComp(t.comp)
+//	it := t.Iterator()
+//	for it.Next() {
+//		v := it.Value()
+//		if t.comp(v, toElem) < 0 {
+//			nt.Add(v)
+//		} else {
+//			break
+//		}
+//	}
+//	return nt
+//}
+//
+//func (t *rbTree[T]) TailSet(fromElem T) types.SortedSet[T] {
+//	//TODO implement me
+//	panic("implement me")
+//}
+//
+//func (t *rbTree[T]) Higher(elem T) (T, bool) {
+//	//TODO implement me
+//	panic("implement me")
+//}
+//
+//func (t *rbTree[T]) Lower(elem T) (T, bool) {
+//	//TODO implement me
+//	panic("implement me")
+//}
+//
+//func (t *rbTree[T]) Ceiling(elem T) (T, bool) {
+//	//TODO implement me
+//	panic("implement me")
+//}
+//
+//func (t *rbTree[T]) Floor(elem T) (T, bool) {
+//	//TODO implement me
+//	panic("implement me")
+//}
+//
+//func (t *rbTree[T]) ReverseSet() types.SortedSet[T] {
+//	//TODO implement me
+//	panic("implement me")
+//}
