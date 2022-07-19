@@ -35,7 +35,7 @@ All interface definitions can be found: [here](./types/collection.go)
 import "github.com/cuzfrog/tgods/collections"
 
 list := collections.NewLinkedListOf(1, 2, 3) // List[int]
-list := collections.NewCircularArrayListOf(1, 2, 3) // List[int]
+list := collections.NewArrayListOf(1, 2, 3) // List[int]
 queue := collections.NewLinkedListQueue[int]() // Queue[int]
 queue := collections.NewArrayListQueue[int]() // Queue[int]
 // more...
