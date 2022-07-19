@@ -9,4 +9,4 @@ type intStruct struct {
 }
 
 var compInt = funcs.ValueCompare[int]
-var equalInt = funcs.ValueEqual[int]
+var eqInt = funcs.ValueEqual[int]
