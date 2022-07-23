@@ -199,10 +199,14 @@ func TestIteratorForSet(t *testing.T) {
 			assert.True(t, ok)
 			assert.ElementsMatch(t, []int{1, 2, 3, 4, 5}, utils.SliceFrom[int](s))
 			it := s.Iterator()
+			arr := make([]int, 5)
 			for i := 0; i < 5; i++ {
 				assert.True(t, it.Next())
+				assert.Equal(t, i, it.Index())
+				arr[i] = it.Value()
 			}
 			assert.False(t, it.Next())
+			assert.ElementsMatch(t, []int{1, 2, 3, 4, 5}, arr)
 		})
 	}
 }
