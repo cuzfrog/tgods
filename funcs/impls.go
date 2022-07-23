@@ -28,8 +28,7 @@ func NumHash[T constraints.Integer | constraints.Float](n T) uint {
 	return uint(n)
 }
 
-// NewStrHash returns a function closure of go native fnv.New32a or fnv.New64a
-// https://stackoverflow.com/questions/13582519/how-to-generate-hash-number-of-a-string-in-go
+// NewStrHash returns a function closure of go native fnv.New32a or fnv.New64a depending on runtime platform
 func NewStrHash() types.Hash[string] {
 	if strconv.IntSize == 32 {
 		fn := fnv.New32a()

@@ -27,7 +27,7 @@ All interface definitions can be found: [here](./types/collection.go)
 * `linkedList` - doubly linked list with fast add/remove.
 * `binaryHeap` - binary heap based min or max priority queue.
 * `rbTree` - recursion-free red black tree implementation.
-* `hashTable` - variable length/cap array based hash table.
+* `hashTable` - variable length/cap array based hash table with built-in hash functions for integers, floats, and string.
 
 ## Usage:
 
@@ -60,6 +60,7 @@ import "github.com/cuzfrog/tgods/utils"
 list := collections.NewLinkedListOf(1, 2, 3)
 utils.StringFrom(list) // [1, 2, 3]
 utils.SliceFrom(list)  // []int{1, 2, 3}
+funcs.NewStrHash() // func(s string) uint
 // more...
 ```
 
