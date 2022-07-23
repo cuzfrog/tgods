@@ -10,7 +10,7 @@ import (
 )
 
 func TestMapTo(t *testing.T) {
-	c := collections.NewCircularArrayList(1, 3, 4)
+	c := collections.NewArrayList(1, 3, 4)
 	l := collections.NewLinkedList[string]()
 	n := MapTo[int, string](c, l, func(elem int) string { return fmt.Sprint(elem) })
 	assert.Equal(t, []string{"1", "3", "4"}, utils.SliceFrom[string](l))

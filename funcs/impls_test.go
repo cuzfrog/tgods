@@ -29,3 +29,16 @@ func TestInverseComp(t *testing.T) {
 	assert.Equal(t, int8(-1), fn(2, 1))
 	assert.Equal(t, int8(1), fn(2, 3))
 }
+
+func TestNumHash(t *testing.T) {
+	assert.Equal(t, uint(3), NumHash(3))
+}
+
+func TestNewStrHash(t *testing.T) {
+	fn := NewStrHash()
+	h1 := fn("abc")
+	h2 := fn("abc")
+	h3 := fn("abcd")
+	assert.Equal(t, h1, h2)
+	assert.NotEqual(t, h3, h1)
+}

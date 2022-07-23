@@ -15,7 +15,7 @@ func TestNewCircularArrayListOfType(t *testing.T) {
 }
 
 func TestCircularArrayList_shrinkIfNeeded(t *testing.T) {
-	l := &circularArray[int]{5, 8, make([]int, 200), 3, equalInt, list}
+	l := &circularArray[int]{5, 8, make([]int, 200), 3, eqInt, list}
 	l.arr[l.start] = 2
 	l.arr[l.end-1] = 4
 	l.shrinkIfNeeded()
@@ -25,11 +25,11 @@ func TestCircularArrayList_shrinkIfNeeded(t *testing.T) {
 	assert.Equal(t, 3, l.Size())
 	assert.Equal(t, []int{2, 0, 4}, l.arr[0:3])
 
-	l = &circularArray[int]{5, 8, make([]int, 12), 3, equalInt, list}
+	l = &circularArray[int]{5, 8, make([]int, 12), 3, eqInt, list}
 	l.shrinkIfNeeded()
 	assert.Equal(t, 12, len(l.arr))
 
-	l = &circularArray[int]{5, 8, make([]int, 14), 3, equalInt, list}
+	l = &circularArray[int]{5, 8, make([]int, 14), 3, eqInt, list}
 	l.shrinkIfNeeded()
 	assert.Equal(t, 14, len(l.arr))
 
@@ -190,7 +190,7 @@ func TestCircularArrayList_Remove(t *testing.T) {
 	v, ok = l.RemoveTail()
 	assert.False(t, ok)
 
-	l = &circularArray[int]{4, 1, make([]int, 6), 3, equalInt, list}
+	l = &circularArray[int]{4, 1, make([]int, 6), 3, eqInt, list}
 	l.arr[0] = 13
 	l.arr[4] = 3
 	l.arr[5] = 11

@@ -4,3 +4,5 @@ package types
 type Compare[T any] func(a, b T) int8
 
 type Equal[T any] func(a, b T) bool
+
+type Hash[T any] func(a T) uint
