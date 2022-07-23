@@ -206,6 +206,7 @@ func (it *slNodeIterator[T]) Next() bool {
 		it.next = it.next.n
 		return true
 	}
+	it.cur = nil
 	return false
 }
 

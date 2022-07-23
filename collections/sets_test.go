@@ -38,7 +38,7 @@ func TestSetProperties(t *testing.T) {
 	}{
 		{"treeSet1", NewTreeSetOf[int]()},
 		{"treeSet2", NewTreeSetOfComp[int](funcs.ValueCompare[int])},
-		{"hashSet1", NewHashSetOfNum[int]()},
+		{"hashSet1", NewHashSetOfNum[int](2)},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {

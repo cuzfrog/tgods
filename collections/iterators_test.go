@@ -230,6 +230,7 @@ func TestIteratorForSlNode(t *testing.T) {
 			assert.Equal(t, 1, it.Index())
 			assert.Equal(t, 5, it.Value())
 			assert.False(t, it.Next())
+			assert.Equal(t, 0, it.Value())
 		})
 	}
 }
