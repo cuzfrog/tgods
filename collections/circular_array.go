@@ -6,8 +6,8 @@ import (
 	"github.com/cuzfrog/tgods/types"
 )
 
-const defaultInitSize = 12
-const defaultShrinkThreshold = 3 // bitwise shift
+const defaultArrInitSize = 12
+const defaultArrShrinkThreshold = 3 // bitwise shift
 
 type circularArray[T any] struct {
 	start int //inclusive
@@ -18,7 +18,7 @@ type circularArray[T any] struct {
 	r     role
 }
 
-// newCircularArrayOf creates an auto expandable circular array based list, auto shrinkable, but will not shrink if the length is <= defaultInitSize,
+// newCircularArrayOf creates an auto expandable circular array based list, auto shrinkable, but will not shrink if the length is <= defaultArrInitSize,
 // the underlying array will be lazily created unless init values are provided, the init arr size is the same as init values'
 func newCircularArrayOf[T comparable](values ...T) *circularArray[T] {
 	var arr []T
@@ -239,7 +239,7 @@ func (l *circularArray[T]) toArrIndex(index int) (int, bool) {
 
 func (l *circularArray[T]) expandIfNeeded() {
 	if l.arr == nil || cap(l.arr) == 0 {
-		l.arr = make([]T, defaultInitSize)
+		l.arr = make([]T, defaultArrInitSize)
 	} else if l.size >= len(l.arr) {
 		newLength := l.size << 1
 		if newLength <= l.size {
@@ -265,8 +265,8 @@ func (l *circularArray[T]) shrinkIfNeeded() {
 		l.arr = nil
 		return
 	}
-	newLength := len(l.arr) >> defaultShrinkThreshold
-	if newLength <= l.size || newLength <= defaultInitSize {
+	newLength := len(l.arr) >> defaultArrShrinkThreshold
+	if newLength <= l.size || newLength <= defaultArrInitSize {
 		return
 	}
 	newArr := make([]T, newLength)

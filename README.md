@@ -15,6 +15,7 @@ Your brand-new Golang collections implementation with generics. Go version >= [1
 | `linkedList`             | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
 | `binaryHeap`             |                    |                    | :heavy_check_mark: |                    |                    |                    |
 | `rbTree`                 |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |
+| `hashTable`              |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |
 
 Top interface `Collection` contains general methods, sub-interfaces like `ArrayList`, `SortedSet` provide more rich functionalities.
 All interface definitions can be found: [here](./types/collection.go)
@@ -25,7 +26,8 @@ All interface definitions can be found: [here](./types/collection.go)
 * `circularArray` - variable length/cap array with fast add/remove at head or tail and random access with index.
 * `linkedList` - doubly linked list with fast add/remove.
 * `binaryHeap` - binary heap based min or max priority queue.
-* `rbTree` - red black tree implementation with no recursions.
+* `rbTree` - recursion-free red black tree implementation.
+* `hashTable` - variable length/cap array based hash table.
 
 ## Usage:
 
