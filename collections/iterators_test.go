@@ -211,6 +211,29 @@ func TestIteratorForSet(t *testing.T) {
 	}
 }
 
+func TestIteratorForSlNode(t *testing.T) {
+	tests := []struct {
+		name string
+		b    bucket[int]
+	}{
+		{"slNode", newLinkedListBucketOf[int](3)},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			b := test.b
+			b.Save(5, eqInt)
+			it := b.Iterator()
+			assert.True(t, it.Next())
+			assert.Equal(t, 0, it.Index())
+			assert.Equal(t, 3, it.Value())
+			assert.True(t, it.Next())
+			assert.Equal(t, 1, it.Index())
+			assert.Equal(t, 5, it.Value())
+			assert.False(t, it.Next())
+		})
+	}
+}
+
 func Test_forEach(t *testing.T) {
 	c := mocks.NewMockCollectionOf(3, 4, 5)
 	arr := make([]int, 3)
