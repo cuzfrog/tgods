@@ -14,6 +14,7 @@ type bucket[T any] interface {
 	Get(elem T, eq types.Equal[T]) (T, bool)               // finds and returns an elem by given eq func and input elem
 	Delete(elem T, eq types.Equal[T]) (bucket[T], T, bool) // removes the elem from the bucket, return the elem and true if found
 	Contains(elem T, eq types.Equal[T]) bool               // checks if the elem is in the bucket
+	Iterator() types.Iterator[T]
 }
 
 // assert type
@@ -24,8 +25,8 @@ type slNode[T any] struct {
 	n *slNode[T]
 }
 
-func newLinkedListBucket[T any]() *slNode[T] {
-	return &slNode[T]{utils.Nil[T](), nil}
+func newLinkedListBucketOf[T any](v T) *slNode[T] {
+	return &slNode[T]{v, nil}
 }
 
 func (n *slNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], T, bool) {
@@ -34,12 +35,13 @@ func (n *slNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], T, bool) {
 	}
 	h := n
 	var np *slNode[T]
-	for n != nil {
-		if eq(elem, n.v) {
-			return h, n.v, true
+	cur := n
+	for cur != nil {
+		if eq(elem, cur.v) {
+			return h, cur.v, true
 		}
-		np = n
-		n = n.n
+		np = cur
+		cur = cur.n
 	}
 	np.n = &slNode[T]{elem, nil}
 	return h, utils.Nil[T](), false

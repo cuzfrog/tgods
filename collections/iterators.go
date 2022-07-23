@@ -187,6 +187,78 @@ func (it *rbTreeIterator[T]) Value() T {
 	return it.cur.v
 }
 
+// ======== singlyLinkedList ========
+
+func (n *slNode[T]) Iterator() types.Iterator[T] {
+	return &slNodeIterator[T]{nil, n, -1}
+}
+
+type slNodeIterator[T any] struct {
+	cur   *slNode[T]
+	next  *slNode[T]
+	index int
+}
+
+func (it *slNodeIterator[T]) Next() bool {
+	it.index++
+	if it.next != nil {
+		it.cur = it.next
+		it.next = it.next.n
+		return true
+	}
+	return false
+}
+
+func (it *slNodeIterator[T]) Index() int {
+	return it.index
+}
+
+func (it *slNodeIterator[T]) Value() T {
+	if it.cur == nil {
+		return utils.Nil[T]()
+	}
+	return it.cur.v
+}
+
+// ======== hashTable ========
+
+func (h *hashTable[T]) Iterator() types.Iterator[T] {
+	return &hashTableIterator[T]{h, nil, 0, -1}
+}
+
+type hashTableIterator[T any] struct {
+	h     *hashTable[T]
+	it    types.Iterator[T] //current bucket iterator
+	cur   int               // current array index
+	index int               // current iterator index
+}
+
+func (it *hashTableIterator[T]) Next() bool {
+	it.index++
+	if it.index >= it.h.size {
+		return false
+	}
+	if it.it != nil && it.it.Next() {
+		return true
+	}
+	var b bucket[T]
+	for b == nil {
+		b = it.h.arr[it.cur]
+		it.cur++
+	}
+	it.it = b.Iterator()
+	it.it.Next()
+	return true
+}
+
+func (it *hashTableIterator[T]) Index() int {
+	return it.index
+}
+
+func (it *hashTableIterator[T]) Value() T {
+	return it.it.Value()
+}
+
 // ======== forEach ========
 
 func forEach[T any](c types.Collection[T], fn func(index int, v T)) {
@@ -214,4 +286,8 @@ func (l *linkedList[T]) Each(fn func(index int, elem T)) {
 
 func (s *rbTree[T]) Each(fn func(index int, elem T)) {
 	forEach[T](s, fn)
+}
+
+func (h *hashTable[T]) Each(fn func(index int, elem T)) {
+	forEach[T](h, fn)
 }

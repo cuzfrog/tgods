@@ -1,6 +1,7 @@
 package collections
 
 import (
+	"github.com/cuzfrog/tgods/funcs"
 	"github.com/cuzfrog/tgods/mocks"
 	"github.com/cuzfrog/tgods/types"
 	"github.com/cuzfrog/tgods/utils"
@@ -179,6 +180,33 @@ func TestIteratorForSortedSet(t *testing.T) {
 	}
 }
 
+func TestIteratorForSet(t *testing.T) {
+	tests := []struct {
+		name string
+		s    types.Set[int]
+	}{
+		{"rbTree", newRbTreeOf[int]()},
+		{"hashTable", newHashTable[int](funcs.NumHash[int], funcs.ValueEqual[int])},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			s := test.s
+			s.Add(1)
+			s.Add(3)
+			s.Add(2)
+			s.Add(4)
+			ok := s.Add(5)
+			assert.True(t, ok)
+			assert.ElementsMatch(t, []int{1, 2, 3, 4, 5}, utils.SliceFrom[int](s))
+			it := s.Iterator()
+			for i := 0; i < 5; i++ {
+				assert.True(t, it.Next())
+			}
+			assert.False(t, it.Next())
+		})
+	}
+}
+
 func Test_forEach(t *testing.T) {
 	c := mocks.NewMockCollectionOf(3, 4, 5)
 	arr := make([]int, 3)
@@ -200,6 +228,10 @@ func Test_Each(t *testing.T) {
 	c4.Enqueue(2)
 	c4.Enqueue(3)
 	c5 := NewTreeSetOf(1, 2, 3)
+	c6 := NewHashSet[int](funcs.NumHash[int], funcs.ValueEqual[int])
+	c6.Add(1)
+	c6.Add(2)
+	c6.Add(3)
 
 	tests := []struct {
 		name string
@@ -210,6 +242,7 @@ func Test_Each(t *testing.T) {
 		{"LinkedList", c3},
 		{"HeapMinPriorityQueue", c4},
 		{"TreeSet", c5},
+		{"HashTable", c6},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -218,8 +251,7 @@ func Test_Each(t *testing.T) {
 			c.Each(func(i, v int) {
 				arr[i] = v
 			})
-			//c.Each(func(i, v int) { fmt.Print(v) })
-			assert.Equal(t, arr, utils.SliceFrom(c))
+			assert.ElementsMatch(t, arr, utils.SliceFrom(c))
 		})
 	}
 }
