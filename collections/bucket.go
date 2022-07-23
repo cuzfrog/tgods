@@ -5,8 +5,6 @@ import (
 	"github.com/cuzfrog/tgods/utils"
 )
 
-const transformToRbTreeThreshold = 6
-
 type bucket[T any] interface {
 	//Save puts the elem into the bucket, returns:
 	//  bucket - the either this or a changed bucket for performance based on size of the elem
@@ -34,23 +32,17 @@ func (n *slNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], T, bool) {
 	if n == nil {
 		return &slNode[T]{elem, nil}, utils.Nil[T](), false
 	}
-	s := 0
 	h := n
 	var np *slNode[T]
 	for n != nil {
-		s++
 		if eq(elem, n.v) {
 			return h, n.v, true
 		}
 		np = n
 		n = n.n
 	}
-	if s < transformToRbTreeThreshold {
-		np.n = &slNode[T]{elem, nil}
-		return h, utils.Nil[T](), false
-	} else {
-		panic("impl me to use rbTree")
-	}
+	np.n = &slNode[T]{elem, nil}
+	return h, utils.Nil[T](), false
 }
 
 func (n *slNode[T]) Get(elem T, eq types.Equal[T]) (T, bool) {
