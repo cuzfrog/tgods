@@ -19,6 +19,9 @@ func newHashMap[K any, V any](hs types.Hash[K], eq types.Equal[K]) *hashMap[K, V
 }
 
 func (h *hashMap[K, V]) Get(k K) (V, bool) {
+	if h.size == 0 {
+		return utils.Nil[V](), false
+	}
 	i := hashToIndex(h.khs(k), cap(h.arr))
 	b := h.arr[i]
 	if b == nil {

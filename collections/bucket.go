@@ -38,7 +38,9 @@ func (n *slNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], T, bool) {
 	cur := n
 	for cur != nil {
 		if eq(elem, cur.v) {
-			return h, cur.v, true
+			old := cur.v
+			cur.v = elem
+			return h, old, true
 		}
 		np = cur
 		cur = cur.n

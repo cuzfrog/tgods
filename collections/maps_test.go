@@ -16,6 +16,8 @@ func TestMapProperties(t *testing.T) {
 	}{
 		{"treeMap1", NewTreeMapOf[string, int](entry1)},
 		{"treeMap2", NewTreeMapOfComp[string, int](funcs.ValueCompare[string], entry1)},
+		{"hashMap1", NewHashMapOfStrKey[int](entry1)},
+		{"hashMap2", NewHashMapOf[string, int](funcs.NewStrHash(), funcs.ValueEqual[string], entry1)},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -53,4 +55,12 @@ func TestMapProperties(t *testing.T) {
 			assert.False(t, found)
 		})
 	}
+}
+
+func TestNewHashMapOfNumKey(t *testing.T) {
+	m := NewHashMapOfNumKey(EntryOf(1, "a"), EntryOf(2, "b"))
+	assert.Equal(t, 2, m.Size())
+	old, found := m.Put(1, "aa")
+	assert.True(t, found)
+	assert.Equal(t, "a", old)
 }
