@@ -1,6 +1,9 @@
 package collections
 
-import "github.com/cuzfrog/tgods/types"
+import (
+	"github.com/cuzfrog/tgods/types"
+	"github.com/cuzfrog/tgods/utils"
+)
 
 const defaultHashTableInitSize = 12
 
@@ -18,7 +21,14 @@ func newHashTable[T any](hs types.Hash[T], eq types.Equal[T]) *hashTable[T] {
 	return &hashTable[T]{nil, 0, hs, eq}
 }
 
-func (h *hashTable[T]) Add(elem T) (found bool) {
+// Add inserts the elem and return true if succeeded
+func (h *hashTable[T]) Add(elem T) bool {
+	h.add(elem)
+	return true
+}
+
+// add inserts the elem and return old elem if found
+func (h *hashTable[T]) add(elem T) (old T, found bool) {
 	h.expandIfNeeded()
 	i := hashToIndex(h.hs(elem), cap(h.arr))
 	b := h.arr[i]
@@ -26,18 +36,21 @@ func (h *hashTable[T]) Add(elem T) (found bool) {
 		b = newLinkedListBucketOf[T](elem) // interface pointer receiver cannot be nil
 		found = false
 	} else {
-		b, _, found = b.Save(elem, h.eq)
+		b, old, found = b.Save(elem, h.eq)
 	}
 	h.arr[i] = b
 	if !found {
 		h.size++
 	}
-	return true
+	return
 }
 
 func (h *hashTable[T]) Contains(elem T) bool {
 	i := hashToIndex(h.hs(elem), cap(h.arr))
 	b := h.arr[i]
+	if b == nil {
+		return false
+	}
 	return b.Contains(elem, h.eq)
 }
 
@@ -51,18 +64,23 @@ func (h *hashTable[T]) Clear() {
 }
 
 func (h *hashTable[T]) Remove(elem T) bool {
+	_, found := h.remove(elem)
+	return found
+}
+
+func (h *hashTable[T]) remove(elem T) (old T, found bool) {
 	i := hashToIndex(h.hs(elem), cap(h.arr))
 	b := h.arr[i]
 	if b == nil {
-		return false
+		return utils.Nil[T](), false
 	}
-	b, _, found := b.Delete(elem, h.eq)
+	b, old, found = b.Delete(elem, h.eq)
 	if found {
 		h.size--
 	}
 	h.arr[i] = b
 	h.shrinkIfNeeded()
-	return found
+	return
 }
 
 // hashToIndex

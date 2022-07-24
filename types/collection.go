@@ -1,7 +1,7 @@
 package types
 
 type Collection[T any] interface {
-	Add(elem T) bool       // add elem into the collection, return true if succeeded
+	Add(elem T) bool       // adds elem into the collection, return true if succeeded
 	Contains(elem T) bool  // typical time complexity O(n) in array based, O(log(n)) in tree based, and O(c) in hash based implementations.
 	Iterator() Iterator[T] // returns a semantic iterator whose behavior is based on the sub-interface
 	Each(func(index int, elem T))
