@@ -22,12 +22,12 @@ All interface definitions can be found: [here](./types/collection.go)
 
 ### Data Structures:
 
-* `arrayStack` - fixed length first-in-last-out array based stack.
-* `circularArray` - variable length/cap array with fast add/remove at head or tail and random access with index.
-* `linkedList` - doubly linked list with fast add/remove.
-* `binaryHeap` - binary heap based min or max priority queue.
-* `rbTree` - recursion-free red black tree implementation.
-* `hashTable` - variable length/cap array based hash table with built-in hash functions for integers, floats, and string.
+* `arrayStack` - fixed length first-in-last-out array based stack. Backing up `Stack`
+* `circularArray` - variable length/cap array with fast add/remove at head or tail and random access with index. Backing up `Stack`, `ArrayList`, `Queue`, `Deque`
+* `linkedList` - doubly linked list with fast add/remove. Backing up `Stack`, `LinkedList`, `Queue`, `Deque`
+* `binaryHeap` - binary heap based min or max priority queue. Backing up `Queue`
+* `rbTree` - recursion-free red black tree implementation. Backing up `SortedSet`, `SortedMap`
+* `hashTable` - variable length/cap array based hash table. Backing up `Set`, `Map`
 
 ## Usage:
 
