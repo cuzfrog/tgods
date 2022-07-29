@@ -260,6 +260,13 @@ func (it *hashTableIterator[T]) Value() T {
 	return it.it.Value()
 }
 
+// ======== linkedHashTable ========
+
+func (h *linkedHashTable[T]) Iterator() types.Iterator[T] {
+	next := func(n *dlNode[T]) *dlNode[T] { return n.next }
+	return &linkedListIterator[T]{-1, h.head, nil, next}
+}
+
 // ======== forEach ========
 
 func forEach[T any](c types.Collection[T], fn func(index int, v T)) {
