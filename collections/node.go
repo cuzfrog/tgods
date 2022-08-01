@@ -12,12 +12,6 @@ type node[T any] interface {
 	SetNext(next node[T]) node[T]
 	SetExternal(x node[T]) node[T]
 
-	//Save puts the elem into the bucket, returns:
-	//  bucket - the either this or a changed bucket for performance based on size of the elem
-	//  node - the current node saving this elem
-	//  T - the old elem
-	//  bool - if found an existing elem by the eq func
-	Save(elem T, eq types.Equal[T]) (bucket[T], node[T], T, bool)
 	Get(elem T, eq types.Equal[T]) (T, bool) // finds and returns an elem by given eq func and input elem
 	Contains(elem T, eq types.Equal[T]) bool // checks if the elem is in the bucket
 	Iterator() types.Iterator[T]

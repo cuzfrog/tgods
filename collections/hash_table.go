@@ -41,7 +41,7 @@ func (h *hashTable[T]) add(elem T) (n node[T], old T, found bool) {
 		b = n
 		found = false
 	} else {
-		b, n, old, found = b.Save(elem, h.eq)
+		b, n, old, found = saveElemIntoBucket(b, elem, h.eq, h.newNodeOf)
 	}
 	h.arr[i] = b
 	if !found {
@@ -129,7 +129,7 @@ func (h *hashTable[T]) hashRedistribute(c int) {
 		if b == nil {
 			b = newSlBucketOf(it.Value())
 		} else {
-			b, _, _, _ = a[i].Save(it.Value(), h.eq)
+			b, _, _, _ = saveElemIntoBucket(a[i], it.Value(), h.eq, h.newNodeOf)
 		}
 		a[i] = b
 	}

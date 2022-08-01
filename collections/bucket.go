@@ -11,27 +11,33 @@ func newSlBucketOf[T any](v T) bucket[T] {
 	return newSlNode[T](v, nil)
 }
 
-func (n *slNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], node[T], T, bool) {
-	newNodeOf := func(elem T) node[T] { return newSlNode(elem, nil) }
-	return saveElemIntoBucket[T](elem, n, eq, newNodeOf)
-}
+//
+//func (n *slNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], node[T], T, bool) {
+//	newNodeOf := func(elem T) node[T] { return newSlNode(elem, nil) }
+//	return saveElemIntoBucket[T](elem, n, eq, newNodeOf)
+//}
+//
+//func (n *slxNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], node[T], T, bool) {
+//	newNodeOf := func(elem T) node[T] { return newSlxNode(elem, nil, nil) }
+//	return saveElemIntoBucket[T](elem, n, eq, newNodeOf)
+//}
+//
+//func (n *dlNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], node[T], T, bool) {
+//	newNodeOf := func(elem T) node[T] { return newDlNode(elem, nil, nil) }
+//	return saveElemIntoBucket[T](elem, n, eq, newNodeOf)
+//}
 
-func (n *slxNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], node[T], T, bool) {
-	newNodeOf := func(elem T) node[T] { return newSlxNode(elem, nil, nil) }
-	return saveElemIntoBucket[T](elem, n, eq, newNodeOf)
-}
+//func (n *dlxNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], node[T], T, bool) {
+//	newNodeOf := func(elem T) node[T] { return newDlxNode(elem, nil, nil, nil) }
+//	return saveElemIntoBucket[T](elem, n, eq, newNodeOf)
+//}
 
-func (n *dlNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], node[T], T, bool) {
-	newNodeOf := func(elem T) node[T] { return newDlNode(elem, nil, nil) }
-	return saveElemIntoBucket[T](elem, n, eq, newNodeOf)
-}
-
-func (n *dlxNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], node[T], T, bool) {
-	newNodeOf := func(elem T) node[T] { return newDlxNode(elem, nil, nil, nil) }
-	return saveElemIntoBucket[T](elem, n, eq, newNodeOf)
-}
-
-func saveElemIntoBucket[T any](elem T, b bucket[T], eq types.Equal[T], newNodeOf func(elem T) node[T]) (bucket[T], node[T], T, bool) {
+//saveElemIntoBucket puts the elem into the bucket, returns:
+//  bucket - the either this or a changed bucket for performance based on size of the elem
+//  node - the current node saving this elem
+//  T - the old elem
+//  bool - if found an existing elem by the eq func
+func saveElemIntoBucket[T any](b bucket[T], elem T, eq types.Equal[T], newNodeOf func(elem T) node[T]) (bucket[T], node[T], T, bool) {
 	h := b
 	var np node[T]
 	var cur node[T] = b
@@ -60,16 +66,16 @@ func (n *slNode[T]) Get(elem T, eq types.Equal[T]) (T, bool) {
 }
 
 // removeElemFromBucket removes the elem from the bucket, return the elem and true if found
-func removeElemFromBucket[T any](n node[T], elem T, eq types.Equal[T]) (bucket[T], T, bool) {
-	if eq(elem, n.Value()) {
-		v := n.Value()
+func removeElemFromBucket[T any](b bucket[T], elem T, eq types.Equal[T]) (bucket[T], T, bool) {
+	if eq(elem, b.Value()) {
+		v := b.Value()
 		return nil, v, true
 	}
-	h := n
-	for n.Next() != nil {
-		v := n.Next().Value()
+	h := b
+	for b.Next() != nil {
+		v := b.Next().Value()
 		if eq(elem, v) {
-			n.SetNext(n.Next().Next())
+			b.SetNext(b.Next().Next())
 			return h, v, true
 		}
 	}

@@ -221,7 +221,7 @@ func TestIteratorForSlNode(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			b := test.b
-			b.Save(5, eqInt)
+			saveElemIntoBucket(b, 5, eqInt, func(elem int) node[int] { return newSlNode(elem, nil) })
 			it := b.Iterator()
 			assert.True(t, it.Next())
 			assert.Equal(t, 0, it.Index())
