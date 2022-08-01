@@ -6,8 +6,8 @@ import (
 )
 
 type linkedList[T any] struct {
-	head *dlNode[T]
-	tail *dlNode[T]
+	head node[T]
+	tail node[T]
 	size int
 	comp types.Equal[T]
 	r    role
@@ -24,12 +24,12 @@ func newLinkedListOfEq[T any](eq types.Equal[T], values ...T) *linkedList[T] {
 		return l
 	}
 	first := values[0]
-	l.head = &dlNode[T]{first, nil, nil}
+	l.head = newDlNode(first, nil, nil)
 	l.tail = l.head
 	l.size = 1
 	for i := 1; i < length; i++ {
-		n := &dlNode[T]{values[i], l.tail, nil}
-		l.tail.next = n
+		n := newDlNode(values[i], l.tail, nil)
+		l.tail.SetNext(n)
 		l.tail = n
 		l.size++
 	}
@@ -67,7 +67,7 @@ func (l *linkedList[T]) Head() (elem T, found bool) {
 	if l.size == 0 {
 		return elem, false
 	}
-	elem = l.head.v
+	elem = l.head.Value()
 	return elem, true
 }
 
@@ -79,7 +79,7 @@ func (l *linkedList[T]) Tail() (elem T, found bool) {
 	if l.size == 0 {
 		return elem, false
 	}
-	elem = l.tail.v
+	elem = l.tail.Value()
 	return elem, true
 }
 
@@ -91,11 +91,11 @@ func (l *linkedList[T]) Peek() (elem T, found bool) {
 // AddHead prepends to the list
 func (l *linkedList[T]) AddHead(elem T) bool {
 	prevHead := l.head
-	l.head = &dlNode[T]{elem, nil, prevHead}
+	l.head = newDlNode(elem, nil, prevHead)
 	if l.size == 0 {
 		l.tail = l.head
 	} else {
-		prevHead.prev = l.head
+		prevHead.SetPrev(l.head)
 	}
 	l.size++
 	return true
@@ -113,10 +113,10 @@ func (l *linkedList[T]) RemoveHead() (elem T, found bool) {
 	if l.size == 0 {
 		return elem, false
 	}
-	elem = l.head.v
-	l.head = l.head.next
+	elem = l.head.Value()
+	l.head = l.head.Next()
 	if l.head != nil {
-		l.head.prev = nil
+		l.head.SetPrev(nil)
 	}
 	if l.size == 1 {
 		l.tail = nil
@@ -136,11 +136,11 @@ func (l *linkedList[T]) DequeueFirst() (elem T, found bool) {
 // Add adds elem to the tail
 func (l *linkedList[T]) Add(elem T) bool {
 	prevTail := l.tail
-	l.tail = &dlNode[T]{elem, prevTail, nil}
+	l.tail = newDlNode(elem, prevTail, nil)
 	if l.size == 0 {
 		l.head = l.tail
 	} else {
-		prevTail.next = l.tail
+		prevTail.SetNext(l.tail)
 	}
 	l.size++
 	return true
@@ -159,10 +159,10 @@ func (l *linkedList[T]) Remove() (elem T, found bool) {
 	if l.size == 0 {
 		return elem, false
 	}
-	elem = l.tail.v
-	l.tail = l.tail.prev
+	elem = l.tail.Value()
+	l.tail = l.tail.Prev()
 	if l.tail != nil {
-		l.tail.next = nil
+		l.tail.SetNext(nil)
 	}
 	if l.size == 1 {
 		l.head = nil
