@@ -15,15 +15,11 @@ type bucket[T any] interface {
 	Delete(elem T, eq types.Equal[T]) (bucket[T], T, bool) // removes the elem from the bucket, return the elem and true if found
 	Contains(elem T, eq types.Equal[T]) bool               // checks if the elem is in the bucket
 	Iterator() types.Iterator[T]
+	External() node[T] // link to another node reference
 }
 
 // assert type
 var _ bucket[int] = (*slNode[int])(nil)
-
-type slNode[T any] struct {
-	v T
-	n *slNode[T]
-}
 
 func newLinkedListBucketOf[T any](v T) *slNode[T] {
 	return &slNode[T]{v, nil}
@@ -34,27 +30,28 @@ func (n *slNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], T, bool) {
 		return &slNode[T]{elem, nil}, utils.Nil[T](), false
 	}
 	h := n
-	var np *slNode[T]
-	cur := n
+	var np node[T]
+	var cur node[T] = n
 	for cur != nil {
-		if eq(elem, cur.v) {
-			old := cur.v
-			cur.v = elem
+		if eq(elem, cur.Value()) {
+			old := cur.Value()
+			cur.SetValue(elem)
 			return h, old, true
 		}
 		np = cur
-		cur = cur.n
+		cur = cur.Next()
 	}
-	np.n = &slNode[T]{elem, nil}
+	np.SetNext(&slNode[T]{elem, nil})
 	return h, utils.Nil[T](), false
 }
 
 func (n *slNode[T]) Get(elem T, eq types.Equal[T]) (T, bool) {
-	for n != nil {
-		if eq(elem, n.v) {
-			return n.v, true
+	var next node[T] = n
+	for next != nil {
+		if eq(elem, next.Value()) {
+			return next.Value(), true
 		}
-		n = n.n
+		next = next.Next()
 	}
 	return utils.Nil[T](), false
 }
@@ -68,10 +65,10 @@ func (n *slNode[T]) Delete(elem T, eq types.Equal[T]) (bucket[T], T, bool) {
 		return nil, v, true
 	}
 	h := n
-	for n.n != nil {
-		v := n.n.v
+	for n.next != nil {
+		v := n.next.Value()
 		if eq(elem, v) {
-			n.n = n.n.n
+			n.next = n.next.Next()
 			return h, v, true
 		}
 	}
@@ -79,11 +76,12 @@ func (n *slNode[T]) Delete(elem T, eq types.Equal[T]) (bucket[T], T, bool) {
 }
 
 func (n *slNode[T]) Contains(elem T, eq types.Equal[T]) bool {
-	for n != nil {
-		if eq(elem, n.v) {
+	var next node[T] = n
+	for next != nil {
+		if eq(elem, next.Value()) {
 			return true
 		}
-		n = n.n
+		next = next.Next()
 	}
 	return false
 }

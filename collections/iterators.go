@@ -194,8 +194,8 @@ func (n *slNode[T]) Iterator() types.Iterator[T] {
 }
 
 type slNodeIterator[T any] struct {
-	cur   *slNode[T]
-	next  *slNode[T]
+	cur   node[T]
+	next  node[T]
 	index int
 }
 
@@ -203,7 +203,7 @@ func (it *slNodeIterator[T]) Next() bool {
 	it.index++
 	if it.next != nil {
 		it.cur = it.next
-		it.next = it.next.n
+		it.next = it.next.Next()
 		return true
 	}
 	it.cur = nil
@@ -218,7 +218,7 @@ func (it *slNodeIterator[T]) Value() T {
 	if it.cur == nil {
 		return utils.Nil[T]()
 	}
-	return it.cur.v
+	return it.cur.Value()
 }
 
 // ======== hashTable ========

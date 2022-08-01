@@ -19,7 +19,7 @@ func TestLinkedListBucket(t *testing.T) {
 	assert.True(t, found)
 	assert.Equal(t, 3, v)
 	assert.Equal(t, 3, l.v)
-	assert.Nil(t, l.n)
+	assert.Nil(t, l.next)
 	b, v, found = l.Delete(3, eqInt)
 	assert.True(t, found)
 	assert.Equal(t, 3, v)
@@ -29,10 +29,10 @@ func TestLinkedListBucket(t *testing.T) {
 	assert.Equal(t, l, b)
 
 	l.Save(4, eqInt)
-	assert.Equal(t, 4, l.n.v)
+	assert.Equal(t, 4, l.next.Value())
 	b, v, found = l.Save(5, eqInt)
 	assert.False(t, found)
-	assert.Equal(t, 5, l.n.n.v)
+	assert.Equal(t, 5, l.next.Next().Value())
 
 	assert.True(t, l.Contains(3, eqInt))
 	assert.False(t, l.Contains(8, eqInt))
@@ -48,6 +48,6 @@ func TestLinkedListBucket(t *testing.T) {
 	assert.Equal(t, 4, v)
 	assert.Equal(t, l, b)
 	assert.Equal(t, 3, l.v)
-	assert.Equal(t, 5, l.n.v)
-	assert.Nil(t, l.n.n)
+	assert.Equal(t, 5, l.next.Value())
+	assert.Nil(t, l.next.Next())
 }

@@ -5,12 +5,6 @@ import (
 	"github.com/cuzfrog/tgods/types"
 )
 
-type dlNode[T any] struct {
-	v    T
-	prev *dlNode[T]
-	next *dlNode[T]
-}
-
 type linkedList[T any] struct {
 	head *dlNode[T]
 	tail *dlNode[T]
