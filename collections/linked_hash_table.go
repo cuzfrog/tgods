@@ -6,26 +6,30 @@ import (
 
 type linkedHashTable[T any] struct {
 	*hashTable[T]
-	h     *hashTable[T]
-	head  node[T]
-	tail  node[T] // new element is added to
-	limit int     // the maximum size limit, 0 means unlimited
+	h    *hashTable[T]
+	head node[T]
+	tail node[T] // new element is added to
 }
 
 func newLinkedHashTable[T any](hs types.Hash[T], eq types.Equal[T]) *linkedHashTable[T] {
 	h := newHashTableOfSlxNode(hs, eq)
-	return &linkedHashTable[T]{h, h, nil, nil, 0}
+	return &linkedHashTable[T]{h, h, nil, nil}
+}
+func (h *linkedHashTable[T]) Add(elem T) bool {
+	h.add(elem)
+	return true
 }
 
-func (h *linkedHashTable[T]) Add(elem T) bool {
+// add returns the newly added or existing node
+func (h *linkedHashTable[T]) add(elem T) (n node[T], old T, found bool) {
 	if h.tail == nil {
 		h.tail = newDlNode(elem, nil, nil)
 		h.head = h.tail
 		x := h.tail
-		n, _, _ := h.add(elem)
+		n, old, found = h.h.add(elem)
 		n.SetExternal(x)
 	} else {
-		n, _, found := h.add(elem)
+		n, old, found = h.h.add(elem)
 		if found {
 			x := n.External()
 			removeNodeFromList(x)
@@ -38,14 +42,17 @@ func (h *linkedHashTable[T]) Add(elem T) bool {
 		}
 		h.tail = h.tail.Next()
 	}
-	return true
+	return
 }
-
 func (h *linkedHashTable[T]) Remove(elem T) bool {
-	if h.size == 0 {
-		return false
-	}
 	n := h.remove(elem)
+	return n != nil
+}
+func (h *linkedHashTable[T]) remove(elem T) node[T] {
+	if h.size == 0 {
+		return nil
+	}
+	n := h.h.remove(elem)
 	if n != nil {
 		x := n.External()
 		if h.head == x {
@@ -56,7 +63,7 @@ func (h *linkedHashTable[T]) Remove(elem T) bool {
 		}
 		removeNodeFromList(x)
 	}
-	return n != nil
+	return n
 }
 
 func (h *linkedHashTable[T]) Clear() {
