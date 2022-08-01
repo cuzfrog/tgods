@@ -38,3 +38,7 @@ func NewHashSetOfStr(values ...string) types.Set[string] {
 	}
 	return h
 }
+
+func NewLinkedHashSet[T any](hs types.Hash[T], eq types.Equal[T]) types.Set[T] {
+	return newLinkedHashTable[T](hs, eq)
+}
