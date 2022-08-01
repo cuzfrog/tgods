@@ -107,11 +107,24 @@ func (n *slNode[T]) SetNext(next node[T]) node[T] {
 }
 
 func (n *slNode[T]) SetExternal(_ node[T]) node[T] {
-	return nil
+	panic("not supported")
 }
 
 func (n *slxNode[T]) SetExternal(x node[T]) node[T] {
 	old := n.x
 	n.x = x
 	return old
+}
+
+func removeNodeFromList[T any](x node[T]) {
+	xPrev := x.Prev()
+	xNext := x.Next()
+	if xPrev != nil {
+		xPrev.SetNext(x.Next())
+	}
+	if xNext != nil {
+		x.Next().SetPrev(xPrev)
+	}
+	x.SetNext(nil)
+	x.SetPrev(nil)
 }

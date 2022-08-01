@@ -12,7 +12,7 @@ type linkedHashTable[T any] struct {
 }
 
 func newLinkedHashTable[T any](hs types.Hash[T], eq types.Equal[T]) *linkedHashTable[T] {
-	return &linkedHashTable[T]{newHashTable(hs, eq), nil, nil, 0}
+	return &linkedHashTable[T]{newHashTableOfSlxNode(hs, eq), nil, nil, 0}
 }
 
 func (h *linkedHashTable[T]) Add(elem T) bool {
@@ -26,14 +26,7 @@ func (h *linkedHashTable[T]) Add(elem T) bool {
 		n, _, found := h.add(elem)
 		if found {
 			x := n.External()
-			xPrev := x.Prev()
-			xNext := x.Next()
-			if xPrev != nil {
-				xPrev.SetNext(x.Next())
-			} else if xNext != nil {
-				x.Next().SetPrev(xPrev)
-			}
-			x.SetNext(nil)
+			removeNodeFromList(x)
 			x.SetPrev(h.tail)
 			h.tail.SetNext(x)
 		} else {
@@ -50,6 +43,10 @@ func (h *linkedHashTable[T]) Remove(elem T) bool {
 	if h.size == 0 {
 		return false
 	}
-	h.remove(elem)
-	panic("")
+	n := h.remove(elem)
+	if n != nil {
+		x := n.External()
+		removeNodeFromList(x)
+	}
+	return n != nil
 }

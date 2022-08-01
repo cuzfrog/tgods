@@ -22,6 +22,29 @@ func TestLinkedHashTable_Add(t *testing.T) {
 	assert.Same(t, h.head, h.tail.Prev().Prev())
 	assert.Same(t, h.tail, h.head.Next().Next())
 
+	m := make(map[int]node[int], 3)
+	for _, b := range h.arr {
+		for b != nil {
+			m[b.Value()] = b
+			b = b.Next()
+		}
+	}
+	assert.Same(t, h.head, m[2].External())
+	assert.Same(t, h.head.Next(), m[6].External())
+	assert.Same(t, h.tail, m[3].External())
+
 	assert.Equal(t, 3, h.size)
 	assert.Equal(t, []int{2, 6, 3}, utils.SliceFrom[int](h))
+}
+
+func TestLinkedHashTable_Remove(t *testing.T) {
+	h := newLinkedHashTable[int](funcs.NumHash[int], funcs.ValueEqual[int])
+	h.Add(2)
+	h.Add(6)
+	h.Add(3)
+	h.Remove(6)
+	assert.Equal(t, 2, h.size)
+	assert.Same(t, h.head, h.tail.Prev())
+	assert.Same(t, h.tail, h.head.Next())
+	assert.Equal(t, []int{2, 3}, utils.SliceFrom[int](h))
 }

@@ -22,6 +22,11 @@ func newHashTable[T any](hs types.Hash[T], eq types.Equal[T]) *hashTable[T] {
 	return &hashTable[T]{nil, 0, hs, eq, newNodeOf}
 }
 
+func newHashTableOfSlxNode[T any](hs types.Hash[T], eq types.Equal[T]) *hashTable[T] {
+	newNodeOf := func(elem T) node[T] { return newSlxNode[T](elem, nil, nil) }
+	return &hashTable[T]{nil, 0, hs, eq, newNodeOf}
+}
+
 // Add inserts the elem and return true if succeeded
 func (h *hashTable[T]) Add(elem T) bool {
 	h.add(elem)
