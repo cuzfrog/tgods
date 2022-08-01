@@ -6,14 +6,15 @@ import (
 
 type linkedHashTable[T any] struct {
 	*hashTable[T]
-	h    *hashTable[T]
-	head node[T]
-	tail node[T] // new element is added to
+	h           *hashTable[T]
+	head        node[T]
+	tail        node[T] // new element is added to
+	accessOrder byte    // 1 - put order, 2 - get order, 3 - both get and put order
 }
 
-func newLinkedHashTable[T any](hs types.Hash[T], eq types.Equal[T]) *linkedHashTable[T] {
+func newLinkedHashTable[T any](hs types.Hash[T], eq types.Equal[T], accessOrder byte) *linkedHashTable[T] {
 	h := newHashTableOfSlxNode(hs, eq)
-	return &linkedHashTable[T]{h, h, nil, nil}
+	return &linkedHashTable[T]{h, h, nil, nil, accessOrder}
 }
 func (h *linkedHashTable[T]) Add(elem T) bool {
 	h.add(elem)

@@ -13,7 +13,7 @@ func TestHashMap(t *testing.T) {
 		h    types.Map[string, int]
 	}{
 		{"hashMap", newHashMap[string, int](funcs.NewStrHash(), funcs.ValueEqual[string])},
-		{"linkedHashMap", newLinkedHashMap[string, int](funcs.NewStrHash(), funcs.ValueEqual[string], 0)},
+		{"linkedHashMap", newLinkedHashMap[string, int](funcs.NewStrHash(), funcs.ValueEqual[string], 0, 1)},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {

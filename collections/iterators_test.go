@@ -187,7 +187,7 @@ func TestIteratorForSet(t *testing.T) {
 	}{
 		{"rbTree", newRbTreeOf[int]()},
 		{"hashTable", newHashTable[int](funcs.NumHash[int], funcs.ValueEqual[int])},
-		{"linkedHashTable", newLinkedHashTable[int](funcs.NumHash[int], funcs.ValueEqual[int])},
+		{"linkedHashTable", newLinkedHashTable[int](funcs.NumHash[int], funcs.ValueEqual[int], 1)},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {

@@ -49,7 +49,7 @@ func NewHashMapOfNumKey[K constraints.Integer | constraints.Float, V any](entrie
 
 // NewLinkedHashMapOf creates a linked hash map with custom Hash and Equal functions, and init values
 func NewLinkedHashMapOf[K any, V any](hs types.Hash[K], eq types.Equal[K], entries ...types.Entry[K, V]) types.Map[K, V] {
-	m := newLinkedHashMap[K, V](hs, eq, 0)
+	m := newLinkedHashMap[K, V](hs, eq, 0, 1)
 	for _, e := range entries {
 		m.Put(e.Key(), e.Value())
 	}
@@ -58,7 +58,7 @@ func NewLinkedHashMapOf[K any, V any](hs types.Hash[K], eq types.Equal[K], entri
 
 // NewLinkedHashMapOfStrKey creates a linked hash map with key type as string and init values
 func NewLinkedHashMapOfStrKey[V any](entries ...types.Entry[string, V]) types.Map[string, V] {
-	m := newLinkedHashMap[string, V](funcs.NewStrHash(), funcs.ValueEqual[string], 0)
+	m := newLinkedHashMap[string, V](funcs.NewStrHash(), funcs.ValueEqual[string], 0, 1)
 	for _, e := range entries {
 		m.Put(e.Key(), e.Value())
 	}
@@ -67,7 +67,7 @@ func NewLinkedHashMapOfStrKey[V any](entries ...types.Entry[string, V]) types.Ma
 
 // NewLinkedHashMapOfNumKey creates a linked hash map with key type as constraints.Integer | constraints.Float, and init values
 func NewLinkedHashMapOfNumKey[K constraints.Integer | constraints.Float, V any](entries ...types.Entry[K, V]) types.Map[K, V] {
-	m := newLinkedHashMap[K, V](funcs.NumHash[K], funcs.ValueEqual[K], 0)
+	m := newLinkedHashMap[K, V](funcs.NumHash[K], funcs.ValueEqual[K], 0, 1)
 	for _, e := range entries {
 		m.Put(e.Key(), e.Value())
 	}
