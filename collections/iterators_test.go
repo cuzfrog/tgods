@@ -187,6 +187,7 @@ func TestIteratorForSet(t *testing.T) {
 	}{
 		{"rbTree", newRbTreeOf[int]()},
 		{"hashTable", newHashTable[int](funcs.NumHash[int], funcs.ValueEqual[int])},
+		{"linkedHashTable", newLinkedHashTable[int](funcs.NumHash[int], funcs.ValueEqual[int])},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -211,12 +212,15 @@ func TestIteratorForSet(t *testing.T) {
 	}
 }
 
-func TestIteratorForSlNode(t *testing.T) {
+func TestIteratorForNode(t *testing.T) {
 	tests := []struct {
 		name string
 		b    bucket[int]
 	}{
-		{"slNode", newSlBucketOf[int](3)},
+		{"slNode", newSlNode[int](3, nil)},
+		{"slxNode", newSlxNode[int](3, nil, nil)},
+		{"dlNode", newDlNode[int](3, nil, nil)},
+		{"dlxNode", newDlxNode[int](3, nil, nil, nil)},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -260,6 +264,10 @@ func Test_Each(t *testing.T) {
 	c6.Add(1)
 	c6.Add(2)
 	c6.Add(3)
+	c7 := NewLinkedHashSet(funcs.NumHash[int], funcs.ValueEqual[int])
+	c7.Add(1)
+	c7.Add(2)
+	c7.Add(3)
 
 	tests := []struct {
 		name string
@@ -271,6 +279,7 @@ func Test_Each(t *testing.T) {
 		{"HeapMinPriorityQueue", c4},
 		{"TreeSet", c5},
 		{"HashTable", c6},
+		{"LinkedHashTable", c7},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -279,7 +288,7 @@ func Test_Each(t *testing.T) {
 			c.Each(func(i, v int) {
 				arr[i] = v
 			})
-			assert.ElementsMatch(t, arr, utils.SliceFrom(c))
+			assert.Equal(t, arr, utils.SliceFrom(c))
 		})
 	}
 }
