@@ -27,15 +27,15 @@ func (h *hashMap[K, V]) Get(k K) (V, bool) {
 	if b == nil {
 		return utils.Nil[V](), false
 	}
-	e, found := b.Get(keyEntry[K, V]{k}, h.eq)
-	if found {
-		return e.Value(), found
+	n := findNodeFromBucket[types.Entry[K, V]](b, keyEntry[K, V]{k}, h.eq)
+	if n != nil {
+		return n.Value().Value(), true
 	}
 	return utils.Nil[V](), false
 }
 
 func (h *hashMap[K, V]) Put(k K, v V) (V, bool) {
-	e, found := h.h.add(EntryOf(k, v))
+	_, e, found := h.h.add(EntryOf(k, v))
 	if found {
 		return e.Value(), found
 	}
@@ -43,9 +43,9 @@ func (h *hashMap[K, V]) Put(k K, v V) (V, bool) {
 }
 
 func (h *hashMap[K, V]) Remove(k K) (V, bool) {
-	e, found := h.h.remove(keyEntry[K, V]{k})
-	if found {
-		return e.Value(), found
+	n := h.h.remove(keyEntry[K, V]{k})
+	if n != nil {
+		return n.Value().Value(), true
 	}
 	return utils.Nil[V](), false
 }

@@ -2,7 +2,6 @@ package collections
 
 import (
 	"github.com/cuzfrog/tgods/types"
-	"github.com/cuzfrog/tgods/utils"
 )
 
 const defaultHashTableInitSize = 12
@@ -11,14 +10,21 @@ const defaultHashTableExpandRatio = 2 // r - bitwise shift, if ((cap(arr) - size
 const defaultHashTableShrinkRatio = 3 // r - bitwise shift, if (size << r) < cap(arr) then shrink, cap cannot be less than defaultHashTableInitSize
 
 type hashTable[T any] struct {
-	arr  []bucket[T]
-	size int
-	hs   types.Hash[T]
-	eq   types.Equal[T]
+	arr       []bucket[T]
+	size      int
+	hs        types.Hash[T]
+	eq        types.Equal[T]
+	newNodeOf func(elem T) node[T]
 }
 
 func newHashTable[T any](hs types.Hash[T], eq types.Equal[T]) *hashTable[T] {
-	return &hashTable[T]{nil, 0, hs, eq}
+	newNodeOf := func(elem T) node[T] { return newSlNode[T](elem, nil) }
+	return &hashTable[T]{nil, 0, hs, eq, newNodeOf}
+}
+
+func newHashTableOfSlxNode[T any](hs types.Hash[T], eq types.Equal[T]) *hashTable[T] {
+	newNodeOf := func(elem T) node[T] { return newSlxNode[T](elem, nil, nil) }
+	return &hashTable[T]{nil, 0, hs, eq, newNodeOf}
 }
 
 // Add inserts the elem and return true if succeeded
@@ -27,16 +33,19 @@ func (h *hashTable[T]) Add(elem T) bool {
 	return true
 }
 
-// add inserts the elem and return old elem if found
-func (h *hashTable[T]) add(elem T) (old T, found bool) {
+// add inserts the elem and return:
+//   n - the node containing the elem
+//   old - existing elem if found
+func (h *hashTable[T]) add(elem T) (n node[T], old T, found bool) {
 	h.expandIfNeeded()
 	i := hashToIndex(h.hs(elem), cap(h.arr))
 	b := h.arr[i]
-	if b == nil {
-		b = newLinkedListBucketOf[T](elem) // interface pointer receiver cannot be nil
+	if b == nil { // interface pointer receiver cannot be nil
+		n = h.newNodeOf(elem)
+		b = n
 		found = false
 	} else {
-		b, old, found = b.Save(elem, h.eq)
+		b, n, old, found = saveElemIntoBucket(b, elem, h.eq, h.newNodeOf)
 	}
 	h.arr[i] = b
 	if !found {
@@ -64,23 +73,24 @@ func (h *hashTable[T]) Clear() {
 }
 
 func (h *hashTable[T]) Remove(elem T) bool {
-	_, found := h.remove(elem)
-	return found
+	n := h.remove(elem)
+	return n != nil
 }
 
-func (h *hashTable[T]) remove(elem T) (old T, found bool) {
+//remove returns old node if found
+func (h *hashTable[T]) remove(elem T) node[T] {
 	i := hashToIndex(h.hs(elem), cap(h.arr))
 	b := h.arr[i]
 	if b == nil {
-		return utils.Nil[T](), false
+		return nil
 	}
-	b, old, found = b.Delete(elem, h.eq)
-	if found {
+	b, oldN := removeElemFromBucket[T](b, elem, h.eq)
+	if oldN != nil {
 		h.size--
 	}
 	h.arr[i] = b
 	h.shrinkIfNeeded()
-	return
+	return oldN
 }
 
 // hashToIndex
@@ -122,9 +132,9 @@ func (h *hashTable[T]) hashRedistribute(c int) {
 		i := hashToIndex(h.hs(it.Value()), c)
 		b := a[i]
 		if b == nil {
-			b = newLinkedListBucketOf(it.Value())
+			b = newSlBucketOf(it.Value())
 		} else {
-			b, _, _ = a[i].Save(it.Value(), h.eq)
+			b, _, _, _ = saveElemIntoBucket(a[i], it.Value(), h.eq, h.newNodeOf)
 		}
 		a[i] = b
 	}

@@ -70,22 +70,13 @@ func (it *circularArrayIterator[T]) Value() T {
 // ======== linkedList ========
 
 func (l *linkedList[T]) Iterator() types.Iterator[T] {
-	var next func(n *dlNode[T]) *dlNode[T]
-	var start *dlNode[T]
-	if l.r == list || l.r == stack || l.r == queue || l.r == deque {
-		next = func(n *dlNode[T]) *dlNode[T] { return n.next }
-		start = l.head
-	} else {
-		panic(fmt.Sprintf("linkedList only implement classes [list(%d), stack(%d), queue(%d), deque(%d)], but the role is '%d'", list, stack, queue, deque, l.r))
-	}
-	return &linkedListIterator[T]{-1, start, nil, next}
+	return &linkedListIterator[T]{-1, l.head, nil}
 }
 
 type linkedListIterator[T any] struct {
 	index int
-	start *dlNode[T]
-	cur   *dlNode[T]
-	next  func(n *dlNode[T]) *dlNode[T]
+	start node[T]
+	cur   node[T]
 }
 
 func (it *linkedListIterator[T]) Next() bool {
@@ -95,7 +86,7 @@ func (it *linkedListIterator[T]) Next() bool {
 	if it.index < 0 {
 		it.cur = it.start
 	} else if it.cur != nil {
-		it.cur = it.next(it.cur)
+		it.cur = it.cur.Next()
 	}
 	it.index++
 	return it.cur != nil
@@ -109,7 +100,7 @@ func (it *linkedListIterator[T]) Value() T {
 	if it.cur == nil {
 		return utils.Nil[T]()
 	}
-	return it.cur.v
+	return it.cur.Value()
 }
 
 // ======== binaryHeap ========
@@ -194,8 +185,8 @@ func (n *slNode[T]) Iterator() types.Iterator[T] {
 }
 
 type slNodeIterator[T any] struct {
-	cur   *slNode[T]
-	next  *slNode[T]
+	cur   node[T]
+	next  node[T]
 	index int
 }
 
@@ -203,7 +194,7 @@ func (it *slNodeIterator[T]) Next() bool {
 	it.index++
 	if it.next != nil {
 		it.cur = it.next
-		it.next = it.next.n
+		it.next = it.next.Next()
 		return true
 	}
 	it.cur = nil
@@ -218,7 +209,7 @@ func (it *slNodeIterator[T]) Value() T {
 	if it.cur == nil {
 		return utils.Nil[T]()
 	}
-	return it.cur.v
+	return it.cur.Value()
 }
 
 // ======== hashTable ========
@@ -258,6 +249,12 @@ func (it *hashTableIterator[T]) Index() int {
 
 func (it *hashTableIterator[T]) Value() T {
 	return it.it.Value()
+}
+
+// ======== linkedHashTable ========
+
+func (h *linkedHashTable[T]) Iterator() types.Iterator[T] {
+	return &linkedListIterator[T]{-1, h.head, nil}
 }
 
 // ======== forEach ========

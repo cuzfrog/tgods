@@ -39,6 +39,7 @@ func TestSetProperties(t *testing.T) {
 		{"treeSet1", NewTreeSetOf[int]()},
 		{"treeSet2", NewTreeSetOfComp[int](funcs.ValueCompare[int])},
 		{"hashSet1", NewHashSetOfNum[int](2)},
+		{"linkedHashSet1", NewLinkedHashSetOfNum[int](2)},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -55,9 +56,21 @@ func TestSetProperties(t *testing.T) {
 	}
 }
 
-func TestSetStr(t *testing.T) {
-	s := NewHashSetOfStr("1", "2", "3", "2")
-	assert.Equal(t, 3, s.Size())
-	s.Remove("3")
-	assert.ElementsMatch(t, []string{"1", "2"}, utils.SliceFrom[string](s))
+func TestSetOfStrProperties(t *testing.T) {
+	tests := []struct {
+		name string
+		s    types.Set[string]
+	}{
+		{"hashSet1", NewHashSetOfStr("1", "2", "3", "2")},
+		{"linkedHashSet1", NewLinkedHashSetOfStr("1", "2", "3", "2")},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			s := test.s
+			assert.Equal(t, 3, s.Size())
+			s.Remove("3")
+			assert.ElementsMatch(t, []string{"1", "2"}, utils.SliceFrom[string](s))
+		})
+	}
+
 }

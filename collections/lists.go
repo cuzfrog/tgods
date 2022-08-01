@@ -4,9 +4,9 @@ import (
 	"github.com/cuzfrog/tgods/types"
 )
 
-// NewArrayList creates an auto expandable/shrinkable circular array based list with init values,
+// NewArrayListOf creates an auto expandable/shrinkable circular array based list with init values,
 // the underlying array will be lazily created if init values are not provided.
-func NewArrayList[T comparable](values ...T) types.ArrayList[T] {
+func NewArrayListOf[T comparable](values ...T) types.ArrayList[T] {
 	return newCircularArrayOf[T](values...).withRole(list)
 }
 
@@ -20,8 +20,8 @@ func NewArrayListOfEq[T any](initCap int, comp types.Equal[T]) types.ArrayList[T
 	return newCircularArrayOfEq(initCap, comp).withRole(list)
 }
 
-// NewLinkedList creates a linked list with init values
-func NewLinkedList[T comparable](values ...T) types.LinkedList[T] {
+// NewLinkedListOf creates a linked list with init values
+func NewLinkedListOf[T comparable](values ...T) types.LinkedList[T] {
 	return newLinkedListOf[T](values...).withRole(list)
 }
 

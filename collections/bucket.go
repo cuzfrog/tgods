@@ -5,85 +5,91 @@ import (
 	"github.com/cuzfrog/tgods/utils"
 )
 
-type bucket[T any] interface {
-	//Save puts the elem into the bucket, returns:
-	//  bucket - the either this or a changed bucket for performance based on size of the elem
-	//  T - the old elem
-	//  bool - if found an existing elem by the eq func
-	Save(elem T, eq types.Equal[T]) (bucket[T], T, bool)
-	Get(elem T, eq types.Equal[T]) (T, bool)               // finds and returns an elem by given eq func and input elem
-	Delete(elem T, eq types.Equal[T]) (bucket[T], T, bool) // removes the elem from the bucket, return the elem and true if found
-	Contains(elem T, eq types.Equal[T]) bool               // checks if the elem is in the bucket
-	Iterator() types.Iterator[T]
+type bucket[T any] node[T]
+
+func newSlBucketOf[T any](v T) bucket[T] {
+	return newSlNode[T](v, nil)
 }
 
-// assert type
-var _ bucket[int] = (*slNode[int])(nil)
+//
+//func (n *slNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], node[T], T, bool) {
+//	newNodeOf := func(elem T) node[T] { return newSlNode(elem, nil) }
+//	return saveElemIntoBucket[T](elem, n, eq, newNodeOf)
+//}
+//
+//func (n *slxNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], node[T], T, bool) {
+//	newNodeOf := func(elem T) node[T] { return newSlxNode(elem, nil, nil) }
+//	return saveElemIntoBucket[T](elem, n, eq, newNodeOf)
+//}
+//
+//func (n *dlNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], node[T], T, bool) {
+//	newNodeOf := func(elem T) node[T] { return newDlNode(elem, nil, nil) }
+//	return saveElemIntoBucket[T](elem, n, eq, newNodeOf)
+//}
 
-type slNode[T any] struct {
-	v T
-	n *slNode[T]
-}
+//func (n *dlxNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], node[T], T, bool) {
+//	newNodeOf := func(elem T) node[T] { return newDlxNode(elem, nil, nil, nil) }
+//	return saveElemIntoBucket[T](elem, n, eq, newNodeOf)
+//}
 
-func newLinkedListBucketOf[T any](v T) *slNode[T] {
-	return &slNode[T]{v, nil}
-}
-
-func (n *slNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], T, bool) {
-	if n == nil {
-		return &slNode[T]{elem, nil}, utils.Nil[T](), false
-	}
-	h := n
-	var np *slNode[T]
-	cur := n
+//saveElemIntoBucket puts the elem into the bucket, returns:
+//  bucket - the either this or a changed bucket for performance based on size of the elem
+//  node - the current node saving this elem
+//  T - the old elem
+//  bool - if found an existing elem by the eq func
+func saveElemIntoBucket[T any](b bucket[T], elem T, eq types.Equal[T], newNodeOf func(elem T) node[T]) (bucket[T], node[T], T, bool) {
+	h := b
+	var np node[T]
+	var cur node[T] = b
 	for cur != nil {
-		if eq(elem, cur.v) {
-			old := cur.v
-			cur.v = elem
-			return h, old, true
+		if eq(elem, cur.Value()) {
+			old := cur.Value()
+			cur.SetValue(elem)
+			return h, cur, old, true
 		}
 		np = cur
-		cur = cur.n
+		cur = cur.Next()
 	}
-	np.n = &slNode[T]{elem, nil}
-	return h, utils.Nil[T](), false
+	np.SetNext(newNodeOf(elem))
+	return h, np.Next(), utils.Nil[T](), false
 }
 
-func (n *slNode[T]) Get(elem T, eq types.Equal[T]) (T, bool) {
-	for n != nil {
-		if eq(elem, n.v) {
-			return n.v, true
+//findNodeFromBucket finds and returns the node by given eq func and input v
+func findNodeFromBucket[T any](b bucket[T], v T, eq types.Equal[T]) node[T] {
+	var next node[T] = b
+	for next != nil {
+		if eq(v, next.Value()) {
+			return next
 		}
-		n = n.n
+		next = next.Next()
 	}
-	return utils.Nil[T](), false
+	return nil
 }
 
-func (n *slNode[T]) Delete(elem T, eq types.Equal[T]) (bucket[T], T, bool) {
-	if n == nil {
-		return nil, utils.Nil[T](), false
+// removeElemFromBucket removes the elem from the bucket, return the elem and true if found
+func removeElemFromBucket[T any](b bucket[T], elem T, eq types.Equal[T]) (bucket[T], node[T]) {
+	if eq(elem, b.Value()) {
+		return nil, b
 	}
-	if eq(elem, n.v) {
-		v := n.v
-		return nil, v, true
-	}
-	h := n
-	for n.n != nil {
-		v := n.n.v
+	h := b
+	for b.Next() != nil {
+		v := b.Next().Value()
 		if eq(elem, v) {
-			n.n = n.n.n
-			return h, v, true
+			n := b.Next()
+			b.SetNext(b.Next().Next())
+			return h, n
 		}
 	}
-	return h, utils.Nil[T](), false
+	return h, nil
 }
 
 func (n *slNode[T]) Contains(elem T, eq types.Equal[T]) bool {
-	for n != nil {
-		if eq(elem, n.v) {
+	var next node[T] = n
+	for next != nil {
+		if eq(elem, next.Value()) {
 			return true
 		}
-		n = n.n
+		next = next.Next()
 	}
 	return false
 }
