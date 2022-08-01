@@ -1,5 +1,7 @@
 package collections
 
+import "github.com/cuzfrog/tgods/types"
+
 type node[T any] interface {
 	Value() T
 	SetValue(v T) T
@@ -9,7 +11,23 @@ type node[T any] interface {
 	SetPrev(prev node[T]) node[T]
 	SetNext(next node[T]) node[T]
 	SetExternal(x node[T]) node[T]
+
+	//Save puts the elem into the bucket, returns:
+	//  bucket - the either this or a changed bucket for performance based on size of the elem
+	//  node - the current node saving this elem
+	//  T - the old elem
+	//  bool - if found an existing elem by the eq func
+	Save(elem T, eq types.Equal[T]) (bucket[T], node[T], T, bool)
+	Get(elem T, eq types.Equal[T]) (T, bool) // finds and returns an elem by given eq func and input elem
+	Contains(elem T, eq types.Equal[T]) bool // checks if the elem is in the bucket
+	Iterator() types.Iterator[T]
 }
+
+// assert type
+var _ node[int] = (*slNode[int])(nil)
+var _ node[int] = (*dlNode[int])(nil)
+var _ node[int] = (*slxNode[int])(nil)
+var _ node[int] = (*dlxNode[int])(nil)
 
 func newSlNode[T any](v T, next node[T]) node[T] {
 	return &slNode[T]{v, next}
@@ -60,7 +78,7 @@ func (n *slNode[T]) SetValue(v T) T {
 }
 
 func (n *slNode[T]) Prev() node[T] {
-	panic("not supported")
+	return nil
 }
 
 func (n *dlNode[T]) Prev() node[T] {
@@ -72,15 +90,15 @@ func (n *slNode[T]) Next() node[T] {
 }
 
 func (n *slNode[T]) External() node[T] {
-	panic("not supported")
+	return nil
 }
 
 func (n *slxNode[T]) External() node[T] {
 	return n.x
 }
 
-func (n *slNode[T]) SetPrev(prev node[T]) node[T] {
-	panic("not supported")
+func (n *slNode[T]) SetPrev(_ node[T]) node[T] {
+	return nil
 }
 
 func (n *dlNode[T]) SetPrev(prev node[T]) node[T] {
@@ -95,8 +113,8 @@ func (n *slNode[T]) SetNext(next node[T]) node[T] {
 	return old
 }
 
-func (n *slNode[T]) SetExternal(x node[T]) node[T] {
-	panic("not supported")
+func (n *slNode[T]) SetExternal(_ node[T]) node[T] {
+	return nil
 }
 
 func (n *slxNode[T]) SetExternal(x node[T]) node[T] {

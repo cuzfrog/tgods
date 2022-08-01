@@ -35,7 +35,7 @@ func (h *hashMap[K, V]) Get(k K) (V, bool) {
 }
 
 func (h *hashMap[K, V]) Put(k K, v V) (V, bool) {
-	e, found := h.h.add(EntryOf(k, v))
+	_, e, found := h.h.add(EntryOf(k, v))
 	if found {
 		return e.Value(), found
 	}

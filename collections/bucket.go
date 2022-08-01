@@ -5,44 +5,47 @@ import (
 	"github.com/cuzfrog/tgods/utils"
 )
 
-type bucket[T any] interface {
-	//Save puts the elem into the bucket, returns:
-	//  bucket - the either this or a changed bucket for performance based on size of the elem
-	//  T - the old elem
-	//  bool - if found an existing elem by the eq func
-	Save(elem T, eq types.Equal[T]) (bucket[T], T, bool)
-	Get(elem T, eq types.Equal[T]) (T, bool)               // finds and returns an elem by given eq func and input elem
-	Delete(elem T, eq types.Equal[T]) (bucket[T], T, bool) // removes the elem from the bucket, return the elem and true if found
-	Contains(elem T, eq types.Equal[T]) bool               // checks if the elem is in the bucket
-	Iterator() types.Iterator[T]
-	External() node[T] // link to another node reference
+type bucket[T any] node[T]
+
+func newSlBucketOf[T any](v T) bucket[T] {
+	return newSlNode[T](v, nil)
 }
 
-// assert type
-var _ bucket[int] = (*slNode[int])(nil)
-
-func newLinkedListBucketOf[T any](v T) *slNode[T] {
-	return &slNode[T]{v, nil}
+func (n *slNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], node[T], T, bool) {
+	newNodeOf := func(elem T) node[T] { return newSlNode(elem, nil) }
+	return saveElemIntoBucket[T](elem, n, eq, newNodeOf)
 }
 
-func (n *slNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], T, bool) {
-	if n == nil {
-		return &slNode[T]{elem, nil}, utils.Nil[T](), false
-	}
-	h := n
+func (n *slxNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], node[T], T, bool) {
+	newNodeOf := func(elem T) node[T] { return newSlxNode(elem, nil, nil) }
+	return saveElemIntoBucket[T](elem, n, eq, newNodeOf)
+}
+
+func (n *dlNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], node[T], T, bool) {
+	newNodeOf := func(elem T) node[T] { return newDlNode(elem, nil, nil) }
+	return saveElemIntoBucket[T](elem, n, eq, newNodeOf)
+}
+
+func (n *dlxNode[T]) Save(elem T, eq types.Equal[T]) (bucket[T], node[T], T, bool) {
+	newNodeOf := func(elem T) node[T] { return newDlxNode(elem, nil, nil, nil) }
+	return saveElemIntoBucket[T](elem, n, eq, newNodeOf)
+}
+
+func saveElemIntoBucket[T any](elem T, b bucket[T], eq types.Equal[T], newNodeOf func(elem T) node[T]) (bucket[T], node[T], T, bool) {
+	h := b
 	var np node[T]
-	var cur node[T] = n
+	var cur node[T] = b
 	for cur != nil {
 		if eq(elem, cur.Value()) {
 			old := cur.Value()
 			cur.SetValue(elem)
-			return h, old, true
+			return h, cur, old, true
 		}
 		np = cur
 		cur = cur.Next()
 	}
-	np.SetNext(&slNode[T]{elem, nil})
-	return h, utils.Nil[T](), false
+	np.SetNext(newNodeOf(elem))
+	return h, np.Next(), utils.Nil[T](), false
 }
 
 func (n *slNode[T]) Get(elem T, eq types.Equal[T]) (T, bool) {
@@ -56,19 +59,17 @@ func (n *slNode[T]) Get(elem T, eq types.Equal[T]) (T, bool) {
 	return utils.Nil[T](), false
 }
 
-func (n *slNode[T]) Delete(elem T, eq types.Equal[T]) (bucket[T], T, bool) {
-	if n == nil {
-		return nil, utils.Nil[T](), false
-	}
-	if eq(elem, n.v) {
-		v := n.v
+// removeElemFromBucket removes the elem from the bucket, return the elem and true if found
+func removeElemFromBucket[T any](n node[T], elem T, eq types.Equal[T]) (bucket[T], T, bool) {
+	if eq(elem, n.Value()) {
+		v := n.Value()
 		return nil, v, true
 	}
 	h := n
-	for n.next != nil {
-		v := n.next.Value()
+	for n.Next() != nil {
+		v := n.Next().Value()
 		if eq(elem, v) {
-			n.next = n.next.Next()
+			n.SetNext(n.Next().Next())
 			return h, v, true
 		}
 	}

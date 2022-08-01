@@ -216,7 +216,7 @@ func TestIteratorForSlNode(t *testing.T) {
 		name string
 		b    bucket[int]
 	}{
-		{"slNode", newLinkedListBucketOf[int](3)},
+		{"slNode", newSlBucketOf[int](3)},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {

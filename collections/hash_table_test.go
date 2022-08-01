@@ -27,15 +27,16 @@ func TestHashTable(t *testing.T) {
 	assert.Nil(t, h.arr)
 }
 
+var newSlNodeOf = func(v int) node[int] { return newSlBucketOf[int](v) }
+
 func TestHashTable_expand(t *testing.T) {
 	a := make([]bucket[int], 5)
-	a[0] = newLinkedListBucketOf(3)
-	a[1] = newLinkedListBucketOf(5)
-	a[2] = newLinkedListBucketOf(6)
-	a[3] = newLinkedListBucketOf(7)
-	a[4] = newLinkedListBucketOf(1)
-
-	h := &hashTable[int]{a, 5, funcs.NumHash[int], funcs.ValueEqual[int]}
+	a[0] = newSlBucketOf(3)
+	a[1] = newSlBucketOf(5)
+	a[2] = newSlBucketOf(6)
+	a[3] = newSlBucketOf(7)
+	a[4] = newSlBucketOf(1)
+	h := &hashTable[int]{a, 5, funcs.NumHash[int], funcs.ValueEqual[int], newSlNodeOf}
 	h.expandIfNeeded()
 	assert.Equal(t, 10, cap(h.arr))
 	assert.ElementsMatch(t, []int{1, 3, 5, 6, 7}, utils.SliceFrom[int](h))
@@ -43,9 +44,9 @@ func TestHashTable_expand(t *testing.T) {
 
 func TestHashTable_shrink(t *testing.T) {
 	a := make([]bucket[int], 32)
-	a[0] = newLinkedListBucketOf(3)
-	a[1] = newLinkedListBucketOf(5)
-	h := &hashTable[int]{a, 2, funcs.NumHash[int], funcs.ValueEqual[int]}
+	a[0] = newSlBucketOf(3)
+	a[1] = newSlBucketOf(5)
+	h := &hashTable[int]{a, 2, funcs.NumHash[int], funcs.ValueEqual[int], newSlNodeOf}
 	h.shrinkIfNeeded()
 	assert.Equal(t, 16, cap(h.arr))
 	assert.ElementsMatch(t, []int{3, 5}, utils.SliceFrom[int](h))
