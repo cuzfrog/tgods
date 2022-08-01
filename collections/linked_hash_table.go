@@ -47,6 +47,9 @@ func (h *linkedHashTable[T]) Add(elem T) bool {
 }
 
 func (h *linkedHashTable[T]) Remove(elem T) bool {
-	//TODO implement me
-	panic("implement me")
+	if h.size == 0 {
+		return false
+	}
+	h.remove(elem)
+	panic("")
 }

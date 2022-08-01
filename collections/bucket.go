@@ -67,20 +67,20 @@ func findNodeFromBucket[T any](b bucket[T], v T, eq types.Equal[T]) node[T] {
 }
 
 // removeElemFromBucket removes the elem from the bucket, return the elem and true if found
-func removeElemFromBucket[T any](b bucket[T], elem T, eq types.Equal[T]) (bucket[T], T, bool) {
+func removeElemFromBucket[T any](b bucket[T], elem T, eq types.Equal[T]) (bucket[T], node[T]) {
 	if eq(elem, b.Value()) {
-		v := b.Value()
-		return nil, v, true
+		return nil, b
 	}
 	h := b
 	for b.Next() != nil {
 		v := b.Next().Value()
 		if eq(elem, v) {
+			n := b.Next()
 			b.SetNext(b.Next().Next())
-			return h, v, true
+			return h, n
 		}
 	}
-	return h, utils.Nil[T](), false
+	return h, nil
 }
 
 func (n *slNode[T]) Contains(elem T, eq types.Equal[T]) bool {

@@ -2,7 +2,6 @@ package collections
 
 import (
 	"github.com/cuzfrog/tgods/types"
-	"github.com/cuzfrog/tgods/utils"
 )
 
 const defaultHashTableInitSize = 12
@@ -69,23 +68,24 @@ func (h *hashTable[T]) Clear() {
 }
 
 func (h *hashTable[T]) Remove(elem T) bool {
-	_, found := h.remove(elem)
-	return found
+	n := h.remove(elem)
+	return n != nil
 }
 
-func (h *hashTable[T]) remove(elem T) (old T, found bool) {
+//remove returns old node if found
+func (h *hashTable[T]) remove(elem T) node[T] {
 	i := hashToIndex(h.hs(elem), cap(h.arr))
 	b := h.arr[i]
 	if b == nil {
-		return utils.Nil[T](), false
+		return nil
 	}
-	b, old, found = removeElemFromBucket[T](b, elem, h.eq)
-	if found {
+	b, oldN := removeElemFromBucket[T](b, elem, h.eq)
+	if oldN != nil {
 		h.size--
 	}
 	h.arr[i] = b
 	h.shrinkIfNeeded()
-	return
+	return oldN
 }
 
 // hashToIndex

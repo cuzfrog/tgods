@@ -43,9 +43,9 @@ func (h *hashMap[K, V]) Put(k K, v V) (V, bool) {
 }
 
 func (h *hashMap[K, V]) Remove(k K) (V, bool) {
-	e, found := h.h.remove(keyEntry[K, V]{k})
-	if found {
-		return e.Value(), found
+	n := h.h.remove(keyEntry[K, V]{k})
+	if n != nil {
+		return n.Value().Value(), true
 	}
 	return utils.Nil[V](), false
 }
