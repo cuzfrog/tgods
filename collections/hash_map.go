@@ -27,9 +27,9 @@ func (h *hashMap[K, V]) Get(k K) (V, bool) {
 	if b == nil {
 		return utils.Nil[V](), false
 	}
-	e, found := b.Get(keyEntry[K, V]{k}, h.eq)
-	if found {
-		return e.Value(), found
+	n := findNodeFromBucket[types.Entry[K, V]](b, keyEntry[K, V]{k}, h.eq)
+	if n != nil {
+		return n.Value().Value(), true
 	}
 	return utils.Nil[V](), false
 }

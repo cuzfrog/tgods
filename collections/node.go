@@ -12,7 +12,6 @@ type node[T any] interface {
 	SetNext(next node[T]) node[T]
 	SetExternal(x node[T]) node[T]
 
-	Get(elem T, eq types.Equal[T]) (T, bool) // finds and returns an elem by given eq func and input elem
 	Contains(elem T, eq types.Equal[T]) bool // checks if the elem is in the bucket
 	Iterator() types.Iterator[T]
 }

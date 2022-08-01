@@ -44,11 +44,10 @@ func TestNode_Bucket(t *testing.T) {
 			assert.True(t, l.Contains(3, eqInt))
 			assert.False(t, l.Contains(8, eqInt))
 
-			v, found = l.Get(4, eqInt)
-			assert.True(t, found)
-			assert.Equal(t, 4, v)
-			v, found = l.Get(7, eqInt)
-			assert.False(t, found)
+			n = findNodeFromBucket(l, 4, eqInt)
+			assert.Equal(t, 4, n.Value())
+			n = findNodeFromBucket(l, 7, eqInt)
+			assert.Nil(t, n)
 
 			b, v, found = removeElemFromBucket[int](l, 4, eqInt)
 			assert.True(t, found)

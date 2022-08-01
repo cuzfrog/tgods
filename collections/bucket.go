@@ -54,15 +54,16 @@ func saveElemIntoBucket[T any](b bucket[T], elem T, eq types.Equal[T], newNodeOf
 	return h, np.Next(), utils.Nil[T](), false
 }
 
-func (n *slNode[T]) Get(elem T, eq types.Equal[T]) (T, bool) {
-	var next node[T] = n
+//findNodeFromBucket finds and returns the node by given eq func and input v
+func findNodeFromBucket[T any](b bucket[T], v T, eq types.Equal[T]) node[T] {
+	var next node[T] = b
 	for next != nil {
-		if eq(elem, next.Value()) {
-			return next.Value(), true
+		if eq(v, next.Value()) {
+			return next
 		}
 		next = next.Next()
 	}
-	return utils.Nil[T](), false
+	return nil
 }
 
 // removeElemFromBucket removes the elem from the bucket, return the elem and true if found
