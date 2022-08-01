@@ -9,7 +9,7 @@ type linkedList[T any] struct {
 	head node[T]
 	tail node[T]
 	size int
-	comp types.Equal[T]
+	eq   types.Equal[T]
 	r    role
 }
 
@@ -56,7 +56,7 @@ func (l *linkedList[T]) Contains(elem T) bool {
 	iter := l.Iterator()
 	for iter.Next() {
 		v := iter.Value()
-		if l.comp(v, elem) { // TODO, check for optimize
+		if l.eq(v, elem) { // TODO, check for optimize
 			return true
 		}
 	}
