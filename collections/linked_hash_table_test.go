@@ -39,12 +39,29 @@ func TestLinkedHashTable_Add(t *testing.T) {
 
 func TestLinkedHashTable_Remove(t *testing.T) {
 	h := newLinkedHashTable[int](funcs.NumHash[int], funcs.ValueEqual[int])
+	assert.False(t, h.Remove(6))
 	h.Add(2)
 	h.Add(6)
 	h.Add(3)
-	h.Remove(6)
+	assert.True(t, h.Remove(6))
 	assert.Equal(t, 2, h.size)
 	assert.Same(t, h.head, h.tail.Prev())
 	assert.Same(t, h.tail, h.head.Next())
 	assert.Equal(t, []int{2, 3}, utils.SliceFrom[int](h))
+
+	h.Remove(2)
+	assert.Equal(t, 1, h.Size())
+	assert.Same(t, h.head, h.tail)
+	assert.Nil(t, h.head.Prev())
+	assert.Nil(t, h.tail.Next())
+	h.Remove(3)
+	assert.Equal(t, 0, h.size)
+	assert.Nil(t, h.head)
+	assert.Nil(t, h.tail)
+
+	h.Add(5)
+	h.Clear()
+	assert.Nil(t, h.head)
+	assert.Nil(t, h.tail)
+	assert.Equal(t, 0, h.size)
 }

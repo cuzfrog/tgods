@@ -6,13 +6,15 @@ import (
 
 type linkedHashTable[T any] struct {
 	*hashTable[T]
+	h     *hashTable[T]
 	head  node[T]
 	tail  node[T] // new element is added to
 	limit int     // the maximum size limit, 0 means unlimited
 }
 
 func newLinkedHashTable[T any](hs types.Hash[T], eq types.Equal[T]) *linkedHashTable[T] {
-	return &linkedHashTable[T]{newHashTableOfSlxNode(hs, eq), nil, nil, 0}
+	h := newHashTableOfSlxNode(hs, eq)
+	return &linkedHashTable[T]{h, h, nil, nil, 0}
 }
 
 func (h *linkedHashTable[T]) Add(elem T) bool {
@@ -46,7 +48,19 @@ func (h *linkedHashTable[T]) Remove(elem T) bool {
 	n := h.remove(elem)
 	if n != nil {
 		x := n.External()
+		if h.head == x {
+			h.head = x.Next()
+		}
+		if h.tail == x {
+			h.tail = x.Prev()
+		}
 		removeNodeFromList(x)
 	}
 	return n != nil
+}
+
+func (h *linkedHashTable[T]) Clear() {
+	h.h.Clear()
+	h.head = nil
+	h.tail = nil
 }

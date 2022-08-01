@@ -16,6 +16,7 @@ Your brand-new Golang collections implementation with generics. Go version >= [1
 | `binaryHeap`             |                    |                    | :heavy_check_mark: |                    |                    |                    |
 | `rbTree`                 |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |
 | `hashTable`              |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |
+| `linkedHashTable`        |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |
 
 Top interface `Collection` contains general methods, sub-interfaces like `ArrayList`, `SortedSet` provide more rich functionalities.
 All interface definitions can be found: [here](./types/collection.go)
@@ -28,6 +29,7 @@ All interface definitions can be found: [here](./types/collection.go)
 * `binaryHeap` - binary heap based min or max priority queue. Backing up `Queue`
 * `rbTree` - recursion-free red black tree implementation. Backing up `SortedSet`, `SortedMap`
 * `hashTable` - variable length/cap array based hash table. Backing up `Set`, `Map`
+* `linkedHashTable` hashTable preserving inserting order. Can serve as an `LRU cache`. Backing up `Set`, `Map`
 
 ## Usage:
 
