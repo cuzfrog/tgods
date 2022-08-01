@@ -90,6 +90,10 @@ func (n *slxNode[T]) External() node[T] {
 	return n.x
 }
 
+func (n *dlxNode[T]) External() node[T] {
+	return n.x
+}
+
 func (n *slNode[T]) SetPrev(_ node[T]) node[T] {
 	return nil
 }
@@ -111,6 +115,12 @@ func (n *slNode[T]) SetExternal(_ node[T]) node[T] {
 }
 
 func (n *slxNode[T]) SetExternal(x node[T]) node[T] {
+	old := n.x
+	n.x = x
+	return old
+}
+
+func (n *dlxNode[T]) SetExternal(x node[T]) node[T] {
 	old := n.x
 	n.x = x
 	return old
