@@ -36,20 +36,20 @@ func (h *hashMap[K, V]) Buckets() []bucket[types.Entry[K, V]] {
 }
 
 func (h *hashMap[K, V]) Get(k K) (V, bool) {
-	return getValueFromMap[K, V](h, k)
-}
-func getValueFromMap[K any, V any](m internalMap[K, V], k K) (V, bool) {
-	if m.Size() == 0 {
-		return utils.Nil[V](), false
-	}
-	arr := m.Buckets()
-	i := hashToIndex(m.Hash(k), cap(arr))
-	b := arr[i]
-	n := findNodeFromBucket[types.Entry[K, V]](b, keyEntry[K, V]{k}, m.Equal)
+	n := getNodeFromMap[K, V](h, k)
 	if n != nil {
 		return n.Value().Value(), true
 	}
 	return utils.Nil[V](), false
+}
+func getNodeFromMap[K any, V any](m internalMap[K, V], k K) node[types.Entry[K, V]] {
+	if m.Size() == 0 {
+		return nil
+	}
+	arr := m.Buckets()
+	i := hashToIndex(m.Hash(k), cap(arr))
+	b := arr[i]
+	return findNodeFromBucket[types.Entry[K, V]](b, keyEntry[K, V]{k}, m.Equal)
 }
 
 func (h *hashMap[K, V]) Put(k K, v V) (V, bool) {
@@ -70,4 +70,8 @@ func (h *hashMap[K, V]) Remove(k K) (V, bool) {
 
 func (h *hashMap[K, V]) ContainsKey(k K) bool {
 	return h.h.Contains(keyEntry[K, V]{k})
+}
+
+func (h *hashMap[K, V]) Keys() types.Set[K] {
+	panic("not impl")
 }

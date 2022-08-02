@@ -10,3 +10,7 @@ const (
 )
 
 const left, right = true, false
+
+type AccessOrder byte
+
+const PutOrder, GetOrder AccessOrder = 1, 2

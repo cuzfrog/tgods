@@ -292,3 +292,27 @@ func Test_Each(t *testing.T) {
 		})
 	}
 }
+
+func Test_Map_Each(t *testing.T) {
+	tests := []struct {
+		name string
+		c    types.Map[int, int]
+	}{
+		{"HashMap", NewHashMapOf[int, int](funcs.NumHash[int], funcs.ValueEqual[int])},
+		{"LinkedHashMap", NewLinkedHashMapOf[int, int](funcs.NumHash[int], funcs.ValueEqual[int])},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			c := test.c
+			c.Put(1, 10)
+			c.Put(3, 30)
+			c.Put(2, 20)
+
+			arr := make([]int, 3)
+			c.Each(func(i int, e types.Entry[int, int]) {
+				arr[i] = e.Value()
+			})
+			assert.ElementsMatch(t, []int{10, 20, 30}, arr)
+		})
+	}
+}

@@ -12,7 +12,7 @@ type linkedHashMap[K any, V any] struct {
 	limit int // the maximum size limit, 0 means unlimited
 }
 
-func newLinkedHashMap[K any, V any](hs types.Hash[K], eq types.Equal[K], sizeLimit int, accessOrder byte) *linkedHashMap[K, V] {
+func newLinkedHashMap[K any, V any](hs types.Hash[K], eq types.Equal[K], sizeLimit int, accessOrder AccessOrder) *linkedHashMap[K, V] {
 	hhs := func(a types.Entry[K, V]) uint { return hs(a.Key()) }
 	heq := func(a, b types.Entry[K, V]) bool { return eq(a.Key(), b.Key()) }
 	h := newLinkedHashTable[types.Entry[K, V]](hhs, heq, accessOrder)
@@ -30,7 +30,16 @@ func (h *linkedHashMap[K, V]) Buckets() []bucket[types.Entry[K, V]] {
 }
 
 func (h *linkedHashMap[K, V]) Get(k K) (V, bool) {
-	return getValueFromMap[K, V](h, k)
+	n := getNodeFromMap[K, V](h, k)
+	if n != nil {
+		if h.accessOrder&GetOrder > 0 {
+			x := n.External()
+			h.h.removeNode(x)
+			h.h.appendToTail(x)
+		}
+		return n.Value().Value(), true
+	}
+	return utils.Nil[V](), false
 }
 
 func (h *linkedHashMap[K, V]) Put(k K, v V) (V, bool) {
