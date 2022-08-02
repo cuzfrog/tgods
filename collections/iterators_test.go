@@ -32,6 +32,7 @@ func TestIteratorForList(t *testing.T) {
 			assert.Equal(t, 7, it.Value())
 			assert.False(t, it.Next())
 			assert.False(t, it.Next())
+			assert.Equal(t, 0, it.Value())
 
 			l.Clear()
 			it = l.Iterator()

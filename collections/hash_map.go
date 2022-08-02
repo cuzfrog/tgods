@@ -72,6 +72,6 @@ func (h *hashMap[K, V]) ContainsKey(k K) bool {
 	return h.h.Contains(keyEntry[K, V]{k})
 }
 
-func (h *hashMap[K, V]) Keys() types.Set[K] {
-	panic("not impl")
-}
+//func (h *hashMap[K, V]) Keys() types.Set[K] {
+//	panic("not impl")
+//}

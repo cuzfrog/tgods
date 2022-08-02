@@ -64,6 +64,9 @@ func (it *circularArrayIterator[T]) Index() int {
 }
 
 func (it *circularArrayIterator[T]) Value() T {
+	if it.arrIndex < 0 || it.arrIndex >= cap(it.l.arr) {
+		return utils.Nil[T]()
+	}
 	return it.l.arr[it.arrIndex]
 }
 
