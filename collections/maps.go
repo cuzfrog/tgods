@@ -6,12 +6,12 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
-// NewTreeMapOf creates a tree map with init values
+// NewTreeMapOf creates a tree map with init values.
 func NewTreeMapOf[K constraints.Ordered, V any](entries ...types.Entry[K, V]) types.SortedMap[K, V] {
 	return NewTreeMapOfComp(funcs.ValueCompare[K], entries...)
 }
 
-// NewTreeMapOfComp creates a tree map with custom Compare func and init values
+// NewTreeMapOfComp creates a tree map with custom Compare func and init values.
 func NewTreeMapOfComp[K any, V any](comp types.Compare[K], entries ...types.Entry[K, V]) types.SortedMap[K, V] {
 	m := newTreeMapOfComp[K, V](comp)
 	for _, e := range entries {
@@ -20,7 +20,7 @@ func NewTreeMapOfComp[K any, V any](comp types.Compare[K], entries ...types.Entr
 	return m
 }
 
-// NewHashMapOf creates a hash map with custom Hash and Equal functions, and init values
+// NewHashMapOf creates a hash map with custom Hash and Equal functions, and init values.
 func NewHashMapOf[K any, V any](hs types.Hash[K], eq types.Equal[K], entries ...types.Entry[K, V]) types.Map[K, V] {
 	m := newHashMap[K, V](hs, eq)
 	for _, e := range entries {
@@ -29,7 +29,7 @@ func NewHashMapOf[K any, V any](hs types.Hash[K], eq types.Equal[K], entries ...
 	return m
 }
 
-// NewHashMapOfStrKey creates a hash map with key type as string and init values
+// NewHashMapOfStrKey creates a hash map with key type as string and init values.
 func NewHashMapOfStrKey[V any](entries ...types.Entry[string, V]) types.Map[string, V] {
 	m := newHashMap[string, V](funcs.NewStrHash(), funcs.ValueEqual[string])
 	for _, e := range entries {
@@ -38,7 +38,7 @@ func NewHashMapOfStrKey[V any](entries ...types.Entry[string, V]) types.Map[stri
 	return m
 }
 
-// NewHashMapOfNumKey creates a hash map with key type as constraints.Integer | constraints.Float, and init values
+// NewHashMapOfNumKey creates a hash map with key type as constraints.Integer | constraints.Float, and init values.
 func NewHashMapOfNumKey[K constraints.Integer | constraints.Float, V any](entries ...types.Entry[K, V]) types.Map[K, V] {
 	m := newHashMap[K, V](funcs.NumHash[K], funcs.ValueEqual[K])
 	for _, e := range entries {
@@ -47,27 +47,39 @@ func NewHashMapOfNumKey[K constraints.Integer | constraints.Float, V any](entrie
 	return m
 }
 
-// NewLinkedHashMapOf creates a linked hash map with custom Hash and Equal functions, and init values
+// NewLinkedHashMap creates a linked hash map with custom Hash and Equal functions, and init values.
+//   hs - the key hash function.
+//   eq - the key equal function.
+//   sizeLimit - limit the maximum size of elements, extra elements will be removed upon Put based on element order defined by AccessOrder.
+//   accessOrder - defines how elements are ordered. For an LRU cache, you can provide PutOrder + GetOrder
+func NewLinkedHashMap[K any, V any](hs types.Hash[K], eq types.Equal[K], sizeLimit int, accessOrder AccessOrder) types.Map[K, V] {
+	return newLinkedHashMap[K, V](hs, eq, sizeLimit, accessOrder)
+}
+
+// NewLinkedHashMapOf creates a linked hash map with custom Hash and Equal functions, and init values.
+// No size limit. Iteration will be of the original put order.
 func NewLinkedHashMapOf[K any, V any](hs types.Hash[K], eq types.Equal[K], entries ...types.Entry[K, V]) types.Map[K, V] {
-	m := newLinkedHashMap[K, V](hs, eq, 0, 1)
+	m := newLinkedHashMap[K, V](hs, eq, 0, OriginalOrder)
 	for _, e := range entries {
 		m.Put(e.Key(), e.Value())
 	}
 	return m
 }
 
-// NewLinkedHashMapOfStrKey creates a linked hash map with key type as string and init values
+// NewLinkedHashMapOfStrKey creates a linked hash map with key type as string and init values.
+// No size limit. Iteration will be of the original put order.
 func NewLinkedHashMapOfStrKey[V any](entries ...types.Entry[string, V]) types.Map[string, V] {
-	m := newLinkedHashMap[string, V](funcs.NewStrHash(), funcs.ValueEqual[string], 0, 1)
+	m := newLinkedHashMap[string, V](funcs.NewStrHash(), funcs.ValueEqual[string], 0, OriginalOrder)
 	for _, e := range entries {
 		m.Put(e.Key(), e.Value())
 	}
 	return m
 }
 
-// NewLinkedHashMapOfNumKey creates a linked hash map with key type as constraints.Integer | constraints.Float, and init values
+// NewLinkedHashMapOfNumKey creates a linked hash map with key type as constraints.Integer | constraints.Float, and init values.
+// No size limit. Iteration will be of the original put order.
 func NewLinkedHashMapOfNumKey[K constraints.Integer | constraints.Float, V any](entries ...types.Entry[K, V]) types.Map[K, V] {
-	m := newLinkedHashMap[K, V](funcs.NumHash[K], funcs.ValueEqual[K], 0, 1)
+	m := newLinkedHashMap[K, V](funcs.NumHash[K], funcs.ValueEqual[K], 0, OriginalOrder)
 	for _, e := range entries {
 		m.Put(e.Key(), e.Value())
 	}

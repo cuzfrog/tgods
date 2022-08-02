@@ -60,12 +60,17 @@ func TestMapProperties(t *testing.T) {
 }
 
 func TestNewHashMapOfNumKey(t *testing.T) {
+	m1 := NewLinkedHashMap[int, string](funcs.NumHash[int], funcs.ValueEqual[int], 0, OriginalOrder)
+	m1.Put(1, "a")
+	m1.Put(2, "b")
+
 	tests := []struct {
 		name string
 		m    types.Map[int, string]
 	}{
+		{"linkedHashMap1", m1},
 		{"hashMap1", NewHashMapOfNumKey(EntryOf(1, "a"), EntryOf(2, "b"))},
-		{"linkedHashMap1", NewLinkedHashMapOfNumKey(EntryOf(1, "a"), EntryOf(2, "b"))},
+		{"linkedHashMap2", NewLinkedHashMapOfNumKey(EntryOf(1, "a"), EntryOf(2, "b"))},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {

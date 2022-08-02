@@ -6,10 +6,9 @@ import (
 
 type linkedHashTable[T any] struct {
 	*hashTable[T]
-	h    *hashTable[T]
-	head node[T]
-	tail node[T] // new element is added to
-	// 1 - put order, 2 - get order, 3 - both get and put order, 0 - original put order (no explicit order change)
+	h           *hashTable[T]
+	head        node[T]
+	tail        node[T] // new element is added to
 	accessOrder AccessOrder
 }
 
