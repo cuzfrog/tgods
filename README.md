@@ -28,8 +28,8 @@ All interface definitions can be found: [here](./types/collection.go)
 * `linkedList` - doubly linked list with fast add/remove. Backing up `Stack`, `LinkedList`, `Queue`, `Deque`
 * `binaryHeap` - binary heap based min or max priority queue. Backing up `Queue`
 * `rbTree` - recursion-free red black tree implementation. Backing up `SortedSet`, `SortedMap`
-* `hashTable` - variable length/cap array based hash table. Backing up `Set`, `Map`
-* `linkedHashTable` hashTable preserving inserting order. Can serve as an `LRU cache`. Backing up `Set`, `Map`
+* `hashTable` - variable length/cap array based hash table, hash collision is handled by linked nodes. Backing up `Set`, `Map`
+* `linkedHashTable` hashTable preserving inserting or configurable access order. Can serve as an `LRU cache`. Backing up `Set`, `Map`
 
 ## Usage:
 
@@ -55,14 +55,23 @@ l := collections.NewLinkedList[string]()
 transform.MapTo[int, string](c, l, func(elem int) string { return fmt.Sprint(elem) }) // l ["1", "2", "3"]
 ```
 
-### Utils:
+### Built-in Utils & Functions:
 
 ```go
 import "github.com/cuzfrog/tgods/utils"
 list := collections.NewLinkedListOf(1, 2, 3)
 utils.StringFrom(list) // [1, 2, 3]
 utils.SliceFrom(list)  // []int{1, 2, 3}
-funcs.NewStrHash() // func(s string) uint
+
+// functions:
+import "github.com/cuzfrog/tgods/funcs"
+funcs.NewStrHash() // func(s string) uint, create a string hash function based on 64bit or 32bit platform
+funcs.ValueEqual // (a, b comparable) bool
+
+// HOFs:
+funcs.CompToEq // func(comp Compare[T]) Equal[T]
+funcs.InverseComp // func(comp Compare[T]) Compare[T]
+
 // more...
 ```
 

@@ -8,7 +8,7 @@ import (
 )
 
 func TestLinkedHashTable_Add(t *testing.T) {
-	h := newLinkedHashTable[int](funcs.NumHash[int], funcs.ValueEqual[int])
+	h := newLinkedHashTable[int](funcs.NumHash[int], funcs.ValueEqual[int], 1)
 	h.Add(2)
 	h.Add(6)
 	h.Add(3)
@@ -38,7 +38,7 @@ func TestLinkedHashTable_Add(t *testing.T) {
 }
 
 func TestLinkedHashTable_Remove(t *testing.T) {
-	h := newLinkedHashTable[int](funcs.NumHash[int], funcs.ValueEqual[int])
+	h := newLinkedHashTable[int](funcs.NumHash[int], funcs.ValueEqual[int], 1)
 	assert.False(t, h.Remove(6))
 	h.Add(2)
 	h.Add(6)

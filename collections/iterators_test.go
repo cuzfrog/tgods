@@ -32,6 +32,7 @@ func TestIteratorForList(t *testing.T) {
 			assert.Equal(t, 7, it.Value())
 			assert.False(t, it.Next())
 			assert.False(t, it.Next())
+			assert.Equal(t, 0, it.Value())
 
 			l.Clear()
 			it = l.Iterator()
@@ -187,7 +188,7 @@ func TestIteratorForSet(t *testing.T) {
 	}{
 		{"rbTree", newRbTreeOf[int]()},
 		{"hashTable", newHashTable[int](funcs.NumHash[int], funcs.ValueEqual[int])},
-		{"linkedHashTable", newLinkedHashTable[int](funcs.NumHash[int], funcs.ValueEqual[int])},
+		{"linkedHashTable", newLinkedHashTable[int](funcs.NumHash[int], funcs.ValueEqual[int], 1)},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -289,6 +290,30 @@ func Test_Each(t *testing.T) {
 				arr[i] = v
 			})
 			assert.Equal(t, arr, utils.SliceFrom(c))
+		})
+	}
+}
+
+func Test_Map_Each(t *testing.T) {
+	tests := []struct {
+		name string
+		c    types.Map[int, int]
+	}{
+		{"HashMap", NewHashMapOf[int, int](funcs.NumHash[int], funcs.ValueEqual[int])},
+		{"LinkedHashMap", NewLinkedHashMapOf[int, int](funcs.NumHash[int], funcs.ValueEqual[int])},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			c := test.c
+			c.Put(1, 10)
+			c.Put(3, 30)
+			c.Put(2, 20)
+
+			arr := make([]int, 3)
+			c.Each(func(i int, e types.Entry[int, int]) {
+				arr[i] = e.Value()
+			})
+			assert.ElementsMatch(t, []int{10, 20, 30}, arr)
 		})
 	}
 }

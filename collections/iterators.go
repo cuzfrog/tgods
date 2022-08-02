@@ -64,6 +64,9 @@ func (it *circularArrayIterator[T]) Index() int {
 }
 
 func (it *circularArrayIterator[T]) Value() T {
+	if it.arrIndex < 0 || it.arrIndex >= cap(it.l.arr) {
+		return utils.Nil[T]()
+	}
 	return it.l.arr[it.arrIndex]
 }
 
@@ -287,5 +290,9 @@ func (s *rbTree[T]) Each(fn func(index int, elem T)) {
 }
 
 func (h *hashTable[T]) Each(fn func(index int, elem T)) {
+	forEach[T](h, fn)
+}
+
+func (h *linkedHashTable[T]) Each(fn func(index int, elem T)) {
 	forEach[T](h, fn)
 }
