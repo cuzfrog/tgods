@@ -31,7 +31,7 @@ func TestLinkedHashMap_AccessOrder(t *testing.T) {
 		m.Put(2, 210)
 		m.Get(1)
 		l := make([]int, 3)
-		m.h.Each(func(index int, e types.Entry[int, int]) {
+		m.linkedHashTable.Each(func(index int, e types.Entry[int, int]) {
 			l[index] = e.Key()
 		})
 		assert.Equal(t, []int{1, 2, 3}, l)
@@ -45,7 +45,7 @@ func TestLinkedHashMap_AccessOrder(t *testing.T) {
 		m.Put(2, 210)
 		m.Get(1)
 		l := make([]int, 3)
-		m.h.Each(func(index int, e types.Entry[int, int]) {
+		m.linkedHashTable.Each(func(index int, e types.Entry[int, int]) {
 			l[index] = e.Key()
 		})
 		assert.Equal(t, []int{1, 3, 2}, l)
@@ -63,7 +63,7 @@ func TestLinkedHashMap_AccessOrder(t *testing.T) {
 		m.Put(2, 210)
 		m.Get(1)
 		l := make([]int, 3)
-		m.h.Each(func(index int, e types.Entry[int, int]) {
+		m.linkedHashTable.Each(func(index int, e types.Entry[int, int]) {
 			l[index] = e.Key()
 		})
 		assert.Equal(t, []int{2, 3, 1}, l)
@@ -77,7 +77,7 @@ func TestLinkedHashMap_AccessOrder(t *testing.T) {
 		m.Put(2, 210)
 		m.Get(1)
 		l := make([]int, 3)
-		m.h.Each(func(index int, e types.Entry[int, int]) {
+		m.linkedHashTable.Each(func(index int, e types.Entry[int, int]) {
 			l[index] = e.Key()
 		})
 		assert.Equal(t, []int{3, 2, 1}, l)
