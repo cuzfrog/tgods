@@ -5,8 +5,7 @@ import (
 )
 
 type linkedHashTable[T any] struct {
-	*hashTable[T]
-	h           *hashTable[T]
+	hashTable[T]
 	head        node[T]
 	tail        node[T] // new element is added to
 	accessOrder AccessOrder
@@ -14,7 +13,7 @@ type linkedHashTable[T any] struct {
 
 func newLinkedHashTable[T any](hs types.Hash[T], eq types.Equal[T], accessOrder AccessOrder) *linkedHashTable[T] {
 	h := newHashTableOfSlxNode(hs, eq)
-	return &linkedHashTable[T]{h, h, nil, nil, accessOrder}
+	return &linkedHashTable[T]{*h, nil, nil, accessOrder}
 }
 func (h *linkedHashTable[T]) Add(elem T) bool {
 	h.add(elem)
@@ -27,10 +26,10 @@ func (h *linkedHashTable[T]) add(elem T) (n node[T], old T, found bool) {
 		h.tail = newDlNode(elem, nil, nil)
 		h.head = h.tail
 		x := h.tail
-		n, old, found = h.h.add(elem)
+		n, old, found = h.hashTable.add(elem)
 		n.SetExternal(x)
 	} else {
-		n, old, found = h.h.add(elem)
+		n, old, found = h.hashTable.add(elem)
 		if found {
 			if h.accessOrder&PutOrder > 0 {
 				x := n.External()
@@ -64,7 +63,7 @@ func (h *linkedHashTable[T]) remove(elem T) node[T] {
 	if h.size == 0 {
 		return nil
 	}
-	n := h.h.remove(elem)
+	n := h.hashTable.remove(elem)
 	if n != nil {
 		h.removeNode(n.External())
 	}
@@ -82,7 +81,7 @@ func (h *linkedHashTable[T]) removeNode(x node[T]) {
 }
 
 func (h *linkedHashTable[T]) Clear() {
-	h.h.Clear()
+	h.hashTable.Clear()
 	h.head = nil
 	h.tail = nil
 }

@@ -140,3 +140,12 @@ func (h *hashTable[T]) hashRedistribute(c int) {
 	}
 	h.arr = a
 }
+
+func (h *hashTable[T]) getNode(elem T) node[T] {
+	if h.size == 0 {
+		return nil
+	}
+	i := hashToIndex(h.hs(elem), cap(h.arr))
+	b := h.arr[i]
+	return findNodeFromBucket[T](b, elem, h.eq)
+}

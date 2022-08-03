@@ -96,7 +96,6 @@ type Map[K any, V any] interface {
 	Put(k K, v V) (V, bool) // puts a key value pair, returns the old value and true associated with the key if any, or Nil and false if not exists
 	Remove(k K) (V, bool)   // removes the value associated with the given key, returns the moved value and true if found, or Nil and false if not exists
 	ContainsKey(k K) bool
-	//Keys() Set[K]
 }
 
 type SortedMap[K any, V any] interface {
