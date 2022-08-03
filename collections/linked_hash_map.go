@@ -17,16 +17,6 @@ func newLinkedHashMap[K any, V any](hs types.Hash[K], eq types.Equal[K], sizeLim
 	return &linkedHashMap[K, V]{*h, sizeLimit}
 }
 
-func (h *linkedHashMap[K, V]) Hash(k K) uint {
-	return h.hs(keyEntry[K, V]{k})
-}
-func (h *linkedHashMap[K, V]) Equal(a, b types.Entry[K, V]) bool {
-	return h.eq(a, b)
-}
-func (h *linkedHashMap[K, V]) Buckets() []bucket[types.Entry[K, V]] {
-	return h.arr
-}
-
 func (h *linkedHashMap[K, V]) Get(k K) (V, bool) {
 	n := h.linkedHashTable.getNode(keyEntry[K, V]{k})
 	if n != nil {
@@ -42,7 +32,7 @@ func (h *linkedHashMap[K, V]) Get(k K) (V, bool) {
 
 func (h *linkedHashMap[K, V]) Put(k K, v V) (V, bool) {
 	_, old, found := h.linkedHashTable.add(EntryOf[K, V](k, v))
-	if h.limit > 0 && h.size > h.limit {
+	if h.limit > 0 && h.linkedHashTable.size > h.limit {
 		head := h.head
 		h.head = head.Next()
 		removeNodeFromList(head)
