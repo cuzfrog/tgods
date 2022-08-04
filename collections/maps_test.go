@@ -59,6 +59,48 @@ func TestMapProperties(t *testing.T) {
 	}
 }
 
+func TestSortedMapProperties(t *testing.T) {
+	tests := []struct {
+		name string
+		m    types.SortedMap[int, int]
+	}{
+		{"treeMap1", NewTreeMapOf[int, int]()},
+		{"treeMap2", NewTreeMapOfComp[int, int](funcs.ValueCompare[int])},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			m := test.m
+			m.Put(3, 300)
+			m.Put(6, 200)
+			m.Put(2, 800)
+			m.Put(1, 900)
+			e := m.First()
+			assert.Equal(t, 1, e.Key())
+			assert.Equal(t, 900, e.Value())
+			e = m.Last()
+			assert.Equal(t, 6, e.Key())
+			e = m.RemoveFirst()
+			assert.Equal(t, 1, e.Key())
+			assert.Equal(t, 3, m.Size())
+			e = m.RemoveLast()
+			assert.Equal(t, 6, e.Key())
+			e = m.RemoveLast()
+			assert.Equal(t, 3, e.Key())
+			assert.Equal(t, 1, m.Size())
+			e = m.RemoveLast()
+			assert.Equal(t, 2, e.Key())
+			assert.Equal(t, 0, m.Size())
+			assert.Nil(t, m.RemoveLast())
+			m.Put(5, 100)
+			e = m.RemoveFirst()
+			assert.Equal(t, 5, e.Key())
+			assert.Nil(t, m.RemoveFirst())
+			assert.Nil(t, m.First())
+			assert.Nil(t, m.Last())
+		})
+	}
+}
+
 func TestNewHashMapOfNumKey(t *testing.T) {
 	m1 := NewLinkedHashMap[int, string](funcs.NumHash[int], funcs.ValueEqual[int], 0, OriginalOrder)
 	m1.Put(1, "a")
