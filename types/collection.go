@@ -106,3 +106,14 @@ type SortedMap[K any, V any] interface {
 	RemoveFirst() Entry[K, V] // returns and removes the first entry if it has, or nil if it's empty. O(log(n))
 	RemoveLast() Entry[K, V]  // returns and removes the last entry if it has, or nil if it's empty. O(log(n))
 }
+
+// Graph directional graph with edge properties
+//   V - the vertex type
+//   E - the edge type
+type Graph[V any, E any] interface {
+	Collection[V]
+	Connect(from, to V, edge E) bool
+	InwardEdges(vertex V) List[E]
+	OutwardEdges(vertex V) List[E]
+	Remove(vertex V) bool
+}
