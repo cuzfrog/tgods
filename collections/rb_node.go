@@ -88,21 +88,22 @@ func searchNode[T any](r *rbNode[T], d T, comp types.Compare[T]) *rbNode[T] {
 func deleteNode[T any](r *rbNode[T], d T, comp types.Compare[T]) (nd *rbNode[T], found bool) {
 	n := searchNode(r, d, comp)
 	if n != nil {
-		found = true
-		n = swapDown(n) // n is a leaf now
-		nd = n
-		if n.p != nil {
-			removeNode(nd)
-		}
+		nd = swapAndRemoveNode(n)
+		return nd, true
 	}
-	return
+	return nil, false
 }
 
-func removeNode[T any](n *rbNode[T]) {
+// swapAndRemoveNode swaps the value of the node with a leaf node to be removed from the tree
+//   n - the node with the value to be deleted, but not necessarily the node to be removed from the tree, cannot be null
+func swapAndRemoveNode[T any](n *rbNode[T]) *rbNode[T] {
+	n = swapDown(n) // n is a leaf now
+	nd := n
 	if n.p != nil {
 		ndp, ndBranch := removeFromParent(n)
 		deletionRebalance(ndp, n, ndBranch)
 	}
+	return nd
 }
 
 // deletionRebalance params:

@@ -73,8 +73,8 @@ type SortedSet[T any] interface {
 	Set[T]
 	First() (T, bool)       // returns the first elem and true if it has, or Nil and false if it hasn't. The elem is not removed from the set. O(log(n))
 	Last() (T, bool)        // returns the last elem and true if it has, or Nil and false if it hasn't. The elem is not removed from the set. O(log(n))
-	RemoveFirst() (T, bool) // returns the first elem and true if it has, or Nil and false if it hasn't. O(log(n))
-	RemoveLast() (T, bool)  // returns the last elem and true if it has, or Nil and false if it hasn't. O(log(n))
+	RemoveFirst() (T, bool) // returns and removes the first elem and true if it has, or Nil and false if it hasn't. O(log(n))
+	RemoveLast() (T, bool)  // returns and removes the last elem and true if it has, or Nil and false if it hasn't. O(log(n))
 	//HeadSet(toElem T) SortedSet[T]          // returns a new set contains elements from first to toElem(exclusive). O(n*log(n))
 	//TailSet(fromElem T) SortedSet[T]        // returns a new set contains elements from fromElem(inclusive) to the last. O(n*log(n))
 	//SubSet(fromElem, toElem T) SortedSet[T] // returns a new set contains elements from fromElem(inclusive) to toElem(exclusive). O(n*log(n))
@@ -98,6 +98,11 @@ type Map[K any, V any] interface {
 	ContainsKey(k K) bool
 }
 
+// SortedMap The key order is decided by Compare func.
 type SortedMap[K any, V any] interface {
 	Map[K, V]
+	First() Entry[K, V]       // returns the first entry if it has, or nil if it's empty. The entry is not removed from the map. O(log(n))
+	Last() Entry[K, V]        // returns the last entry if it has, or nil if it's empty. The entry is not removed from the map. O(log(n))
+	RemoveFirst() Entry[K, V] // returns and removes the first entry if it has, or nil if it's empty. O(log(n))
+	RemoveLast() Entry[K, V]  // returns and removes the last entry if it has, or nil if it's empty. O(log(n))
 }

@@ -11,7 +11,7 @@ import (
 func TestSortedSetProperties(t *testing.T) {
 	tests := []struct {
 		name string
-		s    types.Set[int]
+		s    types.SortedSet[int]
 	}{
 		{"treeSet1", NewTreeSetOf[int]()},
 		{"treeSet2", NewTreeSetOfComp[int](funcs.ValueCompare[int])},
@@ -27,6 +27,17 @@ func TestSortedSetProperties(t *testing.T) {
 			s.Add(5)
 			s.Remove(3)
 			assert.Equal(t, []int{2, 5, 9}, utils.SliceFrom[int](s))
+			s.Remove(5)
+			assert.Equal(t, 2, s.Size())
+			assert.Equal(t, []int{2, 9}, utils.SliceFrom[int](s))
+
+			v, found := s.RemoveFirst()
+			assert.True(t, found)
+			assert.Equal(t, 2, v)
+			v, found = s.RemoveFirst()
+			assert.Equal(t, 9, v)
+			v, found = s.RemoveFirst()
+			assert.False(t, found)
 		})
 	}
 }

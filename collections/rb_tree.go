@@ -128,35 +128,48 @@ func (t *rbTree[T]) Last() (T, bool) {
 	n := t.lastNode()
 	return n.v, true
 }
-
 func (t *rbTree[T]) RemoveFirst() (T, bool) {
+	n := t.removeFirstNode()
+	if n != nil {
+		return n.v, true
+	}
+	return utils.Nil[T](), false
+}
+func (t *rbTree[T]) removeFirstNode() *rbNode[T] {
 	if t.size == 0 {
-		return utils.Nil[T](), false
+		return nil
 	}
 	if t.size == 1 {
-		v := t.root.v
+		r := t.root
 		t.Clear()
-		return v, true
+		return r
 	}
 	n := t.firstNode()
-	removeNode(n)
+	nd := swapAndRemoveNode(n)
 	t.size--
-	return n.v, true
+	return nd
 }
 
 func (t *rbTree[T]) RemoveLast() (T, bool) {
+	n := t.removeLastNode()
+	if n != nil {
+		return n.v, true
+	}
+	return utils.Nil[T](), false
+}
+func (t *rbTree[T]) removeLastNode() *rbNode[T] {
 	if t.size == 0 {
-		return utils.Nil[T](), false
+		return nil
 	}
 	if t.size == 1 {
-		v := t.root.v
+		r := t.root
 		t.Clear()
-		return v, true
+		return r
 	}
 	n := t.lastNode()
-	removeNode(n)
+	nd := swapAndRemoveNode(n)
 	t.size--
-	return n.v, true
+	return nd
 }
 
 //
