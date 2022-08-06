@@ -27,15 +27,9 @@ func (t *treeAdjacencyList[V, E]) Contains(vertex V) bool {
 }
 
 func (t *treeAdjacencyList[V, E]) Connect(from, to V, edge E) (E, bool) {
-	outwards, found := t.treeMap.Get(from)
-	if !found {
-		outwards, _ = utils.ComputeIfAbsent[V, types.Map[V, E]](&t.treeMap, from, t.newMap)
-	}
+	outwards, _ := utils.ComputeIfAbsent[V, types.Map[V, E]](&t.treeMap, from, t.newMap)
 	t.Add(to)
-	inwards, found := t.inward.Get(to)
-	if !found {
-		inwards, _ = utils.ComputeIfAbsent[V, types.Map[V, E]](&t.inward, to, t.newMap)
-	}
+	inwards, _ := utils.ComputeIfAbsent[V, types.Map[V, E]](&t.inward, to, t.newMap)
 	inwards.Put(from, edge)
 	return outwards.Put(to, edge)
 }

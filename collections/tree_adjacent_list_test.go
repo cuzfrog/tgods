@@ -154,4 +154,21 @@ func TestTreeAdjacencyList_Properties(t *testing.T) {
 	assert.Equal(t, 0, g.treeMap.Size())
 	assert.Equal(t, 0, g.inward.Size())
 
+	/*
+				3
+		        5 -> 3(0.6)
+				--
+			    3 < 5(0.6)
+	*/
+	g.Connect(5, 3, 0.6)
+	assert.Equal(t, 2, g.Size())
+	outwards, found := g.treeMap.Get(5)
+	assert.True(t, found)
+	f, found := outwards.Get(3)
+	assert.Equal(t, 0.6, f)
+	inwards, found := g.inward.Get(3)
+	assert.True(t, found)
+	f, found = inwards.Get(5)
+	assert.True(t, found)
+	assert.Equal(t, 0.6, f)
 }

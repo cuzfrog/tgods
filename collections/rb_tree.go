@@ -56,6 +56,9 @@ func (t *rbTree[T]) delete(d T) (T, bool) {
 		if t.root.p != nil {
 			t.root = t.root.p
 		}
+		if t.size == 0 {
+			t.root = nil
+		}
 		return nd.v, true
 	}
 	return utils.Nil[T](), false

@@ -65,8 +65,8 @@ import "github.com/cuzfrog/tgods/utils"
 list := collections.NewLinkedListOf(1, 2, 3)
 utils.StringFrom(list) // [1, 2, 3]
 utils.SliceFrom(list)  // []int{1, 2, 3}
-m := // Map
-utils.KeysFrom(m)
+m := // Map [1->"a", 2->"b"]
+utils.KeysFrom(m) // [1, 2]
 
 // functions:
 import "github.com/cuzfrog/tgods/funcs"
