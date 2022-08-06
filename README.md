@@ -17,7 +17,7 @@ Your brand-new Golang collections implementation with generics. Go version >= [1
 | `rbTree`                 |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |
 | `hashTable`              |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |
 | `linkedHashTable`        |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |
-| `treeAdjacencyList`      |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| `treeAdjacencyList`      |                    |                    |                    |                    |                    |                    | :heavy_check_mark: |
 
 Top interface `Collection` contains general methods, sub-interfaces like `ArrayList`, `SortedSet` provide more rich functionalities.
 All interface definitions can be found: [here](./types/collection.go)
