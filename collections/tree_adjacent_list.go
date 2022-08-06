@@ -40,6 +40,20 @@ func (t *treeAdjacencyList[V, E]) Connect(from, to V, edge E) (E, bool) {
 	return outwards.Put(to, edge)
 }
 
+func (t *treeAdjacencyList[V, E]) Disconnect(from, to V) (E, bool) {
+	outwards, found := t.treeMap.Get(from)
+	if !found {
+		return utils.Nil[E](), false
+	}
+	oldE, hasTo := outwards.Remove(to)
+	if !hasTo {
+		return utils.Nil[E](), false
+	}
+	inwards, _ := t.inward.Get(to)
+	inwards.Remove(from)
+	return oldE, true
+}
+
 func (t *treeAdjacencyList[V, E]) InwardCount(vertex V) int {
 	inwards, found := t.inward.Get(vertex)
 	if !found {

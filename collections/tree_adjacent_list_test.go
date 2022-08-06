@@ -126,6 +126,20 @@ func TestTreeAdjacencyList_Properties(t *testing.T) {
 	assert.Equal(t, 1.5, it.Value().Value())
 	assert.False(t, it.Next())
 
+	edge, exist := g.Disconnect(3, 1)
+	assert.False(t, exist)
+	/*
+			1 ->
+			3
+			--
+			1 <-
+		    3 <-
+	*/
+	edge, exist = g.Disconnect(1, 3)
+	assert.True(t, exist)
+	assert.Equal(t, 1.5, edge)
+	assert.Equal(t, 2, g.Size())
+
 	/*
 			3
 			--

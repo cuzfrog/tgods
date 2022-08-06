@@ -8,15 +8,16 @@ Your brand-new Golang collections implementation with generics. Go version >= [1
 
 ### Interfaces
 
-| Implementation\Interface | Stack              | List               | Queue              | Deque              | Set                | Map                |
-|--------------------------|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
-| `arrayStack`             | :heavy_check_mark: |                    |                    |                    |                    |                    |
-| `circularArray`          | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
-| `linkedList`             | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
-| `binaryHeap`             |                    |                    | :heavy_check_mark: |                    |                    |                    |
-| `rbTree`                 |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |
-| `hashTable`              |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |
-| `linkedHashTable`        |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |
+| Implementation\Interface | Stack              | List               | Queue              | Deque              | Set                | Map                | Graph              |
+|--------------------------|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
+| `arrayStack`             | :heavy_check_mark: |                    |                    |                    |                    |                    |                    |
+| `circularArray`          | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |
+| `linkedList`             | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |
+| `binaryHeap`             |                    |                    | :heavy_check_mark: |                    |                    |                    |                    |
+| `rbTree`                 |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |
+| `hashTable`              |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |
+| `linkedHashTable`        |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |
+| `treeAdjacencyList`      |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 
 Top interface `Collection` contains general methods, sub-interfaces like `ArrayList`, `SortedSet` provide more rich functionalities.
 All interface definitions can be found: [here](./types/collection.go)
@@ -30,6 +31,8 @@ All interface definitions can be found: [here](./types/collection.go)
 * `rbTree` - recursion-free red black tree implementation. Backing up `SortedSet`, `SortedMap`
 * `hashTable` - variable length/cap array based hash table, hash collision is handled by linked nodes. Backing up `Set`, `Map`
 * `linkedHashTable` hashTable preserving inserting or configurable access order. Can serve as an `LRU cache`. Backing up `Set`, `Map`
+* `treeAdjacencyList` a treeMap based graph implementation with directional edge properties.
+It has typical _O(log(n))_ time complexity for adding, searching, and removing vertices. Backing up `Graph`
 
 ## Usage:
 
