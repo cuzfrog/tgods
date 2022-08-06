@@ -9,6 +9,13 @@ import (
 	"testing"
 )
 
+func TestEmptyIterator(t *testing.T) {
+	it := newEmptyIterator[int]()
+	assert.False(t, it.Next())
+	assert.Equal(t, -1, it.Index())
+	assert.Equal(t, utils.Nil[int](), it.Value())
+}
+
 func TestIteratorForList(t *testing.T) {
 	tests := []struct {
 		name string
