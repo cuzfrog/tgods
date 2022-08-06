@@ -284,8 +284,26 @@ func (h *linkedHashTable[T]) Iterator() types.Iterator[T] {
 // ======== treeAdjacencyList ========
 
 func (t *treeAdjacencyList[V, E]) Iterator() types.Iterator[V] {
-	//TODO implement me
-	panic("implement me")
+	mIt := t.treeMap.rbTree.Iterator()
+	projectFn := func(e types.Entry[V, types.Map[V, E]]) V { return e.Key() }
+	return &projectionIterator[types.Entry[V, types.Map[V, E]], V]{mIt, projectFn}
+}
+
+type projectionIterator[T any, R any] struct {
+	it types.Iterator[T]
+	fn func(t T) R
+}
+
+func (it *projectionIterator[T, R]) Next() bool {
+	return it.it.Next()
+}
+
+func (it *projectionIterator[T, R]) Index() int {
+	return it.it.Index()
+}
+
+func (it *projectionIterator[T, R]) Value() R {
+	return it.fn(it.it.Value())
 }
 
 // ======== forEach ========

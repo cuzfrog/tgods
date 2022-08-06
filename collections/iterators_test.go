@@ -48,7 +48,7 @@ func TestIteratorForList(t *testing.T) {
 	}
 }
 
-func TestForStack(t *testing.T) {
+func TestIteratorForStack(t *testing.T) {
 	tests := []struct {
 		name string
 		l    types.Stack[int]
@@ -247,6 +247,34 @@ func TestIteratorForNode(t *testing.T) {
 	}
 }
 
+func TestIteratorForGraph(t *testing.T) {
+	tests := []struct {
+		name string
+		g    types.Graph[int, int]
+	}{
+		{"treeMapGraph", NewTreeAdjacencyGraph[int, int](funcs.ValueCompare[int])},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			g := test.g
+			g.Add(3)
+			g.Add(1)
+			g.Add(6)
+			it := g.Iterator()
+			assert.True(t, it.Next())
+			assert.Equal(t, 0, it.Index())
+			assert.Equal(t, 1, it.Value())
+			assert.True(t, it.Next())
+			assert.Equal(t, 1, it.Index())
+			assert.Equal(t, 3, it.Value())
+			assert.True(t, it.Next())
+			assert.Equal(t, 2, it.Index())
+			assert.Equal(t, 6, it.Value())
+			assert.False(t, it.Next())
+		})
+	}
+}
+
 func Test_forEach(t *testing.T) {
 	c := mocks.NewMockCollectionOf(3, 4, 5)
 	arr := make([]int, 3)
@@ -276,6 +304,10 @@ func Test_Each(t *testing.T) {
 	c7.Add(1)
 	c7.Add(2)
 	c7.Add(3)
+	c8 := NewTreeAdjacencyGraph[int, int](funcs.ValueCompare[int])
+	c8.Add(1)
+	c8.Add(2)
+	c8.Add(3)
 
 	tests := []struct {
 		name string
@@ -288,6 +320,7 @@ func Test_Each(t *testing.T) {
 		{"TreeSet", c5},
 		{"HashTable", c6},
 		{"LinkedHashTable", c7},
+		{"TreeMapGraph", c8},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
