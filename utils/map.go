@@ -28,3 +28,16 @@ func Compute[K any, V any](m types.Map[K, V], k K, fn func(v V, found bool) V) V
 	m.Put(k, newV)
 	return newV
 }
+
+//ComputeIfAbsent sets the computed value for the given key by a function when there's no association existing.
+//Return the computed value and true if put, or the old value and false if the computation didn't happen.
+//  fn - the function to compute the value
+func ComputeIfAbsent[K any, V any](m types.Map[K, V], k K, fn func() V) (V, bool) {
+	oldV, found := m.Get(k)
+	if found {
+		return oldV, false
+	}
+	newV := fn()
+	m.Put(k, newV)
+	return newV, true
+}

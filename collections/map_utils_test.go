@@ -21,4 +21,11 @@ func TestMapUtilsFunctions(t *testing.T) {
 	assert.Equal(t, "b-computed", v)
 	v, _ = m.Get(2)
 	assert.Equal(t, "b-computed", v)
+	
+	v, computed := utils.ComputeIfAbsent(m, 5, func() string { return "computed" })
+	assert.False(t, computed)
+	assert.Equal(t, "f", v)
+	v, computed = utils.ComputeIfAbsent(m, 6, func() string { return "computed" })
+	assert.True(t, computed)
+	assert.Equal(t, "computed", v)
 }
