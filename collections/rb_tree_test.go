@@ -153,4 +153,5 @@ func TestRbTree_Add_Remove_First_Last_Contains(t *testing.T) {
 	assert.False(t, ok)
 	_, ok = tree.Last()
 	assert.False(t, ok)
+	assert.Nil(t, tree.root)
 }

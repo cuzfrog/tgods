@@ -6,6 +6,27 @@ import (
 	"github.com/cuzfrog/tgods/utils"
 )
 
+// ======== emptyIterator ========
+
+type emptyIterator[T any] struct {
+}
+
+func newEmptyIterator[T any]() *emptyIterator[T] {
+	return &emptyIterator[T]{}
+}
+
+func (it *emptyIterator[T]) Next() bool {
+	return false
+}
+
+func (it *emptyIterator[T]) Index() int {
+	return -1
+}
+
+func (it *emptyIterator[T]) Value() T {
+	return utils.Nil[T]()
+}
+
 // ======== arrayStack ========
 
 func (s *arrayStack[T]) Iterator() types.Iterator[T] {
@@ -260,6 +281,31 @@ func (h *linkedHashTable[T]) Iterator() types.Iterator[T] {
 	return &linkedListIterator[T]{-1, h.head, nil}
 }
 
+// ======== treeAdjacencyList ========
+
+func (t *treeAdjacencyList[V, E]) Iterator() types.Iterator[V] {
+	mIt := t.treeMap.rbTree.Iterator()
+	projectFn := func(e types.Entry[V, types.Map[V, E]]) V { return e.Key() }
+	return &projectionIterator[types.Entry[V, types.Map[V, E]], V]{mIt, projectFn}
+}
+
+type projectionIterator[T any, R any] struct {
+	it types.Iterator[T]
+	fn func(t T) R
+}
+
+func (it *projectionIterator[T, R]) Next() bool {
+	return it.it.Next()
+}
+
+func (it *projectionIterator[T, R]) Index() int {
+	return it.it.Index()
+}
+
+func (it *projectionIterator[T, R]) Value() R {
+	return it.fn(it.it.Value())
+}
+
 // ======== forEach ========
 
 func forEach[T any](c types.Collection[T], fn func(index int, v T)) {
@@ -295,4 +341,8 @@ func (h *hashTable[T]) Each(fn func(index int, elem T)) {
 
 func (h *linkedHashTable[T]) Each(fn func(index int, elem T)) {
 	forEach[T](h, fn)
+}
+
+func (t *treeAdjacencyList[V, E]) Each(fn func(index int, elem V)) {
+	forEach[V](t, fn)
 }
