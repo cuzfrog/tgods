@@ -17,4 +17,8 @@ func TestMapUtilsFunctions(t *testing.T) {
 	values := utils.ValuesFrom(m)
 	assert.ElementsMatch(t, []string{"a", "b", "f"}, values)
 
+	v := utils.Compute(m, 2, func(v string, found bool) string { return v + "-computed" })
+	assert.Equal(t, "b-computed", v)
+	v, _ = m.Get(2)
+	assert.Equal(t, "b-computed", v)
 }
