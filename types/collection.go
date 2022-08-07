@@ -112,8 +112,8 @@ type SortedMap[K any, V any] interface {
 //   E - the edge type
 type Graph[V any, E any] interface {
 	Collection[V]
-	Connect(from, to V, edge E) (E, bool)               // connects vertices 'from' to 'to' with provided edge property, add the vertices into the graph if not already exist. Returns old edge property and true if a connection was existing, or Nil and false if not existing.
-	Disconnect(from, to V) (E, bool)                    // disconnects vertices 'from' to 'to', returns the existing edge and true if any, or Nil and false.
+	Connect(from, to V, edge E) (E, bool)               // connects vertices 'from' to 'to' with provided edge property, add the vertices into the graph if not already exist. Returns old edge property and true if a connection was existing, or Nil and false if not existing. If 'from' == 'to' by Compare, no edge will be added.
+	Disconnect(from, to V) (E, bool)                    // disconnects vertices 'from' to 'to', returns the existing edge and true if any, or Nil and false. If 'from' == 'to' by Compare, no effect.
 	InwardCount(vertex V) int                           // returns inward edge count. If the graph does not have the vertex, returns 0
 	OutwardCount(vertex V) int                          // returns outward edge count. If the graph does not have the vertex, returns 0
 	InwardEdges(vertex V) (Iterator[Entry[V, E]], int)  // returns inward neighbour edges and connected vertices and the count. If the graph does not have the vertex, returns an empty iterator.

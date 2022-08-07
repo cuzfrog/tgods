@@ -177,3 +177,18 @@ func TestTreeAdjacencyList_Properties(t *testing.T) {
 	assert.True(t, found)
 	assert.Equal(t, 0.6, f)
 }
+
+func TestTreeAdjacencyList_Connect_Disconnect_same_vertex(t *testing.T) {
+	g := newTreeAdjacencyList[int, float64](funcs.ValueCompare[int])
+	g.Add(3)
+	_, exist := g.Connect(3, 3, 0.7)
+	assert.False(t, exist)
+	_, exist = g.Connect(4, 4, 0.8)
+	assert.False(t, exist)
+	assert.Equal(t, 2, g.Size())
+	_, exist = g.Disconnect(3, 3)
+	assert.False(t, exist)
+	_, exist = g.Disconnect(5, 5)
+	assert.False(t, exist)
+	assert.Equal(t, 2, g.Size())
+}
