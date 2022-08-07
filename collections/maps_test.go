@@ -66,6 +66,7 @@ func TestSortedMapProperties(t *testing.T) {
 	}{
 		{"treeMap1", NewTreeMapOf[int, int]()},
 		{"treeMap2", NewTreeMapOfComp[int, int](funcs.ValueCompare[int])},
+		{"enumMap", NewEnumMap[int, int](10)},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {

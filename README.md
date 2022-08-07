@@ -4,7 +4,8 @@
 
 # Typesafe Go Data Structures
 
-Your brand-new Golang collections implementation with generics. Go version >= [1.18](https://tip.golang.org/doc/go1.18).
+Your brand-new Golang collections implementation with generics.
+Go version >= [1.18](https://tip.golang.org/doc/go1.18). If facing compiler issue, please upgrade to [1.19](https://tip.golang.org/doc/go1.19).
 
 ### Interfaces
 
@@ -17,9 +18,11 @@ Your brand-new Golang collections implementation with generics. Go version >= [1
 | `rbTree`                 |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |
 | `hashTable`              |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |
 | `linkedHashTable`        |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |
+| `enumMap`                |                    |                    |                    |                    |                    | :heavy_check_mark: |                    |
+| `enumSet`                |                    |                    |                    |                    | :heavy_check_mark: |                    |                    |
 | `treeAdjacencyList`      |                    |                    |                    |                    |                    |                    | :heavy_check_mark: |
 
-Top interface `Collection` contains general methods, sub-interfaces like `ArrayList`, `SortedSet` provide more rich functionalities.
+Top interface `Collection` contains general methods, sub-interfaces like `ArrayList`, `SortedSet`, `SortedMap` provide more rich functionalities.
 All interface definitions can be found: [here](./types/collection.go)
 
 ### Data Structures:
@@ -33,6 +36,7 @@ All interface definitions can be found: [here](./types/collection.go)
 * `linkedHashTable` hashTable preserving inserting or configurable access order. Can serve as an `LRU cache`. Backing up `Set`, `Map`
 * `treeAdjacencyList` a treeMap based graph implementation with directional edge properties.
 It has typical _O(log(n))_ time complexity for adding, searching, and removing vertices. Backing up `Graph`
+* `enumMap` & `enumSet` fast array based map and set with `Integer` as the key. Implementing `SortedMap`, `SortedSet` respectively.
 
 ## Usage:
 

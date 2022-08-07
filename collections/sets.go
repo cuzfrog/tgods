@@ -61,3 +61,10 @@ func NewLinkedHashSetOfStr(values ...string) types.Set[string] {
 	}
 	return h
 }
+
+// NewEnumSet creates an array based enum set
+//
+//	max - the max value, which defines the cap of the array
+func NewEnumSet[T constraints.Integer](max T, values ...T) types.SortedSet[T] {
+	return newEnumSet(max, values...)
+}

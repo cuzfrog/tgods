@@ -15,6 +15,7 @@ func TestSortedSetProperties(t *testing.T) {
 	}{
 		{"treeSet1", NewTreeSetOf[int]()},
 		{"treeSet2", NewTreeSetOfComp[int](funcs.ValueCompare[int])},
+		{"enumSet", NewEnumSet[int](10)},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
