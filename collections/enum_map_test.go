@@ -49,3 +49,22 @@ func TestEnumMap(t *testing.T) {
 		assert.Nil(t, m.arr[i])
 	}
 }
+
+func TestEnumMap_SortedProperties(t *testing.T) {
+	m := newEnumMap[myEnum, string](myEnumC)
+	assert.Nil(t, m.First())
+	assert.Nil(t, m.Last())
+	m.Put(myEnumA, "a")
+	m.Put(myEnumB, "b")
+	assert.Equal(t, "a", m.First().Value())
+	assert.Equal(t, "b", m.Last().Value())
+	e := m.RemoveFirst()
+	assert.Equal(t, "a", e.Value())
+	m.Put(myEnumC, "c")
+	e = m.RemoveLast()
+	assert.Equal(t, "c", e.Value())
+	e = m.RemoveFirst()
+	assert.Equal(t, "b", e.Value())
+	assert.Nil(t, m.RemoveFirst())
+	assert.Nil(t, m.RemoveLast())
+}

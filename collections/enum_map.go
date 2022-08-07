@@ -6,6 +6,7 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
+// max length is int despite the type constraint
 type enumMap[K constraints.Integer, V any] struct {
 	arr  []types.Entry[K, V]
 	size int
@@ -30,6 +31,10 @@ func (m *enumMap[K, V]) Add(entry types.Entry[K, V]) bool {
 
 func (m *enumMap[K, V]) Contains(_ types.Entry[K, V]) bool {
 	panic("Not supported, please check with ContainsKey.")
+}
+
+func (m *enumMap[K, V]) ContainsKey(k K) bool {
+	return m.arr[k] != nil
 }
 
 func (m *enumMap[K, V]) Size() int {
@@ -72,6 +77,45 @@ func (m *enumMap[K, V]) Remove(k K) (old V, found bool) {
 	return
 }
 
-func (m *enumMap[K, V]) ContainsKey(k K) bool {
-	return m.arr[k] != nil
+func (m *enumMap[K, V]) First() types.Entry[K, V] {
+	for _, v := range m.arr {
+		if v != nil {
+			return v
+		}
+	}
+	return nil
+}
+
+func (m *enumMap[K, V]) Last() types.Entry[K, V] {
+	for i := len(m.arr) - 1; i >= 0; i-- {
+		v := m.arr[i]
+		if v != nil {
+			return v
+		}
+	}
+	return nil
+}
+
+func (m *enumMap[K, V]) RemoveFirst() types.Entry[K, V] {
+	for i := 0; i < len(m.arr); i++ {
+		v := m.arr[i]
+		if v != nil {
+			m.arr[i] = nil
+			m.size--
+			return v
+		}
+	}
+	return nil
+}
+
+func (m *enumMap[K, V]) RemoveLast() types.Entry[K, V] {
+	for i := len(m.arr) - 1; i >= 0; i-- {
+		v := m.arr[i]
+		if v != nil {
+			m.arr[i] = nil
+			m.size--
+			return v
+		}
+	}
+	return nil
 }
