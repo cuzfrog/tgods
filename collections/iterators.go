@@ -317,7 +317,7 @@ func (m *enumMap[K, V]) Iterator() types.Iterator[types.Entry[K, V]] {
 			i++
 		}
 	}
-	return &arrayIterator[types.Entry[K, V]]{m.arr, -1}
+	return &arrayIterator[types.Entry[K, V]]{arr, -1}
 }
 
 type arrayIterator[T any] struct {
@@ -335,7 +335,24 @@ func (it *arrayIterator[T]) Index() int {
 }
 
 func (it *arrayIterator[T]) Value() T {
+	if it.cur >= len(it.arr) {
+		return utils.Nil[T]()
+	}
 	return it.arr[it.cur]
+}
+
+// ======== enumSet ========
+
+func (s *enumSet[T]) Iterator() types.Iterator[T] {
+	arr := make([]T, s.size)
+	i := 0
+	for _, v := range s.arr {
+		if v != nil {
+			arr[i] = v.Key()
+			i++
+		}
+	}
+	return &arrayIterator[T]{arr, -1}
 }
 
 // ======== forEach ========
@@ -377,6 +394,10 @@ func (h *linkedHashTable[T]) Each(fn func(index int, elem T)) {
 
 func (m *enumMap[K, V]) Each(fn func(index int, elem types.Entry[K, V])) {
 	forEach[types.Entry[K, V]](m, fn)
+}
+
+func (s *enumSet[T]) Each(fn func(index int, elem T)) {
+	forEach[T](s, fn)
 }
 
 func (t *treeAdjacencyList[V, E]) Each(fn func(index int, elem V)) {

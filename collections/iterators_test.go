@@ -154,6 +154,7 @@ func TestIteratorForSortedSet(t *testing.T) {
 		s    types.SortedSet[int]
 	}{
 		{"rbTree", newRbTreeOf[int]()},
+		{"enumSet", newEnumSet[int](10)},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -308,6 +309,10 @@ func Test_Each(t *testing.T) {
 	c8.Add(1)
 	c8.Add(2)
 	c8.Add(3)
+	c9 := NewEnumSet[int](3)
+	c9.Add(1)
+	c9.Add(2)
+	c9.Add(3)
 
 	tests := []struct {
 		name string
@@ -321,6 +326,7 @@ func Test_Each(t *testing.T) {
 		{"HashTable", c6},
 		{"LinkedHashTable", c7},
 		{"TreeMapGraph", c8},
+		{"EnumSet", c9},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -341,6 +347,7 @@ func Test_Map_Each(t *testing.T) {
 	}{
 		{"HashMap", NewHashMapOf[int, int](funcs.NumHash[int], funcs.ValueEqual[int])},
 		{"LinkedHashMap", NewLinkedHashMapOf[int, int](funcs.NumHash[int], funcs.ValueEqual[int])},
+		{"enumMap", NewEnumMap[int, int](3)},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {

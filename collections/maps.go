@@ -48,10 +48,11 @@ func NewHashMapOfNumKey[K constraints.Integer | constraints.Float, V any](entrie
 }
 
 // NewLinkedHashMap creates a linked hash map with custom Hash and Equal functions, and init values.
-//   hs - the key hash function.
-//   eq - the key equal function.
-//   sizeLimit - limit the maximum size of elements, extra elements will be removed upon Put based on element order defined by AccessOrder.
-//   accessOrder - defines how elements are ordered. For an LRU cache, you can provide PutOrder + GetOrder
+//
+//	hs - the key hash function.
+//	eq - the key equal function.
+//	sizeLimit - limit the maximum size of elements, extra elements will be removed upon Put based on element order defined by AccessOrder.
+//	accessOrder - defines how elements are ordered. For an LRU cache, you can provide PutOrder + GetOrder
 func NewLinkedHashMap[K any, V any](hs types.Hash[K], eq types.Equal[K], sizeLimit int, accessOrder AccessOrder) types.Map[K, V] {
 	return newLinkedHashMap[K, V](hs, eq, sizeLimit, accessOrder)
 }
@@ -84,4 +85,11 @@ func NewLinkedHashMapOfNumKey[K constraints.Integer | constraints.Float, V any](
 		m.Put(e.Key(), e.Value())
 	}
 	return m
+}
+
+// NewEnumMap creates an array based enum map
+//
+//	max - the max value, which defines the cap of the array
+func NewEnumMap[K constraints.Integer, V any](max K, entries ...types.Entry[K, V]) types.SortedMap[K, V] {
+	return newEnumMap(max, entries...)
 }

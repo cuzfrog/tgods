@@ -68,3 +68,14 @@ func TestEnumMap_SortedProperties(t *testing.T) {
 	assert.Nil(t, m.RemoveFirst())
 	assert.Nil(t, m.RemoveLast())
 }
+
+func TestEnumMap_Constructor(t *testing.T) {
+	m := newEnumMap[myEnum, string](myEnumC, EntryOf(myEnumA, "aaa"))
+	v, found := m.Get(myEnumA)
+	assert.True(t, found)
+	assert.Equal(t, "aaa", v)
+	m.Add(EntryOf(myEnumB, "b"))
+	v, found = m.Get(myEnumB)
+	assert.Equal(t, "b", v)
+	assert.Equal(t, 2, m.Size())
+}
