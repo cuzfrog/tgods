@@ -306,6 +306,38 @@ func (it *projectionIterator[T, R]) Value() R {
 	return it.fn(it.it.Value())
 }
 
+// ======== enumMap ========
+
+func (m *enumMap[K, V]) Iterator() types.Iterator[types.Entry[K, V]] {
+	arr := make([]types.Entry[K, V], m.size)
+	i := 0
+	for _, v := range m.arr {
+		if v != nil {
+			arr[i] = v
+			i++
+		}
+	}
+	return &arrayIterator[types.Entry[K, V]]{m.arr, -1}
+}
+
+type arrayIterator[T any] struct {
+	arr []T
+	cur int
+}
+
+func (it *arrayIterator[T]) Next() bool {
+	it.cur++
+	return it.cur < len(it.arr)
+}
+
+func (it *arrayIterator[T]) Index() int {
+	return it.cur
+}
+
+func (it *arrayIterator[T]) Value() T {
+	return it.arr[it.cur]
+}
+
 // ======== forEach ========
 
 func forEach[T any](c types.Collection[T], fn func(index int, v T)) {
@@ -341,6 +373,10 @@ func (h *hashTable[T]) Each(fn func(index int, elem T)) {
 
 func (h *linkedHashTable[T]) Each(fn func(index int, elem T)) {
 	forEach[T](h, fn)
+}
+
+func (m *enumMap[K, V]) Each(fn func(index int, elem types.Entry[K, V])) {
+	forEach[types.Entry[K, V]](m, fn)
 }
 
 func (t *treeAdjacencyList[V, E]) Each(fn func(index int, elem V)) {
