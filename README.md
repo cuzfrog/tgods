@@ -21,7 +21,7 @@ Go version >= [1.18](https://tip.golang.org/doc/go1.18). If facing compiler issu
 | `enumMap`                |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |
 | `treeAdjacencyList`      |                    |                    |                    |                    |                    |                    | :heavy_check_mark: |
 
-Top interface `Collection` contains general methods, sub-interfaces like `ArrayList`, `SortedSet` provide more rich functionalities.
+Top interface `Collection` contains general methods, sub-interfaces like `ArrayList`, `SortedSet`, `SortedMap` provide more rich functionalities.
 All interface definitions can be found: [here](./types/collection.go)
 
 ### Data Structures:
