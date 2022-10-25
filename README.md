@@ -102,6 +102,12 @@ stack.Push(3)
 stack.Each(func (i, v int) {fmt.Print(v)}) // 321
 ```
 
+## Development
+Run test:
+```cmd
+go test --tags=test ./...
+```
+
 ## Author
 
 Cause Chung(cuzfrog@gmail.com)
