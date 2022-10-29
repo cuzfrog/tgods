@@ -12,6 +12,13 @@ func TestSlice(t *testing.T) {
 	assert.Equal(t, []int{1, 4, 3, 2}, arr)
 }
 
+func TestAddSliceTo(t *testing.T) {
+	c := mocks.NewMockCollection[int](3)
+	AddSliceTo[int]([]int{1, 2, 3}, c)
+	assert.Equal(t, []int{1, 2, 3}, c.Elems())
+
+}
+
 func TestSliceProjection(t *testing.T) {
 	c := mocks.NewMockCollectionOf[int](1, 4, 3, 2)
 	arr := SliceProject[int, int](c, func(v int) int { return v + 1 })

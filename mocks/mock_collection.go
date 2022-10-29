@@ -9,6 +9,7 @@ import (
 type MockCollection[T comparable] interface {
 	types.Collection[T]
 	SetElems(values ...T)
+	Elems() []T
 }
 
 type MockList[T comparable] interface {
@@ -37,6 +38,10 @@ func NewMockCollection[T comparable](size int) MockCollection[T] {
 func (mc *mockCollection[T]) SetElems(values ...T) {
 	mc.arr = values
 	mc.size = len(values)
+}
+
+func (mc *mockCollection[T]) Elems() []T {
+	return mc.arr
 }
 
 // ======== Implementations ========

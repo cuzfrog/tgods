@@ -364,3 +364,17 @@ func Test_Map_Each(t *testing.T) {
 		})
 	}
 }
+
+func Test_ListMultiMap_Each(t *testing.T) {
+	lm := NewArrayListMultiMapOfStrKey[int]()
+	lm.PutSingle("a", 1)
+	lm.PutSingle("a", 2)
+	lm.PutSingle("a", 3)
+	lm.PutSingle("b", 5)
+	lm.PutSingle("b", 6)
+	arr := make([][]int, 2)
+	lm.Each(func(i int, e types.Entry[string, types.List[int]]) {
+		arr[i] = utils.SliceFrom[int](e.Value())
+	})
+	assert.ElementsMatch(t, [][]int{{1, 2, 3}, {5, 6}}, arr)
+}
