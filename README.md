@@ -9,18 +9,19 @@ Go version >= [1.18](https://tip.golang.org/doc/go1.18). If facing compiler issu
 
 ### Interfaces
 
-| Implementation\Interface | Stack              | List               | Queue              | Deque              | Set                | Map                | Graph              |
-|--------------------------|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
-| `arrayStack`             | :heavy_check_mark: |                    |                    |                    |                    |                    |                    |
-| `circularArray`          | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |
-| `linkedList`             | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |
-| `binaryHeap`             |                    |                    | :heavy_check_mark: |                    |                    |                    |                    |
-| `rbTree`                 |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |
-| `hashTable`              |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |
-| `linkedHashTable`        |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |
-| `enumMap`                |                    |                    |                    |                    |                    | :heavy_check_mark: |                    |
-| `enumSet`                |                    |                    |                    |                    | :heavy_check_mark: |                    |                    |
-| `treeAdjacencyList`      |                    |                    |                    |                    |                    |                    | :heavy_check_mark: |
+| Implementation\Interface | Stack              | List               | Queue              | Deque              | Set                | Map                | MultiMap           | Graph              |
+|--------------------------|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
+| `arrayStack`             | :heavy_check_mark: |                    |                    |                    |                    |                    |                    |                    |
+| `circularArray`          | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
+| `linkedList`             | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
+| `binaryHeap`             |                    |                    | :heavy_check_mark: |                    |                    |                    |                    |                    |
+| `rbTree`                 |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
+| `hashTable`              |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
+| `linkedHashTable`        |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
+| `enumMap`                |                    |                    |                    |                    |                    | :heavy_check_mark: |                    |                    |
+| `enumSet`                |                    |                    |                    |                    | :heavy_check_mark: |                    |                    |                    |
+| `arrayListMultiMap`      |                    |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |                    |
+| `treeAdjacencyList`      |                    |                    |                    |                    |                    |                    |                    | :heavy_check_mark: |
 
 Top interface `Collection` contains general methods, sub-interfaces like `ArrayList`, `SortedSet`, `SortedMap` provide more rich functionalities.
 All interface definitions can be found: [here](./types/collection.go)
@@ -34,13 +35,14 @@ All interface definitions can be found: [here](./types/collection.go)
 * `rbTree` - recursion-free red black tree implementation. Backing up `SortedSet`, `SortedMap`
 * `hashTable` - variable length/cap array based hash table, hash collision is handled by linked nodes. Backing up `Set`, `Map`
 * `linkedHashTable` hashTable preserving inserting or configurable access order. Can serve as an `LRU cache`. Backing up `Set`, `Map`
+* `enumMap` & `enumSet` fast array based map and set with `Integer` as the key. Implementing `SortedMap`, `SortedSet` respectively.
+* `arrayListMultiMap` list multimap impl.
 * `treeAdjacencyList` a treeMap based graph implementation with directional edge properties.
 It has typical _O(log(n))_ time complexity for adding, searching, and removing vertices. Backing up `Graph`
-* `enumMap` & `enumSet` fast array based map and set with `Integer` as the key. Implementing `SortedMap`, `SortedSet` respectively.
 
 ## Usage:
 
-### Constructors:
+### Rich Constructors:
 
 ```go
 import "github.com/cuzfrog/tgods/collections"
@@ -100,6 +102,12 @@ stack.Push(1)
 stack.Push(2)
 stack.Push(3)
 stack.Each(func (i, v int) {fmt.Print(v)}) // 321
+```
+
+## Development
+Run test:
+```cmd
+go test --tags=test ./...
 ```
 
 ## Author

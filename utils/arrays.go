@@ -5,8 +5,9 @@ import (
 )
 
 // SliceFrom creates a new slice from the Collection,
-//   len(slice) = min(size, elemCntFromIterator)
-//   cap(slice) = size
+//
+//	len(slice) = min(size, elemCntFromIterator)
+//	cap(slice) = size
 func SliceFrom[T any](col types.Collection[T]) []T {
 	it, size := col.Iterator(), col.Size()
 	return SliceFromIt(it, size)
@@ -22,9 +23,17 @@ func SliceFromIt[T any](it types.Iterator[T], size int) []T {
 	return arr
 }
 
+// AddSliceTo add all elems from the slice to the collection
+func AddSliceTo[T any](elems []T, col types.Collection[T]) {
+	for _, elem := range elems {
+		col.Add(elem)
+	}
+}
+
 // SliceProject creates a new slice from the Collection and projects the elem by given mapping function.
-//   len(slice) = min(size, elemCntFromIterator)
-//   cap(slice) = size
+//
+//	len(slice) = min(size, elemCntFromIterator)
+//	cap(slice) = size
 func SliceProject[T any, R any](col types.Collection[T], fn func(t T) R) []R {
 	it, size := col.Iterator(), col.Size()
 	return SliceProjectIt(it, size, fn)

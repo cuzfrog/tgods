@@ -1,11 +1,11 @@
 package types
 
 type Collection[T any] interface {
-	Add(elem T) bool       // adds elem into the collection, return true if succeeded
-	Contains(elem T) bool  // typical time complexity O(n) in array based, O(log(n)) in tree based, and O(c) in hash based implementations.
+	Add(elem T) bool       // adds elem into the collection, return true if succeeded. If it's a Map, elem is an entry, a newly added entry will replace the old entry if exists.
+	Contains(elem T) bool  // checks if an elem is in the collection by a given Equal function. If it's a Map, elem is an entry, but only compares the key. Typical time complexity O(n) in array based, O(log(n)) in tree based, and O(c) in hash based implementations.
 	Iterator() Iterator[T] // returns a semantic iterator whose behavior is based on the sub-interface
 	Each(func(index int, elem T))
-	Size() int
+	Size() int // returns element size, if it's a Map returns entry size, if it's a MultiMap returns value element size.
 	Clear()
 }
 
@@ -54,10 +54,10 @@ type LinkedList[T any] interface {
 
 type List[T any] interface {
 	Collection[T]
-	AddHead(elem T) bool
+	AddHead(elem T) bool   // prepends elem to the head, return true if succeeded.
 	RemoveHead() (T, bool) // removes the first elem of the list
 	Head() (T, bool)
-	AddTail(elem T) bool
+	AddTail(elem T) bool // appends elem to the tail, return true if succeeded.
 	RemoveTail() (T, bool)
 	Remove() (T, bool) // alias for RemoveTail
 	Tail() (T, bool)
@@ -93,7 +93,7 @@ type Entry[K any, V any] interface {
 type Map[K any, V any] interface {
 	Collection[Entry[K, V]]
 	Get(k K) (V, bool)      // gets the elem by the given key, returns Nil and false if not found
-	Put(k K, v V) (V, bool) // puts a key value pair, returns the old value and true associated with the key if any, or Nil and false if not exists
+	Put(k K, v V) (V, bool) // puts a key value pair, returns the old value and true associated with the key if any, or Nil and false if not exists. If it's a MultiMap, the value is a collection, which will be directly saved without copying the elements, the implementation of the collection then may violate the multimap properties.
 	Remove(k K) (V, bool)   // removes the value associated with the given key, returns the moved value and true if found, or Nil and false if not exists
 	ContainsKey(k K) bool
 }
@@ -108,8 +108,9 @@ type SortedMap[K any, V any] interface {
 }
 
 // Graph a graph implementation supporting directional edges with properties
-//   V - the vertex type
-//   E - the edge type
+//
+//	V - the vertex type
+//	E - the edge type
 type Graph[V any, E any] interface {
 	Collection[V]
 	Connect(from, to V, edge E) (E, bool)               // connects vertices 'from' to 'to' with provided edge property, add the vertices into the graph if not already exist. Returns old edge property and true if a connection was existing, or Nil and false if not existing. If 'from' == 'to' by Compare, no edge will be added.
@@ -119,4 +120,18 @@ type Graph[V any, E any] interface {
 	InwardEdges(vertex V) (Iterator[Entry[V, E]], int)  // returns inward neighbour edges and connected vertices and the count. If the graph does not have the vertex, returns an empty iterator.
 	OutwardEdges(vertex V) (Iterator[Entry[V, E]], int) // returns outward neighbour edges and connected vertices and the count. If the graph does not have the vertex, returns an empty iterator.
 	Remove(vertex V) bool                               // removes the vertex and all connected edges from the graph. Returns true if found the vertex in the graph, or false if not.
+}
+
+type ListMultiMap[K any, V any] interface {
+	Map[K, List[V]]
+	PutSingle(k K, v V)
+	KeySize() int
+	AllValues() List[V]
+}
+
+type SetMultiMap[K any, V any] interface {
+	Map[K, Set[V]]
+	PutSingle(k K, v V)
+	KeySize() int
+	AllValues() Set[V]
 }

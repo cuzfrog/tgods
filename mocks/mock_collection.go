@@ -9,6 +9,7 @@ import (
 type MockCollection[T comparable] interface {
 	types.Collection[T]
 	SetElems(values ...T)
+	Elems() []T
 }
 
 type MockList[T comparable] interface {
@@ -37,6 +38,10 @@ func NewMockCollection[T comparable](size int) MockCollection[T] {
 func (mc *mockCollection[T]) SetElems(values ...T) {
 	mc.arr = values
 	mc.size = len(values)
+}
+
+func (mc *mockCollection[T]) Elems() []T {
+	return mc.arr
 }
 
 // ======== Implementations ========
@@ -112,17 +117,18 @@ func (mc *mockCollection[T]) Tail() (T, bool) {
 // ======== Iterator ========
 
 func (mc *mockCollection[T]) Iterator() types.Iterator[T] {
-	return &mockIterator[T]{mc.arr, -1}
+	return &mockIterator[T]{mc.arr, -1, mc.size}
 }
 
 type mockIterator[T any] struct {
-	arr []T
-	cur int
+	arr  []T
+	cur  int
+	size int
 }
 
 func (it *mockIterator[T]) Next() bool {
 	it.cur++
-	return it.cur < len(it.arr)
+	return it.cur < it.size
 }
 
 func (it *mockIterator[T]) Index() int {
