@@ -18,8 +18,16 @@ type hashTable[T any] struct {
 }
 
 func newHashTable[T any](hs types.Hash[T], eq types.Equal[T]) *hashTable[T] {
+	return newHashTableOfInitCap(0, hs, eq)
+}
+
+func newHashTableOfInitCap[T any](initCap int, hs types.Hash[T], eq types.Equal[T]) *hashTable[T] {
 	newNodeOf := func(elem T) node[T] { return newSlNode[T](elem, nil) }
-	return &hashTable[T]{nil, 0, hs, eq, newNodeOf}
+	var arr []bucket[T]
+	if initCap > 0 {
+		arr = make([]bucket[T], initCap)
+	}
+	return &hashTable[T]{arr, 0, hs, eq, newNodeOf}
 }
 
 func newHashTableOfSlxNode[T any](hs types.Hash[T], eq types.Equal[T]) *hashTable[T] {
