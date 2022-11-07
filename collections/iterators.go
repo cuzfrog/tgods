@@ -357,7 +357,7 @@ func (s *enumSet[T]) Iterator() types.Iterator[T] {
 
 // ======== arrayListMultiMap ========
 
-func (m *arrayListMultiMap[K, V]) Iterator() types.Iterator[types.Entry[K, types.List[V]]] {
+func (m *baseMultiMap[K, V]) Iterator() types.Iterator[types.Entry[K, types.Collection[V]]] {
 	return m.Map.Iterator()
 }
 
@@ -410,6 +410,6 @@ func (t *treeAdjacencyList[V, E]) Each(fn func(index int, elem V)) {
 	forEach[V](t, fn)
 }
 
-func (m *arrayListMultiMap[K, V]) Each(fn func(index int, elem types.Entry[K, types.List[V]])) {
-	forEach[types.Entry[K, types.List[V]]](m, fn)
+func (m *baseMultiMap[K, V]) Each(fn func(index int, elem types.Entry[K, types.Collection[V]])) {
+	forEach[types.Entry[K, types.Collection[V]]](m, fn)
 }

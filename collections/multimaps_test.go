@@ -16,7 +16,7 @@ func TestNewArrayListMultiMap_Properties(t *testing.T) {
 
 	tests := []struct {
 		name string
-		m    types.ListMultiMap[int, string]
+		m    types.MultiMap[int, string]
 	}{
 		{"arrListMultiMap1", m1},
 		{"arrListMultiMap1", m2},
