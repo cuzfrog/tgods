@@ -18,6 +18,14 @@ func ValueCompare[T constraints.Ordered](a, b T) int8 {
 	}
 }
 
+func ValueLess[T constraints.Ordered](a, b T) bool {
+	return a < b
+}
+
+func ValueGreater[T constraints.Ordered](a, b T) bool {
+	return a > b
+}
+
 // ValueEqual bounded by native comparable
 func ValueEqual[T comparable](a, b T) bool {
 	return a == b

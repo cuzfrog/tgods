@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/cuzfrog/tgods/funcs"
 	"github.com/cuzfrog/tgods/types"
+	"sort"
 )
 
 const defaultArrInitSize = 12
@@ -14,8 +15,12 @@ type circularArray[T any] struct {
 	end   int //exclusive
 	arr   []T
 	size  int
-	comp  types.Equal[T]
+	eq    types.Equal[T]
 	r     role
+}
+type circularArrayForSort[T any] struct {
+	l    *circularArray[T]
+	less types.Less[T]
 }
 
 // newCircularArrayOf creates an auto expandable circular array based list, auto shrinkable, but will not shrink if the length is <= defaultArrInitSize,
@@ -131,7 +136,7 @@ func (l *circularArray[T]) Contains(elem T) bool {
 	it := l.Iterator()
 	for it.Next() {
 		v := it.Value()
-		if l.comp(v, elem) {
+		if l.eq(v, elem) {
 			return true
 		}
 	}
@@ -222,7 +227,7 @@ func (l *circularArray[T]) Swap(indexA, indexB int) bool {
 func (l *circularArray[T]) clone() *circularArray[T] {
 	arr := make([]T, l.size)
 	copy(arr, l.arr)
-	return &circularArray[T]{l.start, l.end, arr, l.size, l.comp, l.r}
+	return &circularArray[T]{l.start, l.end, arr, l.size, l.eq, l.r}
 }
 
 func (l *circularArray[T]) toArrIndex(index int) (int, bool) {
@@ -278,4 +283,29 @@ func (l *circularArray[T]) shrinkIfNeeded() {
 	l.arr = newArr
 	l.start = 0
 	l.end = l.size
+}
+
+func (l *circularArray[T]) Sort(less types.Less[T]) {
+	c := &circularArrayForSort[T]{l, less}
+	sort.Sort(c)
+}
+
+func (c *circularArrayForSort[T]) Len() int {
+	return c.l.Size()
+}
+
+func (c *circularArrayForSort[T]) Less(i, j int) bool {
+	elem1, found1 := c.l.Get(i)
+	elem2, found2 := c.l.Get(j)
+	if !found1 || !found2 {
+		panic(fmt.Sprintf("invalid index %d, %d", i, j))
+	}
+	return c.less(elem1, elem2)
+}
+
+func (c *circularArrayForSort[T]) Swap(i, j int) {
+	swapped := c.l.Swap(i, j)
+	if !swapped {
+		panic(fmt.Sprintf("invalid index %d, %d", i, j))
+	}
 }
