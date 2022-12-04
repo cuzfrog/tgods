@@ -50,3 +50,47 @@ func TestNewArrayListMultiMapOfStrKey_Properties(t *testing.T) {
 	assert.True(t, found)
 	assert.Equal(t, []int{1, 2}, utils.SliceFrom[int](l))
 }
+
+func TestNewHashSetMultiMap_Properties(t *testing.T) {
+	m1 := NewHashSetMultiMapOf[int, string](funcs.NumHash[int], funcs.ValueEqual[int], funcs.NewStrHash(), funcs.ValueEqual[string])
+	m1.PutSingle(1, "a")
+	m2 := NewHashSetMultiMapOfNumKey[int, string](funcs.NewStrHash(), funcs.ValueEqual[string])
+	m2.PutSingle(1, "a")
+
+	tests := []struct {
+		name string
+		m    types.MultiMap[int, string]
+	}{
+		{"hashSetMultiMap1", m1},
+		{"hashSetMultiMap1", m2},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			m := test.m
+			m.PutSingle(1, "a")
+			m.PutSingle(2, "b")
+			m.PutSingle(2, "c")
+			l, found := m.Get(0)
+			assert.False(t, found)
+
+			l, found = m.Get(1)
+			assert.True(t, found)
+			assert.Equal(t, []string{"a"}, utils.SliceFrom[string](l))
+
+			l, found = m.Get(2)
+			assert.True(t, found)
+			assert.ElementsMatch(t, []string{"b", "c"}, utils.SliceFrom[string](l))
+		})
+	}
+}
+
+func TestNewHashSetMultiMapOfStrKey_Properties(t *testing.T) {
+	m := NewHashSetMultiMapOfStrKey[int](funcs.NumHash[int], funcs.ValueEqual[int])
+	m.PutSingle("a", 1)
+	m.PutSingle("a", 2)
+	m.PutSingle("a", 2)
+
+	l, found := m.Get("a")
+	assert.True(t, found)
+	assert.ElementsMatch(t, []int{1, 2}, utils.SliceFrom[int](l))
+}
