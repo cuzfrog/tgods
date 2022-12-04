@@ -1,6 +1,8 @@
 package collections
 
 import (
+	"github.com/cuzfrog/tgods/funcs"
+	"github.com/cuzfrog/tgods/types"
 	"github.com/cuzfrog/tgods/utils"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -252,4 +254,18 @@ func TestCircularArray_toArrIndex(t *testing.T) {
 	assert.False(t, ok)
 	i, ok = l.toArrIndex(4)
 	assert.False(t, ok)
+}
+
+func TestCircularArray_sort(t *testing.T) {
+	l := newCircularArrayOf(3, 5, 2, 6, 1, 1, 15)
+
+	ls := &circularArrayForSort[int]{l, nil}
+	assert.Panics(t, func() { ls.Less(100, 3) })
+	assert.Panics(t, func() { ls.Less(3, -5) })
+	assert.Panics(t, func() { ls.Swap(100, 3) })
+	assert.Panics(t, func() { ls.Swap(3, -5) })
+
+	var list types.IndexAccess[int] = l
+	list.Sort(funcs.ValueLess[int])
+	assert.Equal(t, []int{1, 1, 2, 3, 5, 6, 15}, utils.SliceFrom[int](l))
 }

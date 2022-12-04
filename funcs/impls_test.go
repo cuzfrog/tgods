@@ -10,6 +10,9 @@ func TestValueComparator(t *testing.T) {
 	assert.Equal(t, int8(1), ValueCompare("c", "b"))
 	assert.Equal(t, int8(0), ValueCompare(2, 2))
 	assert.True(t, 0 == ValueCompare(2, 2))
+
+	assert.True(t, ValueLess(1, 2))
+	assert.True(t, ValueGreater(3, 2))
 }
 
 func TestEqualComparable(t *testing.T) {

@@ -70,7 +70,8 @@ transform.MapTo[int, string](c, l, func(elem int) string { return fmt.Sprint(ele
 
 ```go
 import "github.com/cuzfrog/tgods/utils"
-list := collections.NewLinkedListOf(1, 2, 3)
+list := collections.NewArrayListOf(1, 3, 2) // ArrayList 1, 3, 2
+list.Sort(funcs.ValueLess[int]) // ArrayList 1, 2, 3
 utils.StringFrom(list) // [1, 2, 3]
 utils.SliceFrom(list)  // []int{1, 2, 3}
 m := // Map [1->"a", 2->"b"]
