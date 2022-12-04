@@ -18,8 +18,16 @@ type hashTable[T any] struct {
 }
 
 func newHashTable[T any](hs types.Hash[T], eq types.Equal[T]) *hashTable[T] {
+	return newHashTableOfInitCap(0, hs, eq)
+}
+
+func newHashTableOfInitCap[T any](initCap int, hs types.Hash[T], eq types.Equal[T]) *hashTable[T] {
 	newNodeOf := func(elem T) node[T] { return newSlNode[T](elem, nil) }
-	return &hashTable[T]{nil, 0, hs, eq, newNodeOf}
+	var arr []bucket[T]
+	if initCap > 0 {
+		arr = make([]bucket[T], initCap)
+	}
+	return &hashTable[T]{arr, 0, hs, eq, newNodeOf}
 }
 
 func newHashTableOfSlxNode[T any](hs types.Hash[T], eq types.Equal[T]) *hashTable[T] {
@@ -34,8 +42,9 @@ func (h *hashTable[T]) Add(elem T) bool {
 }
 
 // add inserts the elem and return:
-//   n - the node containing the elem
-//   old - existing elem if found
+//
+//	n - the node containing the elem
+//	old - existing elem if found
 func (h *hashTable[T]) add(elem T) (n node[T], old T, found bool) {
 	h.expandIfNeeded()
 	i := hashToIndex(h.hs(elem), cap(h.arr))
@@ -77,7 +86,7 @@ func (h *hashTable[T]) Remove(elem T) bool {
 	return n != nil
 }
 
-//remove returns old node if found
+// remove returns old node if found
 func (h *hashTable[T]) remove(elem T) node[T] {
 	i := hashToIndex(h.hs(elem), cap(h.arr))
 	b := h.arr[i]

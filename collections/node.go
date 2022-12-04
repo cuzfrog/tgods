@@ -48,11 +48,13 @@ type dlNode[T any] struct {
 	prev node[T]
 }
 
+// singly linked with external reference
 type slxNode[T any] struct {
 	*slNode[T]
 	x node[T]
 }
 
+// doubly linked with external reference
 type dlxNode[T any] struct {
 	*dlNode[T]
 	x node[T]

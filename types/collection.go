@@ -93,7 +93,7 @@ type Entry[K any, V any] interface {
 type Map[K any, V any] interface {
 	Collection[Entry[K, V]]
 	Get(k K) (V, bool)      // gets the elem by the given key, returns Nil and false if not found
-	Put(k K, v V) (V, bool) // puts a key value pair, returns the old value and true associated with the key if any, or Nil and false if not exists. If it's a MultiMap, the value is a collection, which will be directly saved without copying the elements, the implementation of the collection then may violate the multimap properties.
+	Put(k K, v V) (V, bool) // puts a key value pair, returns the old value and true associated with the key if any, or Nil and false if not exists. If it's a MultiMap, the value is a collection, which will be directly saved without copying the elements, the implementation of the collection then may violate the multimap properties, this may be refined with more powerful generics from newer golang.
 	Remove(k K) (V, bool)   // removes the value associated with the given key, returns the moved value and true if found, or Nil and false if not exists
 	ContainsKey(k K) bool
 }
@@ -122,16 +122,8 @@ type Graph[V any, E any] interface {
 	Remove(vertex V) bool                               // removes the vertex and all connected edges from the graph. Returns true if found the vertex in the graph, or false if not.
 }
 
-type ListMultiMap[K any, V any] interface {
-	Map[K, List[V]]
+type MultiMap[K any, V any] interface {
+	Map[K, Collection[V]]
 	PutSingle(k K, v V)
 	KeySize() int
-	AllValues() List[V]
-}
-
-type SetMultiMap[K any, V any] interface {
-	Map[K, Set[V]]
-	PutSingle(k K, v V)
-	KeySize() int
-	AllValues() Set[V]
 }

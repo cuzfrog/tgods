@@ -27,6 +27,11 @@ func TestHashTable(t *testing.T) {
 	assert.Nil(t, h.arr)
 }
 
+func Test_newHashTableOfInitCap(t *testing.T) {
+	h := newHashTableOfInitCap(10, funcs.NumHash[int], funcs.ValueEqual[int])
+	assert.Equal(t, 10, cap(h.arr))
+}
+
 var newSlNodeOf = func(v int) node[int] { return newSlBucketOf[int](v) }
 
 func TestHashTable_expand(t *testing.T) {
