@@ -7,6 +7,10 @@
 Your brand-new Golang collections implementation with generics.
 Go version >= [1.18](https://tip.golang.org/doc/go1.18). If facing compiler issue, please upgrade to [1.19](https://tip.golang.org/doc/go1.19).
 
+```bash
+go get github.com/cuzfrog/tgods@v1.5.0
+```
+
 ### Interfaces
 
 | Implementation\Interface | Stack              | List               | Queue              | Deque              | Set                | Map                | MultiMap           | Graph              |
@@ -61,9 +65,16 @@ hashMap := collections.NewHashMapOfStrKey[int](EntryOf("Earth", 3), EntryOf("Mar
 ```go
 import "github.com/cuzfrog/tgods/transform"
 
-c := collections.NewCircularArrayList(1, 3, 4)
-l := collections.NewLinkedList[string]()
+c := collections.NewArrayListOf(1, 3, 4)
+l := collections.NewLinkedListOf[string]()
 transform.MapTo[int, string](c, l, func(elem int) string { return fmt.Sprint(elem) }) // l ["1", "2", "3"]
+
+listOfList := ... // List[List[int]] [[1, 3], [2, 4]]
+list := NewArrayListOf[int]()
+transform.FlattenTo[types.List[int], int](listOfList, list) // list [1, 3, 2, 4]
+
+c := collections.NewArrayListOf(1, 3, 4)
+transform.Reduce[int, string](c, "", func(acc string, next int) string { return acc + strconv.Itoa(next) }) // "134"
 ```
 
 ### Built-in Utils & Functions:
