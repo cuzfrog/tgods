@@ -66,3 +66,12 @@ func FilterFlatMapTo[T any, R any](src types.Collection[T], tgt types.Collection
 	}
 	return cnt
 }
+
+func Reduce[T any, R any](col types.Collection[T], identity R, reduceFn func(acc R, next T) R) R {
+	it := col.Iterator()
+	acc := identity
+	for it.Next() {
+		acc = reduceFn(acc, it.Value())
+	}
+	return acc
+}
