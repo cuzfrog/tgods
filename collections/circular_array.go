@@ -124,7 +124,11 @@ func (l *circularArray[T]) Peek() (elem T, found bool) {
 	if l.size == 0 {
 		return elem, false
 	}
-	return l.arr[l.end-1], true
+	idx := l.end - 1
+	if idx < 0 {
+		idx = len(l.arr) - 1
+	}
+	return l.arr[idx], true
 }
 
 func (l *circularArray[T]) Dequeue() (elem T, found bool) {

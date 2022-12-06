@@ -32,6 +32,8 @@ func TestDequeProperties(t *testing.T) {
 			v, ok := q.Dequeue()
 			assert.True(t, ok)
 			assert.Equal(t, 3, v)
+			v, ok = q.Peek()
+			assert.Equal(t, 7, v)
 			v, ok = q.Dequeue()
 			assert.Equal(t, 7, v)
 			v, ok = q.DequeueFirst()
