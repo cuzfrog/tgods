@@ -76,8 +76,6 @@ func TestReduceSlice(t *testing.T) {
 
 func TestCountSlice(t *testing.T) {
 	c := []int{1, 3, 4}
-	res := CountSlice[int](c, func(elem int) bool {
-		return elem > 2
-	})
+	res := CountSlice[int](c, func(elem int) bool { return elem > 2 })
 	assert.Equal(t, 2, res)
 }

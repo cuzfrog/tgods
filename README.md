@@ -76,6 +76,8 @@ transform.FlattenTo[types.List[int], int](listOfList, list) // list [1, 3, 2, 4]
 c := collections.NewArrayListOf(1, 3, 4)
 transform.Reduce[int, string](c, "", func(acc string, next int) string { return acc + strconv.Itoa(next) }) // "134"
 
+c := []int{1, 3, 4}
+transform.CountSlice[int](c, func(elem int) bool {return elem > 2}) // 2, yeah for slices, also has Count for Collection
 // more...
 ```
 
