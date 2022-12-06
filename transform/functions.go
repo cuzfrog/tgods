@@ -52,6 +52,19 @@ func FlatMapTo[T any, R any](src types.Collection[T], tgt types.Collection[R], m
 	return cnt
 }
 
+func FlattenTo[C types.Collection[T], T any](src types.Collection[C], tgt types.Collection[T]) int {
+	cnt := 0
+	it := src.Iterator()
+	for it.Next() {
+		subit := it.Value().Iterator()
+		for subit.Next() {
+			tgt.Add(subit.Value())
+			cnt++
+		}
+	}
+	return cnt
+}
+
 // FilterFlatMapTo filters and transforms elem into another Collection, returns transformed elem count collected
 func FilterFlatMapTo[T any, R any](src types.Collection[T], tgt types.Collection[R], filterFn func(elem T) bool, mapFn func(elem T) []R) int {
 	cnt := 0

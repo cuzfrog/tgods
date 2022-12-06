@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/cuzfrog/tgods/collections"
 	"github.com/cuzfrog/tgods/mocks"
+	"github.com/cuzfrog/tgods/types"
 	"github.com/cuzfrog/tgods/utils"
 	"github.com/stretchr/testify/assert"
 	"strconv"
@@ -46,6 +47,14 @@ func TestFlatMapTo(t *testing.T) {
 	})
 	assert.Equal(t, []string{"1", "2", "3", "4", "5", "6"}, utils.SliceFrom[string](l))
 	assert.Equal(t, 6, n)
+}
+
+func TestFlattenTo(t *testing.T) {
+	c := collections.NewLinkedListOfEq[types.List[int]](nil, collections.NewLinkedListOf(1, 3), collections.NewLinkedListOf(2, 4))
+	l := collections.NewLinkedListOf[int]()
+	n := FlattenTo[types.List[int], int](c, l)
+	assert.Equal(t, []int{1, 3, 2, 4}, utils.SliceFrom[int](l))
+	assert.Equal(t, 4, n)
 }
 
 func TestFilterFlatMapTo(t *testing.T) {
