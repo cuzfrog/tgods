@@ -32,6 +32,8 @@ func TestQueueProperties(t *testing.T) {
 			v, ok := q.Dequeue()
 			assert.True(t, ok)
 			assert.Equal(t, 7, v)
+			v, ok = q.Peek()
+			assert.Equal(t, 6, v)
 			v, ok = q.Dequeue()
 			assert.Equal(t, 6, v)
 			assert.Equal(t, []int{11, 7, 8, 3}, utils.SliceFrom[int](q))

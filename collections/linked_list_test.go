@@ -58,11 +58,22 @@ func TestLinkedList_Head_Tail(t *testing.T) {
 }
 
 func TestLinkedList_Peek(t *testing.T) {
-	l := newLinkedListOf[int]().withRole(stack)
-	l.Push(1)
-	l.Push(3)
-	v, _ := l.Peek()
-	assert.Equal(t, 3, v)
+	tests := []struct {
+		name string
+		r    role
+	}{
+		{"stack", stack},
+		{"deque", deque},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			l := newLinkedListOf[int]().withRole(test.r)
+			l.Push(1)
+			l.Push(3)
+			v, _ := l.Peek()
+			assert.Equal(t, 3, v)
+		})
+	}
 }
 
 func TestLinkedList_Add(t *testing.T) {

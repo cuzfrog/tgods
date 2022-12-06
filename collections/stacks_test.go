@@ -26,6 +26,8 @@ func TestStackProperties(t *testing.T) {
 			s.Push(3)
 			s.Push(4)
 			assert.Equal(t, []int{4, 3, 1}, utils.SliceFrom[int](s))
+			v, _ := s.Peek()
+			assert.Equal(t, 4, v)
 			s.Pop()
 			assert.Equal(t, []int{3, 1}, utils.SliceFrom[int](s))
 			s.Clear()
