@@ -8,8 +8,10 @@ import (
 
 type MockCollection[T comparable] interface {
 	types.Collection[T]
+	types.IndexAccess[T]
 	SetElems(values ...T)
 	Elems() []T
+	GetFlag(key string) string
 }
 
 type MockList[T comparable] interface {
@@ -18,19 +20,20 @@ type MockList[T comparable] interface {
 }
 
 type mockCollection[T comparable] struct {
-	arr  []T
-	size int
+	arr   []T
+	size  int
+	flags map[string]string
 }
 
 // ======== Constructors ========
 
 func NewMockCollectionOf[T comparable](values ...T) MockCollection[T] {
-	return &mockCollection[T]{values, len(values)}
+	return &mockCollection[T]{values, len(values), make(map[string]string, 10)}
 }
 
 func NewMockCollection[T comparable](size int) MockCollection[T] {
 	arr := make([]T, size)
-	return &mockCollection[T]{arr, 0}
+	return &mockCollection[T]{arr, 0, make(map[string]string, 10)}
 }
 
 // ======== Mocks ========
@@ -42,6 +45,10 @@ func (mc *mockCollection[T]) SetElems(values ...T) {
 
 func (mc *mockCollection[T]) Elems() []T {
 	return mc.arr
+}
+
+func (mc *mockCollection[T]) GetFlag(key string) string {
+	return mc.flags[key]
 }
 
 // ======== Implementations ========
@@ -112,6 +119,19 @@ func (mc *mockCollection[T]) Remove() (T, bool) {
 func (mc *mockCollection[T]) Tail() (T, bool) {
 	//TODO implement me
 	panic("implement me")
+}
+
+func (mc *mockCollection[T]) Get(index int) (T, bool) {
+	panic("implement me")
+}
+func (mc *mockCollection[T]) Set(index int, elem T) (T, bool) {
+	panic("implement me")
+}
+func (mc *mockCollection[T]) Swap(indexA, indexB int) bool {
+	panic("implement me")
+}
+func (mc *mockCollection[T]) Sort(lessFn types.Less[T]) {
+	mc.flags["SortCalled"] = "yes"
 }
 
 // ======== Iterator ========
