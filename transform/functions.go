@@ -75,3 +75,14 @@ func Reduce[T any, R any](col types.Collection[T], identity R, reduceFn func(acc
 	}
 	return acc
 }
+
+func Count[T any](col types.Collection[T], conditionFunc func(elem T) bool) int {
+	cnt := 0
+	it := col.Iterator()
+	for it.Next() {
+		if conditionFunc(it.Value()) {
+			cnt++
+		}
+	}
+	return cnt
+}

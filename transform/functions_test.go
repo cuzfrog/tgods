@@ -70,3 +70,11 @@ func TestReduce(t *testing.T) {
 	res := Reduce[int, string](c, "", func(acc string, next int) string { return acc + strconv.Itoa(next) })
 	assert.Equal(t, "134", res)
 }
+
+func TestCount(t *testing.T) {
+	c := mocks.NewMockCollectionOf(1, 3, 4)
+	res := Count[int](c, func(elem int) bool {
+		return elem > 2
+	})
+	assert.Equal(t, 2, res)
+}
