@@ -167,6 +167,15 @@ func TestCircularArrayList_Peek(t *testing.T) {
 	assert.False(t, ok)
 }
 
+func TestCircularArrayStack_Peek(t *testing.T) {
+	s := newCircularArrayOf[int]().withRole(stack)
+	s.Push(1)
+	s.Push(3)
+	s.Push(2)
+	v, _ := s.Peek()
+	assert.Equal(t, 2, v)
+}
+
 func TestCircularArrayList_Head(t *testing.T) {
 	l := newCircularArrayOf(3, 5)
 	v, ok := l.Head()
