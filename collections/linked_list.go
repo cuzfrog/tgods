@@ -83,9 +83,12 @@ func (l *linkedList[T]) Tail() (elem T, found bool) {
 	return elem, true
 }
 
-// Peek same as Tail
 func (l *linkedList[T]) Peek() (elem T, found bool) {
-	return l.Tail()
+	if l.r == stack {
+		return l.Head()
+	} else {
+		return l.Tail()
+	}
 }
 
 // AddHead prepends to the list

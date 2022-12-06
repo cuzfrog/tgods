@@ -57,6 +57,14 @@ func TestLinkedList_Head_Tail(t *testing.T) {
 	assert.Equal(t, okt2, okp)
 }
 
+func TestLinkedList_Peek(t *testing.T) {
+	l := newLinkedListOf[int]().withRole(stack)
+	l.Push(1)
+	l.Push(3)
+	v, _ := l.Peek()
+	assert.Equal(t, 3, v)
+}
+
 func TestLinkedList_Add(t *testing.T) {
 	l := newLinkedListOf[int]()
 	l.Add(1)
