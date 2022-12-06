@@ -26,15 +26,22 @@ type Queue[T any] interface {
 	Collection[T]
 	Enqueue(elem T) bool
 	Dequeue() (T, bool)
-	Peek() (T, bool) // Peek retrieves the next elem of the queue, equivalent to Dequeue without removal
+	Peek() (T, bool) // Peek retrieves the next (to dequeue) elem of the queue, equivalent to Dequeue without removal
 }
 
+// Deque - double ended queue, can serve as Stack or Queue. Note the iteration order will be as if it's a Queue or Stack, but one cannot treat it as both at the same time.
 type Deque[T any] interface {
-	Stack[T]
-	Queue[T]
-	EnqueueLast(elem T) bool
-	DequeueFirst() (T, bool)
-	First() (T, bool)
+	Collection[T]     // TODO: cannot composite Queue and Stack at the same time, due to Golang limitation
+	Push(elem T) bool // Push adds the last(next to dequeue) elem to the deque, equivalent to EnqueueLast
+	Pop() (T, bool)   // Pop retrieves and removes the last(next to dequeue) elem from the deque, equivalent to Dequeue
+
+	Enqueue(elem T) bool // Enqueue adds the first(last to dequeue) elem to the deque
+	Dequeue() (T, bool)  // Dequeue retrieves and removes the last(next to dequeue) elem from the deque, equivalent to Pop
+	Peek() (T, bool)     // Peek retrieves the last(next to dequeue) elem of the deque, equivalent to Dequeue or Pop without removal
+
+	EnqueueLast(elem T) bool // EnqueueLast adds the last(next to dequeue) elem to the deque, equivalent to Push
+	DequeueFirst() (T, bool) // DequeueFirst retrieves and removes the first(last to dequeue) elem from the deque
+	First() (T, bool)        // First retrieves the first elem of the deque, equivalent to DequeueFirst without removal
 }
 
 type Stack[T any] interface {
