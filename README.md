@@ -8,7 +8,7 @@ Your brand-new Golang collections implementation with generics.
 Go version >= [1.18](https://tip.golang.org/doc/go1.18). If facing compiler issue, please upgrade to [1.19](https://tip.golang.org/doc/go1.19).
 
 ```bash
-go get github.com/cuzfrog/tgods@v1.5.0
+go get github.com/cuzfrog/tgods@<version>
 ```
 
 ### Interfaces
