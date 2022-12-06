@@ -75,6 +75,8 @@ transform.FlattenTo[types.List[int], int](listOfList, list) // list [1, 3, 2, 4]
 
 c := collections.NewArrayListOf(1, 3, 4)
 transform.Reduce[int, string](c, "", func(acc string, next int) string { return acc + strconv.Itoa(next) }) // "134"
+
+// more...
 ```
 
 ### Built-in Utils & Functions:

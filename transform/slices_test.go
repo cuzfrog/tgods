@@ -60,6 +60,14 @@ func TestFilterFlatMapSliceTo(t *testing.T) {
 	assert.Equal(t, 5, n)
 }
 
+func TestFlattenSliceTo(t *testing.T) {
+	c := [][]int{{1, 2}, {3}, {4, 5, 6}}
+	l := collections.NewLinkedListOf[int]()
+	n := FlattenSliceTo[int](c, l)
+	assert.Equal(t, []int{1, 2, 3, 4, 5, 6}, utils.SliceFrom[int](l))
+	assert.Equal(t, 6, n)
+}
+
 func TestReduceSlice(t *testing.T) {
 	c := []int{1, 3, 4}
 	res := ReduceSlice[int, string](c, "", func(acc string, next int) string { return acc + strconv.Itoa(next) })

@@ -62,6 +62,17 @@ func FilterFlatMapSliceTo[T any, R any](src []T, tgt types.Collection[R], filter
 	return cnt
 }
 
+func FlattenSliceTo[T any](src [][]T, tgt types.Collection[T]) int {
+	cnt := 0
+	for _, ts := range src {
+		for _, t := range ts {
+			tgt.Add(t)
+			cnt++
+		}
+	}
+	return cnt
+}
+
 func ReduceSlice[T any, R any](arr []T, identity R, reduceFn func(acc R, next T) R) R {
 	acc := identity
 	for _, t := range arr {
