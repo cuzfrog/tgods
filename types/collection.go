@@ -19,7 +19,7 @@ type IndexAccess[T any] interface {
 	Get(index int) (T, bool)
 	Set(index int, elem T) (T, bool)
 	Swap(indexA, indexB int) bool // if any index is invalid, return false
-	Sort(less Less[T])            // sort elem by provided Less function
+	Sort(lessFn Less[T])          // sort elem by provided Less function
 }
 
 type Queue[T any] interface {

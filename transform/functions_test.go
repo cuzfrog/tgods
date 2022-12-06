@@ -49,14 +49,6 @@ func TestFlatMapTo(t *testing.T) {
 	assert.Equal(t, 6, n)
 }
 
-func TestFlattenTo(t *testing.T) {
-	c := collections.NewLinkedListOfEq[types.List[int]](nil, collections.NewLinkedListOf(1, 3), collections.NewLinkedListOf(2, 4))
-	l := collections.NewLinkedListOf[int]()
-	n := FlattenTo[types.List[int], int](c, l)
-	assert.Equal(t, []int{1, 3, 2, 4}, utils.SliceFrom[int](l))
-	assert.Equal(t, 4, n)
-}
-
 func TestFilterFlatMapTo(t *testing.T) {
 	c := collections.NewLinkedListOfEq(nil, []int{1, 2}, []int{3}, []int{4, 5, 6})
 	l := collections.NewLinkedListOf[string]()
@@ -74,8 +66,24 @@ func TestFilterFlatMapTo(t *testing.T) {
 	assert.Equal(t, 5, n)
 }
 
+func TestFlattenTo(t *testing.T) {
+	c := collections.NewLinkedListOfEq[types.List[int]](nil, collections.NewLinkedListOf(1, 3), collections.NewLinkedListOf(2, 4))
+	l := collections.NewLinkedListOf[int]()
+	n := FlattenTo[types.List[int], int](c, l)
+	assert.Equal(t, []int{1, 3, 2, 4}, utils.SliceFrom[int](l))
+	assert.Equal(t, 4, n)
+}
+
 func TestReduce(t *testing.T) {
 	c := mocks.NewMockCollectionOf(1, 3, 4)
 	res := Reduce[int, string](c, "", func(acc string, next int) string { return acc + strconv.Itoa(next) })
 	assert.Equal(t, "134", res)
+}
+
+func TestCount(t *testing.T) {
+	c := mocks.NewMockCollectionOf(1, 3, 4)
+	res := Count[int](c, func(elem int) bool {
+		return elem > 2
+	})
+	assert.Equal(t, 2, res)
 }

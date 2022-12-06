@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"github.com/cuzfrog/tgods/funcs"
 	"github.com/cuzfrog/tgods/types"
+	"golang.org/x/exp/constraints"
 )
 
 // SliceFrom creates a new slice from the Collection,
@@ -47,4 +49,12 @@ func SliceProjectIt[T any, R any](it types.Iterator[T], size int, fn func(t T) R
 		arr[i] = fn(it.Value())
 	}
 	return arr
+}
+
+func Sort[T any](list types.IndexAccess[T], lessFn types.Less[T]) {
+	list.Sort(lessFn)
+}
+
+func SortOrderable[T constraints.Ordered](list types.IndexAccess[T]) {
+	list.Sort(funcs.ValueLess[T])
 }

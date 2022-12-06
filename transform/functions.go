@@ -52,19 +52,6 @@ func FlatMapTo[T any, R any](src types.Collection[T], tgt types.Collection[R], m
 	return cnt
 }
 
-func FlattenTo[C types.Collection[T], T any](src types.Collection[C], tgt types.Collection[T]) int {
-	cnt := 0
-	it := src.Iterator()
-	for it.Next() {
-		subit := it.Value().Iterator()
-		for subit.Next() {
-			tgt.Add(subit.Value())
-			cnt++
-		}
-	}
-	return cnt
-}
-
 // FilterFlatMapTo filters and transforms elem into another Collection, returns transformed elem count collected
 func FilterFlatMapTo[T any, R any](src types.Collection[T], tgt types.Collection[R], filterFn func(elem T) bool, mapFn func(elem T) []R) int {
 	cnt := 0
@@ -80,6 +67,19 @@ func FilterFlatMapTo[T any, R any](src types.Collection[T], tgt types.Collection
 	return cnt
 }
 
+func FlattenTo[C types.Collection[T], T any](src types.Collection[C], tgt types.Collection[T]) int {
+	cnt := 0
+	it := src.Iterator()
+	for it.Next() {
+		subit := it.Value().Iterator()
+		for subit.Next() {
+			tgt.Add(subit.Value())
+			cnt++
+		}
+	}
+	return cnt
+}
+
 func Reduce[T any, R any](col types.Collection[T], identity R, reduceFn func(acc R, next T) R) R {
 	it := col.Iterator()
 	acc := identity
@@ -87,4 +87,15 @@ func Reduce[T any, R any](col types.Collection[T], identity R, reduceFn func(acc
 		acc = reduceFn(acc, it.Value())
 	}
 	return acc
+}
+
+func Count[T any](col types.Collection[T], conditionFunc func(elem T) bool) int {
+	cnt := 0
+	it := col.Iterator()
+	for it.Next() {
+		if conditionFunc(it.Value()) {
+			cnt++
+		}
+	}
+	return cnt
 }

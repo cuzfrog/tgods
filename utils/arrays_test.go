@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"github.com/cuzfrog/tgods/funcs"
 	"github.com/cuzfrog/tgods/mocks"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -23,4 +24,16 @@ func TestSliceProjection(t *testing.T) {
 	c := mocks.NewMockCollectionOf[int](1, 4, 3, 2)
 	arr := SliceProject[int, int](c, func(v int) int { return v + 1 })
 	assert.Equal(t, []int{2, 5, 4, 3}, arr)
+}
+
+func TestSort(t *testing.T) {
+	c := mocks.NewMockCollectionOf[int](1, 4, 3, 2)
+	Sort[int](c, funcs.ValueLess[int])
+	assert.Equal(t, "yes", c.GetFlag("SortCalled"))
+}
+
+func TestSortOrderable(t *testing.T) {
+	c := mocks.NewMockCollectionOf[int](1, 4, 3, 2)
+	SortOrderable[int](c)
+	assert.Equal(t, "yes", c.GetFlag("SortCalled"))
 }
