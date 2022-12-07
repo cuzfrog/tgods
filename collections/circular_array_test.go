@@ -37,6 +37,11 @@ func TestCircularArrayList_shrinkIfNeeded(t *testing.T) {
 
 	l = newCircularArrayOf[int]()
 	l.shrinkIfNeeded()
+
+	// empty array
+	l = &circularArray[int]{33, 33, make([]int, 48), 0, eqInt, list}
+	l.shrinkIfNeeded()
+	l.AddHead(3)
 }
 
 func TestCircularArrayList_expandIfNeeded(t *testing.T) {
