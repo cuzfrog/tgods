@@ -87,6 +87,21 @@ func NewLinkedHashMapOfNumKey[K constraints.Integer | constraints.Float, V any](
 	return m
 }
 
+// NewLRUCache alias for NewLinkedHashMap
+func NewLRUCache[K any, V any](hs types.Hash[K], eq types.Equal[K], sizeLimit int, accessOrder AccessOrder) types.Map[K, V] {
+	return NewLinkedHashMap[K, V](hs, eq, sizeLimit, accessOrder)
+}
+
+// NewLRUCacheOfStrKey creates a linkedHashMap as an LRU cache, eviction and iteration will follow provided AccessOrder
+func NewLRUCacheOfStrKey[V any](sizeLimit int, accessOrder AccessOrder) types.Map[string, V] {
+	return NewLinkedHashMap[string, V](funcs.NewStrHash(), funcs.ValueEqual[string], sizeLimit, accessOrder)
+}
+
+// NewLRUCacheOfNumKey creates a linkedHashMap as an LRU cache, eviction and iteration will follow provided AccessOrder
+func NewLRUCacheOfNumKey[K constraints.Integer | constraints.Float, V any](sizeLimit int, accessOrder AccessOrder) types.Map[K, V] {
+	return NewLinkedHashMap[K, V](funcs.NumHash[K], funcs.ValueEqual[K], sizeLimit, accessOrder)
+}
+
 // NewEnumMap creates an array based enum map
 //
 //	max - the max value, which defines the cap of the array

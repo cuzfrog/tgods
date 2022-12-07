@@ -57,6 +57,7 @@ queue := collections.NewLinkedListQueue[int]() // Queue[int]
 queue := collections.NewArrayListQueue[int]() // Queue[int]
 hashMap := collections.NewHashMapOf[string, int](funcs.NewStrHash(), funcs.ValueEqual[string]) // Map[string, int]
 hashMap := collections.NewHashMapOfStrKey[int](EntryOf("Earth", 3), EntryOf("Mars", 4)) // Map[string, int]
+cache := collections.NewLRUCacheOfStrKey[int](40, collections.PutOrder + collections.GetOrder) // LRU cache[string, int] of size limit 40
 // more...
 ```
 
