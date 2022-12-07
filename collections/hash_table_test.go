@@ -9,7 +9,9 @@ import (
 
 func TestHashTable(t *testing.T) {
 	h := newHashTable[int](funcs.NumHash[int], funcs.ValueEqual[int])
+	assert.False(t, h.Contains(7))
 	h.Add(1)
+	assert.False(t, h.Contains(7))
 	h.Add(2)
 	h.Add(3)
 	h.Add(4)

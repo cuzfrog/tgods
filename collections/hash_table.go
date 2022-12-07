@@ -64,6 +64,9 @@ func (h *hashTable[T]) add(elem T) (n node[T], old T, found bool) {
 }
 
 func (h *hashTable[T]) Contains(elem T) bool {
+	if h.size == 0 {
+		return false
+	}
 	i := hashToIndex(h.hs(elem), cap(h.arr))
 	b := h.arr[i]
 	if b == nil {
