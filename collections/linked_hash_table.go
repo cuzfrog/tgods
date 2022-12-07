@@ -21,6 +21,11 @@ func (h *linkedHashTable[T]) Add(elem T) bool {
 	return true
 }
 
+func (h *linkedHashTable[T]) Replace(elem T) (T, bool) {
+	_, old, found := h.add(elem)
+	return old, found
+}
+
 // add returns the newly added or existing node
 func (h *linkedHashTable[T]) add(elem T) (n node[T], old T, found bool) {
 	if h.tail == nil {

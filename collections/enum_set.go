@@ -19,13 +19,18 @@ func newEnumSet[T constraints.Integer](max T, values ...T) *enumSet[T] {
 }
 
 func (s *enumSet[T]) Add(elem T) bool {
+	_, existing := s.Replace(elem)
+	return !existing
+}
+
+func (s *enumSet[T]) Replace(elem T) (T, bool) {
 	e := s.arr[elem]
 	if e == nil {
 		s.size++
 		s.arr[elem] = keyEntry[T, interface{}]{elem}
-		return true
+		return utils.Nil[T](), false
 	}
-	return false
+	return e.Key(), true
 }
 
 func (s *enumSet[T]) Contains(elem T) bool {

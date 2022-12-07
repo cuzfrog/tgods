@@ -10,7 +10,11 @@ import (
 func TestHashTable(t *testing.T) {
 	h := newHashTable[int](funcs.NumHash[int], funcs.ValueEqual[int])
 	h.Add(1)
-	h.Add(2)
+	v, found := h.Replace(2)
+	assert.False(t, found)
+	v, found = h.Replace(2)
+	assert.True(t, found)
+	assert.Equal(t, 2, v)
 	h.Add(3)
 	h.Add(4)
 	assert.True(t, h.Add(5))

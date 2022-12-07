@@ -75,8 +75,8 @@ type List[T any] interface {
 
 type Set[T any] interface {
 	Collection[T]
-	Remove(elem T) bool // removes elem from the set, returns true if found the elem.
-	// TODO Replace(elem T) (T, bool) // add the elem to the set, returns the existing elem and true if found it, otherwise Nil and false.
+	Remove(elem T) bool       // removes elem from the set, returns true if found the elem.
+	Replace(elem T) (T, bool) // add the elem to the set, returns the existing elem and true if found it, otherwise Nil and false. Equivalent to Add, but with different return types.
 }
 
 // SortedSet The elem order is decided by Compare func.

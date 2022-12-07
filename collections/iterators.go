@@ -386,8 +386,8 @@ func (l *linkedList[T]) Each(fn func(index int, elem T)) {
 	forEach[T](l, fn)
 }
 
-func (s *rbTree[T]) Each(fn func(index int, elem T)) {
-	forEach[T](s, fn)
+func (t *rbTree[T]) Each(fn func(index int, elem T)) {
+	forEach[T](t, fn)
 }
 
 func (h *hashTable[T]) Each(fn func(index int, elem T)) {
