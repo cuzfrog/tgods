@@ -3,6 +3,7 @@ package collections
 import (
 	"github.com/cuzfrog/tgods/funcs"
 	"github.com/cuzfrog/tgods/types"
+	"github.com/cuzfrog/tgods/utils"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -122,6 +123,47 @@ func TestNewHashMapOfNumKey(t *testing.T) {
 			old, found := m.Put(1, "aa")
 			assert.True(t, found)
 			assert.Equal(t, "a", old)
+		})
+	}
+}
+
+func TestLRUCache_Properties(t *testing.T) {
+	tests := []struct {
+		name string
+		m    types.Map[int, string]
+	}{
+		{"LRU1", NewLRUCache[int, string](funcs.NumHash[int], funcs.ValueEqual[int], 3, GetOrder)},
+		{"LRU2", NewLRUCacheOfNumKey[int, string](3, GetOrder)},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			m := test.m
+			m.Put(1, "a")
+			m.Put(3, "c")
+			m.Put(2, "b")
+			m.Get(1)
+			m.Put(4, "d")
+			assert.Equal(t, []int{2, 1, 4}, utils.KeysFrom(m))
+		})
+	}
+}
+
+func TestLRUCacheOfStrKey_Properties(t *testing.T) {
+	tests := []struct {
+		name string
+		m    types.Map[string, string]
+	}{
+		{"LRU1", NewLRUCacheOfStrKey[string](3, GetOrder)},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			m := test.m
+			m.Put("1", "a")
+			m.Put("3", "c")
+			m.Put("2", "b")
+			m.Get("1")
+			m.Put("4", "d")
+			assert.Equal(t, []string{"2", "1", "4"}, utils.KeysFrom(m))
 		})
 	}
 }
