@@ -16,6 +16,6 @@ type AccessOrder byte
 
 const (
 	OriginalOrder AccessOrder = 0 // original put order (no explicit order change)
-	PutOrder      AccessOrder = 1 // newly put element will be at the tail, the elem at head will be next for eviction
-	GetOrder      AccessOrder = 2 // newly get element will be at the tail, the elem at head will be next for eviction
+	PutOrder      AccessOrder = 1 // newly put element will be at the tail (the elem at head will be next for eviction).
+	GetOrder      AccessOrder = 2 // newly get element will be at the tail (the elem at head will be next for eviction).
 )

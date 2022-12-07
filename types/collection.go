@@ -1,7 +1,9 @@
 package types
 
 type Collection[T any] interface {
-	Add(elem T) bool       // adds elem into the collection, return true if succeeded. If it's a Map, elem is an entry, a newly added entry will replace the old entry if exists.
+	Add(elem T) bool // adds elem into the collection, return true if succeeded. If it's a Map, elem is an entry, a newly added entry will replace the old entry if exists.
+	// TODO AddConditional
+
 	Contains(elem T) bool  // checks if an elem is in the collection by a given Equal function. If it's a Map, elem is an entry, but only compares the key. Typical time complexity O(n) in array based, O(log(n)) in tree based, and O(c) in hash based implementations.
 	Iterator() Iterator[T] // returns a semantic iterator whose behavior is based on the sub-interface
 	Each(func(index int, elem T))
@@ -64,16 +66,17 @@ type List[T any] interface {
 	Collection[T]
 	AddHead(elem T) bool   // prepends elem to the head, return true if succeeded.
 	RemoveHead() (T, bool) // removes the first elem of the list
-	Head() (T, bool)
-	AddTail(elem T) bool // appends elem to the tail, return true if succeeded.
-	RemoveTail() (T, bool)
-	Remove() (T, bool) // alias for RemoveTail
-	Tail() (T, bool)
+	Head() (T, bool)       // peeks the first elem of the list, equivalent to RemoveHead without removal
+	AddTail(elem T) bool   // appends elem to the tail, return true if succeeded.
+	RemoveTail() (T, bool) // removes the last elem of the list
+	Remove() (T, bool)     // alias for RemoveTail
+	Tail() (T, bool)       // peeks the last elem of the list, equivalent to RemoveTail or Remove without removal
 }
 
 type Set[T any] interface {
 	Collection[T]
-	Remove(elem T) bool // removes elem from the set, returns true if found the elem. O(log(n))
+	Remove(elem T) bool       // removes elem from the set, returns true if found the elem.
+	Replace(elem T) (T, bool) // add the elem to the set, returns the existing elem and true if found it, otherwise Nil and false. Equivalent to Add, but with different return types.
 }
 
 // SortedSet The elem order is decided by Compare func.
@@ -91,6 +94,16 @@ type SortedSet[T any] interface {
 	//Ceiling(elem T) (T, bool)               // returns the least elem that is greater than or equal to the given elem, or Nil and false if no one can be found. O(log(n))
 	//Floor(elem T) (T, bool)                 // returns the greatest elem that is less than or equal to the given elem, or Nil and false if no one can be found. O(log(n))
 	//ReverseSet() SortedSet[T]               // returns a view of the same set with an inverted Compare func and reverted element order. O(c)
+}
+
+type LinkedSet[T any] interface {
+	Set[T]
+	AddHead(elem T) (T, bool) // adds to the head (the oldest added by Add), returns the existing elem and true if found an elem, otherwise Nil and false.
+	RemoveHead() (T, bool)    // removes the elem on the head (the oldest added by Add) from the set, returns the elem and true if found the elem, otherwise Nil and false.
+	Head() (T, bool)          // equivalent to RemoveHead without removal.
+	AddTail(elem T) (T, bool) // appends elem to the tail, returns the existing elem and true if found an elem, otherwise Nil and false. Equivalent to Add with different return types.
+	RemoveTail() (T, bool)    // removes the elem on the tail (the newest added by Add) from the set, returns the elem and true if found the elem, otherwise Nil and false. Alias for Remove.
+	Tail() (T, bool)          // equivalent to RemoveTail or Remove without removal.
 }
 
 type Entry[K any, V any] interface {
@@ -113,6 +126,16 @@ type SortedMap[K any, V any] interface {
 	Last() Entry[K, V]        // returns the last entry if it has, or nil if it's empty. The entry is not removed from the map. O(log(n))
 	RemoveFirst() Entry[K, V] // returns and removes the first entry if it has, or nil if it's empty. O(log(n))
 	RemoveLast() Entry[K, V]  // returns and removes the last entry if it has, or nil if it's empty. O(log(n))
+}
+
+type LinkedMap[K any, V any] interface {
+	Map[K, V]
+	PutHead(k K, v V) (V, bool) // prepends entry to the head (the oldest added by Put), returns the existing value and true if found the key, otherwise Nil and false.
+	RemoveHead() (K, V, bool)   // removes the entry on the head (the oldest added by Put) from the map, returns the existing value and true if found the key, otherwise Nil and false.
+	Head() (K, V, bool)         // equivalent to RemoveHead without removal.
+	PutTail(k K, v V) (V, bool) // equivalent to Put with PutOrder
+	RemoveTail() (K, V, bool)   // removes the entry on the tail (the newest added by Put) from the map, returns the existing value and true if found the key, otherwise Nil and false.
+	Tail() (K, V, bool)         // equivalent to RemoveTail or Remove without removal.
 }
 
 // Graph a graph implementation supporting directional edges with properties

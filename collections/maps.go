@@ -53,13 +53,13 @@ func NewHashMapOfNumKey[K constraints.Integer | constraints.Float, V any](entrie
 //	eq - the key equal function.
 //	sizeLimit - limit the maximum size of elements, extra elements will be removed upon Put based on element order defined by AccessOrder.
 //	accessOrder - defines how elements are ordered. For an LRU cache, you can provide PutOrder + GetOrder
-func NewLinkedHashMap[K any, V any](hs types.Hash[K], eq types.Equal[K], sizeLimit int, accessOrder AccessOrder) types.Map[K, V] {
+func NewLinkedHashMap[K any, V any](hs types.Hash[K], eq types.Equal[K], sizeLimit int, accessOrder AccessOrder) types.LinkedMap[K, V] {
 	return newLinkedHashMap[K, V](hs, eq, sizeLimit, accessOrder)
 }
 
 // NewLinkedHashMapOf creates a linked hash map with custom Hash and Equal functions, and init values.
 // No size limit. Iteration will be of the original put order.
-func NewLinkedHashMapOf[K any, V any](hs types.Hash[K], eq types.Equal[K], entries ...types.Entry[K, V]) types.Map[K, V] {
+func NewLinkedHashMapOf[K any, V any](hs types.Hash[K], eq types.Equal[K], entries ...types.Entry[K, V]) types.LinkedMap[K, V] {
 	m := newLinkedHashMap[K, V](hs, eq, 0, OriginalOrder)
 	for _, e := range entries {
 		m.Put(e.Key(), e.Value())
@@ -69,7 +69,7 @@ func NewLinkedHashMapOf[K any, V any](hs types.Hash[K], eq types.Equal[K], entri
 
 // NewLinkedHashMapOfStrKey creates a linked hash map with key type as string and init values.
 // No size limit. Iteration will be of the original put order.
-func NewLinkedHashMapOfStrKey[V any](entries ...types.Entry[string, V]) types.Map[string, V] {
+func NewLinkedHashMapOfStrKey[V any](entries ...types.Entry[string, V]) types.LinkedMap[string, V] {
 	m := newLinkedHashMap[string, V](funcs.NewStrHash(), funcs.ValueEqual[string], 0, OriginalOrder)
 	for _, e := range entries {
 		m.Put(e.Key(), e.Value())
@@ -79,7 +79,7 @@ func NewLinkedHashMapOfStrKey[V any](entries ...types.Entry[string, V]) types.Ma
 
 // NewLinkedHashMapOfNumKey creates a linked hash map with key type as constraints.Integer | constraints.Float, and init values.
 // No size limit. Iteration will be of the original put order.
-func NewLinkedHashMapOfNumKey[K constraints.Integer | constraints.Float, V any](entries ...types.Entry[K, V]) types.Map[K, V] {
+func NewLinkedHashMapOfNumKey[K constraints.Integer | constraints.Float, V any](entries ...types.Entry[K, V]) types.LinkedMap[K, V] {
 	m := newLinkedHashMap[K, V](funcs.NumHash[K], funcs.ValueEqual[K], 0, OriginalOrder)
 	for _, e := range entries {
 		m.Put(e.Key(), e.Value())

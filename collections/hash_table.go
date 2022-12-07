@@ -41,10 +41,16 @@ func (h *hashTable[T]) Add(elem T) bool {
 	return true
 }
 
+func (h *hashTable[T]) Replace(elem T) (T, bool) {
+	_, old, found := h.add(elem)
+	return old, found
+}
+
 // add inserts the elem and return:
 //
-//	n - the node containing the elem
-//	old - existing elem if found
+//		n - the node containing the elem;
+//		old - existing elem if found;
+//	 found - if found an existing elem.
 func (h *hashTable[T]) add(elem T) (n node[T], old T, found bool) {
 	h.expandIfNeeded()
 	i := hashToIndex(h.hs(elem), cap(h.arr))

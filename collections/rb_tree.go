@@ -97,6 +97,10 @@ func (t *rbTree[T]) Add(elem T) bool {
 	return true
 }
 
+func (t *rbTree[T]) Replace(elem T) (T, bool) {
+	return rbTreeInsert(t, elem)
+}
+
 func (t *rbTree[T]) Contains(elem T) bool {
 	n := t.searchNode(elem)
 	return n != nil

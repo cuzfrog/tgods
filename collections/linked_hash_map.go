@@ -55,3 +55,51 @@ func (h *linkedHashMap[K, V]) Remove(k K) (V, bool) {
 func (h *linkedHashMap[K, V]) ContainsKey(k K) bool {
 	return h.linkedHashTable.Contains(keyEntry[K, V]{k})
 }
+
+func (h *linkedHashMap[K, V]) PutHead(k K, v V) (V, bool) {
+	e, found := h.linkedHashTable.AddHead(EntryOf[K, V](k, v))
+	if found {
+		return e.Value(), true
+	}
+	return utils.Nil[V](), false
+}
+
+func (h *linkedHashMap[K, V]) RemoveHead() (K, V, bool) {
+	e, found := h.linkedHashTable.RemoveHead()
+	if found {
+		return e.Key(), e.Value(), true
+	}
+	return utils.Nil[K](), utils.Nil[V](), false
+}
+
+func (h *linkedHashMap[K, V]) Head() (K, V, bool) {
+	e, found := h.linkedHashTable.Head()
+	if found {
+		return e.Key(), e.Value(), true
+	}
+	return utils.Nil[K](), utils.Nil[V](), false
+}
+
+func (h *linkedHashMap[K, V]) PutTail(k K, v V) (V, bool) {
+	e, found := h.linkedHashTable.AddTail(EntryOf(k, v))
+	if found {
+		return e.Value(), true
+	}
+	return utils.Nil[V](), false
+}
+
+func (h *linkedHashMap[K, V]) RemoveTail() (K, V, bool) {
+	e, found := h.linkedHashTable.RemoveTail()
+	if found {
+		return e.Key(), e.Value(), true
+	}
+	return utils.Nil[K](), utils.Nil[V](), false
+}
+
+func (h *linkedHashMap[K, V]) Tail() (K, V, bool) {
+	e, found := h.linkedHashTable.Tail()
+	if found {
+		return e.Key(), e.Value(), true
+	}
+	return utils.Nil[K](), utils.Nil[V](), false
+}
