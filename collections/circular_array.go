@@ -270,10 +270,6 @@ func (l *circularArray[T]) shrinkIfNeeded() {
 	if l.arr == nil {
 		return
 	}
-	if l.size == 0 {
-		l.arr = nil
-		return
-	}
 	newLength := len(l.arr) >> defaultArrShrinkThreshold
 	if newLength <= l.size || newLength <= defaultArrInitSize {
 		return
