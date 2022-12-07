@@ -83,3 +83,56 @@ func TestLinkedHashMap_AccessOrder(t *testing.T) {
 		assert.Equal(t, []int{3, 2, 1}, l)
 	})
 }
+
+func TestLinkedHashMap_Head_Tail(t *testing.T) {
+	m := newLinkedHashMap[int, int](funcs.NumHash[int], funcs.ValueEqual[int], 0, OriginalOrder)
+	k, v, found := m.Head()
+	assert.False(t, found)
+	k, v, found = m.Tail()
+	assert.False(t, found)
+	k, v, found = m.RemoveHead()
+	assert.False(t, found)
+	k, v, found = m.RemoveTail()
+	assert.False(t, found)
+
+	v, found = m.PutHead(3, 33)
+	assert.False(t, found)
+	v, found = m.PutHead(3, 333)
+	assert.True(t, found)
+	assert.Equal(t, 33, v)
+
+	v, found = m.PutTail(4, 44)
+	assert.False(t, found)
+	v, found = m.PutTail(4, 444)
+	assert.True(t, found)
+	assert.Equal(t, 44, v)
+
+	v, found = m.PutTail(5, 55)
+	v, found = m.PutHead(2, 22)
+
+	k, v, found = m.Head()
+	assert.True(t, found)
+	assert.Equal(t, 2, k)
+	assert.Equal(t, 22, v)
+	k, v, found = m.Tail()
+	assert.True(t, found)
+	assert.Equal(t, 5, k)
+	assert.Equal(t, 55, v)
+	assert.Equal(t, 4, m.Size())
+
+	k, v, found = m.RemoveHead()
+	assert.True(t, found)
+	assert.Equal(t, 2, k)
+	assert.Equal(t, 22, v)
+	k, v, found = m.RemoveTail()
+	assert.True(t, found)
+	assert.Equal(t, 5, k)
+	assert.Equal(t, 55, v)
+	assert.Equal(t, 2, m.Size())
+
+	m.Clear()
+	m.PutTail(1, 11)
+	k, v, found = m.RemoveHead()
+	assert.Equal(t, 1, k)
+	assert.Equal(t, 11, v)
+}

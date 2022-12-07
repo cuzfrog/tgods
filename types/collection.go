@@ -128,6 +128,16 @@ type SortedMap[K any, V any] interface {
 	RemoveLast() Entry[K, V]  // returns and removes the last entry if it has, or nil if it's empty. O(log(n))
 }
 
+type LinkedMap[K any, V any] interface {
+	Map[K, V]
+	PutHead(k K, v V) (V, bool) // prepends entry to the head (the oldest added by Put), returns the existing value and true if found the key, otherwise Nil and false.
+	RemoveHead() (K, V, bool)   // removes the entry on the head (the oldest added by Put) from the map, returns the existing value and true if found the key, otherwise Nil and false.
+	Head() (K, V, bool)         // equivalent to RemoveHead without removal.
+	PutTail(k K, v V) (V, bool) // equivalent to Put with PutOrder
+	RemoveTail() (K, V, bool)   // removes the entry on the tail (the newest added by Put) from the map, returns the existing value and true if found the key, otherwise Nil and false.
+	Tail() (K, V, bool)         // equivalent to RemoveTail or Remove without removal.
+}
+
 // Graph a graph implementation supporting directional edges with properties
 //
 //	V - the vertex type
