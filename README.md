@@ -38,7 +38,7 @@ All interface definitions can be found: [here](./types/collection.go)
 * `binaryHeap` - binary heap based min or max priority queue. Backing up `Queue`
 * `rbTree` - recursion-free red black tree implementation. Backing up `SortedSet`, `SortedMap`
 * `hashTable` - variable length/cap array based hash table, hash collision is handled by linked nodes. Backing up `Set`, `Map`
-* `linkedHashTable` hashTable preserving inserting or configurable access order. Can serve as an `LRU cache`. Backing up `Set`, `Map`
+* `linkedHashTable` hashTable preserving inserting or configurable access order. Can serve as an `LRU cache`. Backing up `LinkedSet`, `LinkedMap`
 * `enumMap` & `enumSet` fast array based map and set with `Integer` as the key. Implementing `SortedMap`, `SortedSet` respectively.
 * `multiMap` multimap implementation with `arrayListMultiMap` and `hashSetMultiMap` constructors.
 * `treeAdjacencyList` a treeMap based graph implementation with directional edge properties.
