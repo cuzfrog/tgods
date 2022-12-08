@@ -21,7 +21,7 @@ func NewHashSet[T any](hs types.Hash[T], eq types.Equal[T]) types.Set[T] {
 	return newHashTable[T](hs, eq)
 }
 
-// NewHashSetC creates a hash table with a containing type that implements custom Hash and Equal
+// NewHashSetC creates a hash table with a constrained type that implements custom Hash and Equal
 func NewHashSetC[T types.HashAndEqual[T]]() types.Set[T] {
 	hs := func(elem T) uint { return elem.Hash() }
 	eq := func(a, b T) bool { return a.Equal(b) }

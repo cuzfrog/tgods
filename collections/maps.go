@@ -20,7 +20,7 @@ func NewTreeMapOfComp[K any, V any](comp types.Compare[K], entries ...types.Entr
 	return m
 }
 
-// NewHashMapC creates a hash map with a containing key type that implements custom Hash and Equal
+// NewHashMapC creates a hash map with a constrained key type that implements custom Hash and Equal
 func NewHashMapC[K types.HashAndEqual[K], V any]() types.Map[K, V] {
 	hs := func(key K) uint { return key.Hash() }
 	eq := func(a, b K) bool { return a.Equal(b) }
