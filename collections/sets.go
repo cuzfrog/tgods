@@ -21,6 +21,13 @@ func NewHashSet[T any](hs types.Hash[T], eq types.Equal[T]) types.Set[T] {
 	return newHashTable[T](hs, eq)
 }
 
+// NewHashSetC creates a hash table with a containing type that implements custom Hash and Equal
+func NewHashSetC[T types.HashAndEqual[T]]() types.Set[T] {
+	hs := func(elem T) uint { return elem.Hash() }
+	eq := func(a, b T) bool { return a.Equal(b) }
+	return newHashTable[T](hs, eq)
+}
+
 // NewHashSetOfNum creates a hash table backed set with values, see funcs.NumHash
 func NewHashSetOfNum[T constraints.Integer | constraints.Float](values ...T) types.Set[T] {
 	h := newHashTable[T](funcs.NumHash[T], funcs.ValueEqual[T])

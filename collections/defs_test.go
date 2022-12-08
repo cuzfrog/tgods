@@ -10,3 +10,11 @@ type intStruct struct {
 
 var compInt = funcs.ValueCompare[int]
 var eqInt = funcs.ValueEqual[int]
+
+func (s *intStruct) Hash() uint {
+	return funcs.NumHash(s.v)
+}
+
+func (s *intStruct) Equal(other *intStruct) bool {
+	return s.v == other.v
+}

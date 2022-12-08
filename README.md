@@ -60,6 +60,13 @@ hashMap := collections.NewHashMapOfStrKey[int](EntryOf("Earth", 3), EntryOf("Mar
 cache := collections.NewLRUCacheOfStrKey[int](40, collections.PutOrder + collections.GetOrder) // LRU cache[string, int] of size limit 40
 // more...
 ```
+Client implementation of [constraint interfaces](types/interfaces.go) to simplify collection creation:
+```go
+type myStruct struct {...}
+func (s *myStruct) Hash() uint {...}
+func (s *myStruct) Equal(other *myStruct) bool {...}
+hashSet := collections.NewHashSetC[*myStruct]()
+```
 
 ### Functional Transformation
 
