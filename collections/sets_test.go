@@ -86,3 +86,12 @@ func TestSetOfStrProperties(t *testing.T) {
 	}
 
 }
+
+func TestHashSetConstraintInterface(t *testing.T) {
+	set := NewHashSetC[*intStruct]()
+	s1 := &intStruct{3}
+	set.Add(s1)
+	assert.Equal(t, 1, set.Size())
+	s2 := &intStruct{3}
+	assert.True(t, set.Contains(s2))
+}

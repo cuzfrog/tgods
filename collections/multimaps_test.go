@@ -94,3 +94,26 @@ func TestNewHashSetMultiMapOfStrKey_Properties(t *testing.T) {
 	assert.True(t, found)
 	assert.ElementsMatch(t, []int{1, 2}, utils.SliceFrom[int](l))
 }
+
+func TestArrayListMultiMapConstraintInterface(t *testing.T) {
+	m := NewArrayListMultiMapC[*intStruct, int]()
+	k1 := &intStruct{3}
+	m.PutSingle(k1, 2)
+	assert.Equal(t, 1, m.Size())
+	k2 := &intStruct{3}
+	assert.True(t, m.ContainsKey(k2))
+}
+
+func TestHashSetMultiMapConstraintInterface(t *testing.T) {
+	m := NewHashSetMultiMapC[*intStruct, int](funcs.NumHash[int], funcs.ValueEqual[int])
+	k1 := &intStruct{3}
+	m.PutSingle(k1, 2)
+	assert.Equal(t, 1, m.Size())
+	k2 := &intStruct{3}
+	assert.True(t, m.ContainsKey(k2))
+
+	m2 := NewHashSetMultiMapCC[*intStruct, *intStruct]()
+	m2.PutSingle(k1, &intStruct{33})
+	m2.PutSingle(k1, &intStruct{33})
+	assert.Equal(t, 1, m2.Size())
+}
