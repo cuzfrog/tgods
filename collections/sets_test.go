@@ -88,10 +88,21 @@ func TestSetOfStrProperties(t *testing.T) {
 }
 
 func TestHashSetConstraintInterface(t *testing.T) {
-	set := NewHashSetC[*intStruct]()
-	s1 := &intStruct{3}
-	set.Add(s1)
-	assert.Equal(t, 1, set.Size())
-	s2 := &intStruct{3}
-	assert.True(t, set.Contains(s2))
+	tests := []struct {
+		name string
+		s    types.Set[*intStruct]
+	}{
+		{"hashSet1", NewHashSetC[*intStruct]()},
+		{"hashSet2", NewLinkedHashSetC[*intStruct]()},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			set := test.s
+			s1 := &intStruct{3}
+			set.Add(s1)
+			assert.Equal(t, 1, set.Size())
+			s2 := &intStruct{3}
+			assert.True(t, set.Contains(s2))
+		})
+	}
 }

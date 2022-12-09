@@ -48,12 +48,19 @@ func NewHashSetOfStr(values ...string) types.Set[string] {
 
 // NewLinkedHashSet creates a linked hash table backed set with custom Hash and Equal functions
 func NewLinkedHashSet[T any](hs types.Hash[T], eq types.Equal[T]) types.LinkedSet[T] {
-	return newLinkedHashTable[T](hs, eq, 0)
+	return newLinkedHashTable[T](hs, eq, OriginalOrder)
+}
+
+// NewLinkedHashSetC creates a linked hash table backed set with a constrained type that implements custom Hash and Equal
+func NewLinkedHashSetC[T types.HashAndEqual[T]]() types.LinkedSet[T] {
+	hs := func(elem T) uint { return elem.Hash() }
+	eq := func(a, b T) bool { return a.Equal(b) }
+	return newLinkedHashTable[T](hs, eq, OriginalOrder)
 }
 
 // NewLinkedHashSetOfNum creates a linked hash table backed set with values, see funcs.NumHash
 func NewLinkedHashSetOfNum[T constraints.Integer | constraints.Float](values ...T) types.LinkedSet[T] {
-	h := newLinkedHashTable[T](funcs.NumHash[T], funcs.ValueEqual[T], 0)
+	h := newLinkedHashTable[T](funcs.NumHash[T], funcs.ValueEqual[T], OriginalOrder)
 	for _, v := range values {
 		h.Add(v)
 	}
@@ -62,7 +69,7 @@ func NewLinkedHashSetOfNum[T constraints.Integer | constraints.Float](values ...
 
 // NewLinkedHashSetOfStr creates a linked hash table backed set with values, see funcs.NewStrHash
 func NewLinkedHashSetOfStr(values ...string) types.LinkedSet[string] {
-	h := newLinkedHashTable[string](funcs.NewStrHash(), funcs.ValueEqual[string], 0)
+	h := newLinkedHashTable[string](funcs.NewStrHash(), funcs.ValueEqual[string], OriginalOrder)
 	for _, v := range values {
 		h.Add(v)
 	}
