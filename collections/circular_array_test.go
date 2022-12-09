@@ -55,7 +55,7 @@ func TestCircularArrayList_expandIfNeeded(t *testing.T) {
 	assert.Equal(t, 0, l.start)
 	assert.Equal(t, 3, l.end)
 
-	l = newCircularArray[int](5)
+	l = newCircularArray[int](5, AutoExpand+AutoShrink)
 	l.Add(4)
 	l.AddHead(2)
 	l.expandIfNeeded()
@@ -63,6 +63,15 @@ func TestCircularArrayList_expandIfNeeded(t *testing.T) {
 	assert.Equal(t, 2, l.size)
 	assert.Equal(t, 4, l.start)
 	assert.Equal(t, 1, l.end)
+}
+
+func TestCircularArrayList_expandIfNeeded_autoExpandDisabled(t *testing.T) {
+	l := newCircularArray[int](1, NoAutoSizing)
+	l.expandIfNeeded()
+	l.Add(3)
+	assert.Panics(t, func() {
+		l.expandIfNeeded()
+	}, "AutoExpand disabled but current cap 1 cannot contain size increment.")
 }
 
 func TestCircularArrayList_Add(t *testing.T) {
@@ -82,7 +91,7 @@ func TestCircularArrayList_Add(t *testing.T) {
 }
 
 func TestCircularArrayList_AddHead(t *testing.T) {
-	l := newCircularArray[int](5)
+	l := newCircularArray[int](5, AutoExpand+AutoShrink)
 	l.AddHead(3)
 	assert.Equal(t, 1, l.size)
 	assert.Equal(t, 4, l.start)
@@ -101,7 +110,7 @@ func TestCircularArrayList_AddHead(t *testing.T) {
 }
 
 func TestCircularArrayList_Clear(t *testing.T) {
-	l := newCircularArray[int](5)
+	l := newCircularArray[int](5, AutoExpand+AutoShrink)
 	l.AddHead(5)
 	l.Clear()
 	assert.Equal(t, 0, l.size)
@@ -111,7 +120,7 @@ func TestCircularArrayList_Clear(t *testing.T) {
 }
 
 func TestCircularArrayList_Contains(t *testing.T) {
-	l := newCircularArray[int](5)
+	l := newCircularArray[int](5, AutoExpand+AutoShrink)
 	l.AddHead(5)
 	assert.True(t, l.Contains(5))
 	assert.False(t, l.Contains(6))
@@ -120,7 +129,7 @@ func TestCircularArrayList_Contains(t *testing.T) {
 }
 
 func TestCircularArrayList_Get(t *testing.T) {
-	l := newCircularArray[int](5)
+	l := newCircularArray[int](5, AutoExpand+AutoShrink)
 	l.Add(100)
 	for i := 1; i <= 12; i++ {
 		l.AddHead(i)
@@ -135,7 +144,7 @@ func TestCircularArrayList_Get(t *testing.T) {
 }
 
 func TestCircularArrayList_Set(t *testing.T) {
-	l := newCircularArray[int](5)
+	l := newCircularArray[int](5, AutoExpand+AutoShrink)
 	l.Add(100)
 	v, ok := l.Set(0, 5)
 	assert.True(t, ok)

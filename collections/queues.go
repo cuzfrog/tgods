@@ -30,7 +30,7 @@ func NewArrayListQueue[T comparable]() types.Queue[T] {
 }
 
 func NewArrayListQueueOfSize[T comparable](initSize int) types.Queue[T] {
-	return newCircularArray[T](initSize).withRole(queue)
+	return newCircularArray[T](initSize, AutoExpand+AutoShrink).withRole(queue)
 }
 
 func NewArrayListQueueOfEq[T any](initSize int, eq types.Equal[T]) types.Queue[T] {

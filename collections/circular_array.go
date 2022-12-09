@@ -43,8 +43,8 @@ func newCircularArrayOf[T comparable](values ...T) *circularArray[T] {
 }
 
 // newCircularArray creates underlying array eagerly with the init size
-func newCircularArray[T comparable](initSize int) *circularArray[T] {
-	return &circularArray[T]{-1, 0, make([]T, initSize), 0, funcs.ValueEqual[T], list, AutoExpand + AutoShrink}
+func newCircularArray[T comparable](initSize int, flag AutoSizingFlag) *circularArray[T] {
+	return &circularArray[T]{-1, 0, make([]T, initSize), 0, funcs.ValueEqual[T], list, flag}
 }
 
 // newCircularArrayOfEq creates underlying array eagerly with the init size
@@ -248,7 +248,14 @@ func (l *circularArray[T]) toArrIndex(index int) (int, bool) {
 }
 
 func (l *circularArray[T]) expandIfNeeded() {
-	if l.arr == nil || cap(l.arr) == 0 {
+	c := cap(l.arr)
+	if l.autoSizingFlag&AutoExpand == 0 {
+		if l.size >= c {
+			panic(fmt.Sprintf("AutoExpand disabled but current cap %d cannot contain size increment", c))
+		}
+		return
+	}
+	if c == 0 {
 		l.arr = make([]T, defaultArrInitSize)
 	} else if l.size >= len(l.arr) {
 		newLength := l.size << 1

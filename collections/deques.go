@@ -15,7 +15,7 @@ func NewArrayListDeque[T comparable]() types.Deque[T] {
 }
 
 func NewArrayListDequeOfSize[T comparable](initSize int) types.Deque[T] {
-	return newCircularArray[T](initSize).withRole(deque)
+	return newCircularArray[T](initSize, AutoExpand+AutoShrink).withRole(deque)
 }
 
 func NewArrayListDequeOfEq[T any](initSize int, eq types.Equal[T]) types.Deque[T] {
