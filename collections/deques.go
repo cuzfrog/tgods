@@ -14,10 +14,18 @@ func NewArrayListDeque[T comparable]() types.Deque[T] {
 	return newCircularArrayOf[T]().withRole(deque)
 }
 
-func NewArrayListDequeOfSize[T comparable](initSize int) types.Deque[T] {
-	return newCircularArray[T](initSize, AutoExpand+AutoShrink).withRole(deque)
+func NewArrayListDequeOfSize[T comparable](initCap int) types.Deque[T] {
+	return newCircularArray[T](initCap, AutoExpand+AutoShrink).withRole(deque)
 }
 
-func NewArrayListDequeOfEq[T any](initSize int, eq types.Equal[T]) types.Deque[T] {
-	return newCircularArrayOfEq[T](initSize, eq).withRole(deque)
+func NewArrayListDequeOfSizeP[T comparable](initCap int, autoSizingFlag AutoSizingFlag) types.Deque[T] {
+	return newCircularArray[T](initCap, autoSizingFlag).withRole(deque)
+}
+
+func NewArrayListDequeOfEq[T any](initCap int, eq types.Equal[T]) types.Deque[T] {
+	return newCircularArrayOfEq[T](initCap, eq).withRole(deque)
+}
+
+func NewArrayListDequeOfEqP[T any](initCap int, eq types.Equal[T], autoSizingFlag AutoSizingFlag) types.Deque[T] {
+	return newCircularArrayOfEqP[T](initCap, eq, autoSizingFlag).withRole(deque)
 }

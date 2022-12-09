@@ -42,14 +42,19 @@ func newCircularArrayOf[T comparable](values ...T) *circularArray[T] {
 	return &circularArray[T]{start, size, arr, size, funcs.ValueEqual[T], list, AutoExpand + AutoShrink}
 }
 
-// newCircularArray creates underlying array eagerly with the init size
-func newCircularArray[T comparable](initSize int, flag AutoSizingFlag) *circularArray[T] {
-	return &circularArray[T]{-1, 0, make([]T, initSize), 0, funcs.ValueEqual[T], list, flag}
+// newCircularArray creates underlying array eagerly with the init cap
+func newCircularArray[T comparable](initCap int, flag AutoSizingFlag) *circularArray[T] {
+	return &circularArray[T]{-1, 0, make([]T, initCap), 0, funcs.ValueEqual[T], list, flag}
 }
 
-// newCircularArrayOfEq creates underlying array eagerly with the init size
-func newCircularArrayOfEq[T any](initSize int, eq types.Equal[T]) *circularArray[T] {
-	return &circularArray[T]{-1, 0, make([]T, initSize), 0, eq, list, AutoExpand + AutoShrink}
+// newCircularArrayOfEq creates underlying array eagerly with the init cap
+func newCircularArrayOfEq[T any](initCap int, eq types.Equal[T]) *circularArray[T] {
+	return &circularArray[T]{-1, 0, make([]T, initCap), 0, eq, list, AutoExpand + AutoShrink}
+}
+
+// newCircularArrayOfEqP creates underlying array eagerly with the init cap
+func newCircularArrayOfEqP[T any](initCap int, eq types.Equal[T], autoSizingFlag AutoSizingFlag) *circularArray[T] {
+	return &circularArray[T]{-1, 0, make([]T, initCap), 0, eq, list, autoSizingFlag}
 }
 
 func (l *circularArray[T]) withRole(r role) *circularArray[T] {

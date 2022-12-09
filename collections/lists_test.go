@@ -16,6 +16,8 @@ func TestListProperties(t *testing.T) {
 		{"circularArrayList1", NewArrayListOf[int]()},
 		{"circularArrayList2", NewArrayListOfSize[int](0)},
 		{"circularArrayList3", NewArrayListOfEq[int](0, funcs.ValueEqual[int])},
+		{"circularArrayList4", NewArrayListOfSizeP[int](0, AutoExpand)},
+		{"circularArrayList5", NewArrayListOfEqP[int](0, funcs.ValueEqual[int], AutoExpand)},
 		{"linkedList1", NewLinkedListOf[int]()},
 		{"linkedList2", NewLinkedListOfEq[int](funcs.ValueEqual[int])},
 	}

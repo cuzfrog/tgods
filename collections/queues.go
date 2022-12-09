@@ -29,10 +29,18 @@ func NewArrayListQueue[T comparable]() types.Queue[T] {
 	return newCircularArrayOf[T]().withRole(queue)
 }
 
-func NewArrayListQueueOfSize[T comparable](initSize int) types.Queue[T] {
-	return newCircularArray[T](initSize, AutoExpand+AutoShrink).withRole(queue)
+func NewArrayListQueueOfSize[T comparable](initCap int) types.Queue[T] {
+	return newCircularArray[T](initCap, AutoExpand+AutoShrink).withRole(queue)
 }
 
-func NewArrayListQueueOfEq[T any](initSize int, eq types.Equal[T]) types.Queue[T] {
-	return newCircularArrayOfEq[T](initSize, eq).withRole(queue)
+func NewArrayListQueueOfSizeP[T comparable](initCap int, flag AutoSizingFlag) types.Queue[T] {
+	return newCircularArray[T](initCap, flag).withRole(queue)
+}
+
+func NewArrayListQueueOfEq[T any](initCap int, eq types.Equal[T]) types.Queue[T] {
+	return newCircularArrayOfEq[T](initCap, eq).withRole(queue)
+}
+
+func NewArrayListQueueOfEqP[T any](initCap int, eq types.Equal[T], flag AutoSizingFlag) types.Queue[T] {
+	return newCircularArrayOfEqP[T](initCap, eq, flag).withRole(queue)
 }

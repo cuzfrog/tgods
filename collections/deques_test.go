@@ -18,6 +18,8 @@ func TestDequeProperties(t *testing.T) {
 		{"arrayList1", NewArrayListDeque[int]()},
 		{"arrayList2", NewArrayListDequeOfSize[int](10)},
 		{"arrayList3", NewArrayListDequeOfEq[int](10, funcs.ValueEqual[int])},
+		{"arrayList4", NewArrayListDequeOfSizeP[int](10, NoAutoSizing)},
+		{"arrayList5", NewArrayListDequeOfEqP[int](10, funcs.ValueEqual[int], NoAutoSizing)},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {

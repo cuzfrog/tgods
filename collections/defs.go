@@ -20,7 +20,7 @@ const (
 	GetOrder      AccessOrder = 2 // newly get element will be at the tail (the elem at head will be next for eviction).
 )
 
-// AutoSizingFlag default is AutoExpand + AutoShrink
+// AutoSizingFlag determines if cap should be auto adjusted, default is AutoExpand + AutoShrink
 type AutoSizingFlag byte
 
 const (
