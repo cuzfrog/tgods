@@ -42,6 +42,11 @@ func TestCircularArrayList_shrinkIfNeeded(t *testing.T) {
 	l = &circularArray[int]{33, 33, make([]int, 48), 0, eqInt, list, AutoShrink}
 	l.shrinkIfNeeded()
 	l.AddHead(3)
+
+	// autoShrink disabled
+	l = &circularArray[int]{5, 8, make([]int, 200), 3, eqInt, list, NoAutoSizing}
+	l.shrinkIfNeeded()
+	assert.Equal(t, 200, len(l.arr))
 }
 
 func TestCircularArrayList_expandIfNeeded(t *testing.T) {

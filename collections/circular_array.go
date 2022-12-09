@@ -275,7 +275,7 @@ func (l *circularArray[T]) expandIfNeeded() {
 }
 
 func (l *circularArray[T]) shrinkIfNeeded() {
-	if l.arr == nil {
+	if l.arr == nil || l.autoSizingFlag&AutoShrink == 0 {
 		return
 	}
 	newLength := len(l.arr) >> defaultArrShrinkThreshold
