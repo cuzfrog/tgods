@@ -24,7 +24,7 @@ func NewCircularArrayStack[T comparable]() types.Stack[T] {
 	return newCircularArrayOf[T]().withRole(stack)
 }
 
-// NewCircularArrayStackOfEq creates a stack from an auto-recap circularArray with initSize and custom Equal
-func NewCircularArrayStackOfEq[T any](initSize int, eq types.Equal[T]) types.Stack[T] {
-	return newCircularArrayOfEq[T](initSize, eq).withRole(stack)
+// NewCircularArrayStackOfEq creates a stack from an auto-recap circularArray with initCap and custom Equal
+func NewCircularArrayStackOfEq[T any](initCap int, eq types.Equal[T]) types.Stack[T] {
+	return newCircularArrayOfEq[T](initCap, eq).withRole(stack)
 }

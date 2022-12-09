@@ -18,6 +18,8 @@ func TestQueueProperties(t *testing.T) {
 		{"arrayList1", NewArrayListQueue[int]()},
 		{"arrayList2", NewArrayListQueueOfSize[int](10)},
 		{"arrayList3", NewArrayListQueueOfEq[int](10, funcs.ValueEqual[int])},
+		{"arrayList4", NewArrayListQueueOfSizeP[int](10, NoAutoSizing)},
+		{"arrayList5", NewArrayListQueueOfEqP[int](10, funcs.ValueEqual[int], NoAutoSizing)},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {

@@ -12,12 +12,22 @@ func NewArrayListOf[T comparable](values ...T) types.ArrayList[T] {
 
 // NewArrayListOfSize creates an auto expandable/shrinkable circular array based list with init cap
 func NewArrayListOfSize[T comparable](initCap int) types.ArrayList[T] {
-	return newCircularArray[T](initCap).withRole(list)
+	return newCircularArray[T](initCap, AutoExpand+AutoShrink).withRole(list)
+}
+
+// NewArrayListOfSizeP creates a circular array based list with init cap
+func NewArrayListOfSizeP[T comparable](initCap int, flag AutoSizingFlag) types.ArrayList[T] {
+	return newCircularArray[T](initCap, flag).withRole(list)
 }
 
 // NewArrayListOfEq creates an auto expandable/shrinkable circular array based list with init cap and an Equal func
 func NewArrayListOfEq[T any](initCap int, comp types.Equal[T]) types.ArrayList[T] {
 	return newCircularArrayOfEq(initCap, comp).withRole(list)
+}
+
+// NewArrayListOfEqP creates a circular array based list with init cap and an Equal func
+func NewArrayListOfEqP[T any](initCap int, comp types.Equal[T], flag AutoSizingFlag) types.ArrayList[T] {
+	return newCircularArrayOfEqP(initCap, comp, flag).withRole(list)
 }
 
 // NewLinkedListOf creates a linked list with init values
