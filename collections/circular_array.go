@@ -11,12 +11,13 @@ const defaultArrInitSize = 12
 const defaultArrShrinkThreshold = 3 // bitwise shift
 
 type circularArray[T any] struct {
-	start int //inclusive
-	end   int //exclusive
-	arr   []T
-	size  int
-	eq    types.Equal[T]
-	r     role
+	start          int //inclusive
+	end            int //exclusive
+	arr            []T
+	size           int
+	eq             types.Equal[T]
+	r              role
+	autoSizingFlag AutoSizingFlag
 }
 type circularArrayForSort[T any] struct {
 	l    *circularArray[T]
@@ -38,17 +39,17 @@ func newCircularArrayOf[T comparable](values ...T) *circularArray[T] {
 		size = length
 		start = 0
 	}
-	return &circularArray[T]{start, size, arr, size, funcs.ValueEqual[T], list}
+	return &circularArray[T]{start, size, arr, size, funcs.ValueEqual[T], list, AutoExpand + AutoShrink}
 }
 
 // newCircularArray creates underlying array eagerly with the init size
 func newCircularArray[T comparable](initSize int) *circularArray[T] {
-	return &circularArray[T]{-1, 0, make([]T, initSize), 0, funcs.ValueEqual[T], list}
+	return &circularArray[T]{-1, 0, make([]T, initSize), 0, funcs.ValueEqual[T], list, AutoExpand + AutoShrink}
 }
 
 // newCircularArrayOfEq creates underlying array eagerly with the init size
 func newCircularArrayOfEq[T any](initSize int, eq types.Equal[T]) *circularArray[T] {
-	return &circularArray[T]{-1, 0, make([]T, initSize), 0, eq, list}
+	return &circularArray[T]{-1, 0, make([]T, initSize), 0, eq, list, AutoExpand + AutoShrink}
 }
 
 func (l *circularArray[T]) withRole(r role) *circularArray[T] {
@@ -231,7 +232,7 @@ func (l *circularArray[T]) Swap(indexA, indexB int) bool {
 func (l *circularArray[T]) clone() *circularArray[T] {
 	arr := make([]T, l.size)
 	copy(arr, l.arr)
-	return &circularArray[T]{l.start, l.end, arr, l.size, l.eq, l.r}
+	return &circularArray[T]{l.start, l.end, arr, l.size, l.eq, l.r, l.autoSizingFlag}
 }
 
 func (l *circularArray[T]) toArrIndex(index int) (int, bool) {

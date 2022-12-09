@@ -378,8 +378,8 @@ func (h *binaryHeap[T]) Each(fn func(index int, elem T)) {
 	forEach[T](h, fn)
 }
 
-func (a *circularArray[T]) Each(fn func(index int, elem T)) {
-	forEach[T](a, fn)
+func (l *circularArray[T]) Each(fn func(index int, elem T)) {
+	forEach[T](l, fn)
 }
 
 func (l *linkedList[T]) Each(fn func(index int, elem T)) {
