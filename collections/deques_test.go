@@ -56,8 +56,8 @@ func TestDequeConstraintTypeConstructors(t *testing.T) {
 		name string
 		q    types.Deque[*intStruct]
 	}{
-		{"heap1", NewLinkedListDequeC[*intStruct]()},
-		{"linkedList1", NewArrayListDequeC[*intStruct]()},
+		{"linkedList1", NewLinkedListDequeC[*intStruct]()},
+		{"arrayList1", NewArrayListDequeC[*intStruct]()},
 		{"arrayList2", NewArrayListDequeOfSizeC[*intStruct](10)},
 		{"arrayList4", NewArrayListDequeOfSizePC[*intStruct](10, NoAutoSizing)},
 	}
