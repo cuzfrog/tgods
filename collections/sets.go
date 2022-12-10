@@ -22,7 +22,7 @@ func NewHashSet[T any](hs types.Hash[T], eq types.Equal[T]) types.Set[T] {
 }
 
 // NewHashSetC creates a hash table with a constrained type that implements custom Hash and Equal
-func NewHashSetC[T types.HashAndEqual[T]]() types.Set[T] {
+func NewHashSetC[T types.WithHashAndEqual[T]]() types.Set[T] {
 	hs := func(elem T) uint { return elem.Hash() }
 	eq := func(a, b T) bool { return a.Equal(b) }
 	return newHashTable[T](hs, eq)
@@ -52,7 +52,7 @@ func NewLinkedHashSet[T any](hs types.Hash[T], eq types.Equal[T]) types.LinkedSe
 }
 
 // NewLinkedHashSetC creates a linked hash table backed set with a constrained type that implements custom Hash and Equal
-func NewLinkedHashSetC[T types.HashAndEqual[T]]() types.LinkedSet[T] {
+func NewLinkedHashSetC[T types.WithHashAndEqual[T]]() types.LinkedSet[T] {
 	hs := func(elem T) uint { return elem.Hash() }
 	eq := func(a, b T) bool { return a.Equal(b) }
 	return newLinkedHashTable[T](hs, eq, OriginalOrder)

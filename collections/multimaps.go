@@ -8,7 +8,7 @@ import (
 )
 
 // NewArrayListMultiMapC creates a hash multimap with a constrained key type that implements custom Hash and Equal
-func NewArrayListMultiMapC[K types.HashAndEqual[K], V any]() types.MultiMap[K, V] {
+func NewArrayListMultiMapC[K types.WithHashAndEqual[K], V any]() types.MultiMap[K, V] {
 	hs := func(key K) uint { return key.Hash() }
 	eq := func(a, b K) bool { return a.Equal(b) }
 	return newArrayListMultiMap[K, V](hs, eq)
@@ -36,14 +36,14 @@ func NewArrayListMultiMapOfNumKey[K constraints.Integer | constraints.Float, V a
 }
 
 // NewHashSetMultiMapC creates a hash multimap with a constrained key type that implements custom Hash and Equal
-func NewHashSetMultiMapC[K types.HashAndEqual[K], V any](vhs types.Hash[V], veq types.Equal[V]) types.MultiMap[K, V] {
+func NewHashSetMultiMapC[K types.WithHashAndEqual[K], V any](vhs types.Hash[V], veq types.Equal[V]) types.MultiMap[K, V] {
 	khs := func(key K) uint { return key.Hash() }
 	keq := func(a, b K) bool { return a.Equal(b) }
 	return newHashSetMultiMap[K, V](khs, keq, vhs, veq)
 }
 
 // NewHashSetMultiMapCC creates a hash multimap with constrained key and value types that implements custom Hash and Equal
-func NewHashSetMultiMapCC[K types.HashAndEqual[K], V types.HashAndEqual[V]]() types.MultiMap[K, V] {
+func NewHashSetMultiMapCC[K types.WithHashAndEqual[K], V types.WithHashAndEqual[V]]() types.MultiMap[K, V] {
 	khs := func(key K) uint { return key.Hash() }
 	keq := func(a, b K) bool { return a.Equal(b) }
 	vhs := func(v V) uint { return v.Hash() }
