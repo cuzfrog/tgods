@@ -58,15 +58,39 @@ func NewHashMapOfNumKey[K constraints.Integer | constraints.Float, V any](entrie
 //
 //	hs - the key hash function.
 //	eq - the key equal function.
-//	sizeLimit - limit the maximum size of elements, extra elements will be removed upon Put based on element order defined by AccessOrder.
+//	sizeLimit - limit the maximum size of elements, extra elements will be removed upon Put based on element order defined by AccessOrder. 0 means unlimited.
 //	accessOrder - defines how elements are ordered. For an LRU cache, you can provide PutOrder + GetOrder
 func NewLinkedHashMap[K any, V any](hs types.Hash[K], eq types.Equal[K], sizeLimit int, accessOrder AccessOrder) types.LinkedMap[K, V] {
+	return newLinkedHashMap[K, V](hs, eq, sizeLimit, accessOrder)
+}
+
+// NewLinkedHashMapC creates a linked hash map with a constrained key type that implements custom Hash and Equal, and init values.
+// 'C' stands for Client Customized Constrained type.
+//
+//	sizeLimit - limit the maximum size of elements, extra elements will be removed upon Put based on element order defined by AccessOrder. 0 means unlimited.
+//	accessOrder - defines how elements are ordered. For an LRU cache, you can provide PutOrder + GetOrder
+func NewLinkedHashMapC[K types.WithHashAndEqual[K], V any](sizeLimit int, accessOrder AccessOrder) types.LinkedMap[K, V] {
+	hs := func(key K) uint { return key.Hash() }
+	eq := func(a, b K) bool { return a.Equal(b) }
 	return newLinkedHashMap[K, V](hs, eq, sizeLimit, accessOrder)
 }
 
 // NewLinkedHashMapOf creates a linked hash map with custom Hash and Equal functions, and init values.
 // No size limit. Iteration will be of the original put order.
 func NewLinkedHashMapOf[K any, V any](hs types.Hash[K], eq types.Equal[K], entries ...types.Entry[K, V]) types.LinkedMap[K, V] {
+	m := newLinkedHashMap[K, V](hs, eq, 0, OriginalOrder)
+	for _, e := range entries {
+		m.Put(e.Key(), e.Value())
+	}
+	return m
+}
+
+// NewLinkedHashMapOfC creates a linked hash map with a constrained key type that implements custom Hash and Equal, and init values.
+// 'C' stands for Client Customized Constrained type.
+// No size limit. Iteration will be of the original put order.
+func NewLinkedHashMapOfC[K types.WithHashAndEqual[K], V any](entries ...types.Entry[K, V]) types.LinkedMap[K, V] {
+	hs := func(key K) uint { return key.Hash() }
+	eq := func(a, b K) bool { return a.Equal(b) }
 	m := newLinkedHashMap[K, V](hs, eq, 0, OriginalOrder)
 	for _, e := range entries {
 		m.Put(e.Key(), e.Value())
@@ -97,6 +121,11 @@ func NewLinkedHashMapOfNumKey[K constraints.Integer | constraints.Float, V any](
 // NewLRUCache alias for NewLinkedHashMap
 func NewLRUCache[K any, V any](hs types.Hash[K], eq types.Equal[K], sizeLimit int, accessOrder AccessOrder) types.Map[K, V] {
 	return NewLinkedHashMap[K, V](hs, eq, sizeLimit, accessOrder)
+}
+
+// NewLRUCacheC alias for NewLinkedHashMapC
+func NewLRUCacheC[K types.WithHashAndEqual[K], V any](sizeLimit int, accessOrder AccessOrder) types.Map[K, V] {
+	return NewLinkedHashMapC[K, V](sizeLimit, accessOrder)
 }
 
 // NewLRUCacheOfStrKey creates a linkedHashMap as an LRU cache, eviction and iteration will follow provided AccessOrder
