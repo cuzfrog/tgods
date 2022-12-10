@@ -87,11 +87,12 @@ func TestSetOfStrProperties(t *testing.T) {
 
 }
 
-func TestHashSetConstraintInterface(t *testing.T) {
+func TestSetConstraintInterface(t *testing.T) {
 	tests := []struct {
 		name string
 		s    types.Set[*intStruct]
 	}{
+		{"treeSet1", NewTreeSetOfC[*intStruct]()},
 		{"hashSet1", NewHashSetC[*intStruct]()},
 		{"hashSet2", NewLinkedHashSetC[*intStruct]()},
 	}

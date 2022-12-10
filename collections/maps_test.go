@@ -168,11 +168,25 @@ func TestLRUCacheOfStrKey_Properties(t *testing.T) {
 	}
 }
 
-func TestHashMapConstraintInterface(t *testing.T) {
-	m := NewHashMapC[*intStruct, int]()
-	k1 := &intStruct{3}
-	m.Put(k1, 2)
-	assert.Equal(t, 1, m.Size())
-	k2 := &intStruct{3}
-	assert.True(t, m.ContainsKey(k2))
+func TestMapConstraintTypeConstructors(t *testing.T) {
+	tests := []struct {
+		name string
+		m    types.Map[*intStruct, int]
+	}{
+		{"treeMap1", NewTreeMapOfC[*intStruct, int]()},
+		{"hashMap1", NewHashMapC[*intStruct, int]()},
+		{"linkedHashMap1", NewLinkedHashMapC[*intStruct, int](0, OriginalOrder)},
+		{"linkedHashMap2", NewLRUCacheC[*intStruct, int](0, OriginalOrder)},
+		{"linkedHashMap3", NewLinkedHashMapOfC[*intStruct, int]()},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			m := test.m
+			k1 := &intStruct{3}
+			m.Put(k1, 2)
+			assert.Equal(t, 1, m.Size())
+			k2 := &intStruct{3}
+			assert.True(t, m.ContainsKey(k2))
+		})
+	}
 }

@@ -27,6 +27,10 @@ type circularArrayForSort[T any] struct {
 // newCircularArrayOf creates an auto expandable circular array based list, auto shrinkable, but will not shrink if the length is <= defaultArrInitSize,
 // the underlying array will be lazily created unless init values are provided, the init arr size is the same as init values'
 func newCircularArrayOf[T comparable](values ...T) *circularArray[T] {
+	return newCircularArrayOfP[T](funcs.ValueEqual[T], AutoExpand+AutoShrink, values...)
+}
+
+func newCircularArrayOfP[T any](eq types.Equal[T], flag AutoSizingFlag, values ...T) *circularArray[T] {
 	var arr []T
 	var size, start int
 	length := len(values)
@@ -39,7 +43,7 @@ func newCircularArrayOf[T comparable](values ...T) *circularArray[T] {
 		size = length
 		start = 0
 	}
-	return &circularArray[T]{start, size, arr, size, funcs.ValueEqual[T], list, AutoExpand + AutoShrink}
+	return &circularArray[T]{start, size, arr, size, eq, list, flag}
 }
 
 // newCircularArray creates underlying array eagerly with the init cap
@@ -47,7 +51,7 @@ func newCircularArray[T comparable](initCap int, flag AutoSizingFlag) *circularA
 	return &circularArray[T]{-1, 0, make([]T, initCap), 0, funcs.ValueEqual[T], list, flag}
 }
 
-// newCircularArrayOfEq creates underlying array eagerly with the init cap
+// newCircularArrayOfEq creates underlying array eagerly with the init cap, AutoExpand + AutoShrink
 func newCircularArrayOfEq[T any](initCap int, eq types.Equal[T]) *circularArray[T] {
 	return &circularArray[T]{-1, 0, make([]T, initCap), 0, eq, list, AutoExpand + AutoShrink}
 }

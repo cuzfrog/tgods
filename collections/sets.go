@@ -11,6 +11,13 @@ func NewTreeSetOf[T constraints.Ordered](values ...T) types.SortedSet[T] {
 	return newRbTreeOf(values...)
 }
 
+// NewTreeSetOfC creates a red black tree backed SortedSet with init values
+// 'C' stands for Client Customized Constrained type.
+func NewTreeSetOfC[T types.WithCompare[T]](values ...T) types.SortedSet[T] {
+	comp := func(a, b T) int8 { return a.Compare(b) }
+	return newRbTreeOfComp(comp, values...)
+}
+
 // NewTreeSetOfComp creates a red black tree backed SortedSet with a Compare func
 func NewTreeSetOfComp[T any](comp types.Compare[T]) types.SortedSet[T] {
 	return newRbTreeOfComp(comp)
@@ -22,7 +29,8 @@ func NewHashSet[T any](hs types.Hash[T], eq types.Equal[T]) types.Set[T] {
 }
 
 // NewHashSetC creates a hash table with a constrained type that implements custom Hash and Equal
-func NewHashSetC[T types.HashAndEqual[T]]() types.Set[T] {
+// 'C' stands for Client Customized Constrained type.
+func NewHashSetC[T types.WithHashAndEqual[T]]() types.Set[T] {
 	hs := func(elem T) uint { return elem.Hash() }
 	eq := func(a, b T) bool { return a.Equal(b) }
 	return newHashTable[T](hs, eq)
@@ -52,7 +60,7 @@ func NewLinkedHashSet[T any](hs types.Hash[T], eq types.Equal[T]) types.LinkedSe
 }
 
 // NewLinkedHashSetC creates a linked hash table backed set with a constrained type that implements custom Hash and Equal
-func NewLinkedHashSetC[T types.HashAndEqual[T]]() types.LinkedSet[T] {
+func NewLinkedHashSetC[T types.WithHashAndEqual[T]]() types.LinkedSet[T] {
 	hs := func(elem T) uint { return elem.Hash() }
 	eq := func(a, b T) bool { return a.Equal(b) }
 	return newLinkedHashTable[T](hs, eq, OriginalOrder)

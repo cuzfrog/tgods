@@ -13,16 +13,16 @@ type rbTree[T any] struct {
 	comp types.Compare[T]
 }
 
-func newRbTreeOfComp[T any](comp types.Compare[T]) *rbTree[T] {
-	return &rbTree[T]{nil, 0, comp}
-}
-
-func newRbTreeOf[T constraints.Ordered](values ...T) *rbTree[T] {
-	t := newRbTreeOfComp[T](funcs.ValueCompare[T])
+func newRbTreeOfComp[T any](comp types.Compare[T], values ...T) *rbTree[T] {
+	t := &rbTree[T]{nil, 0, comp}
 	for _, v := range values {
 		t.insert(v)
 	}
 	return t
+}
+
+func newRbTreeOf[T constraints.Ordered](values ...T) *rbTree[T] {
+	return newRbTreeOfComp[T](funcs.ValueCompare[T], values...)
 }
 
 func rbTreeInsert[T any](t *rbTree[T], d T) (T, bool) {

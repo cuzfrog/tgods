@@ -9,11 +9,15 @@ type hashMap[K any, V any] struct {
 	hashTable[types.Entry[K, V]]
 }
 
-func newHashMap[K any, V any](hs types.Hash[K], eq types.Equal[K]) *hashMap[K, V] {
+func newHashMap[K any, V any](hs types.Hash[K], eq types.Equal[K], entries ...types.Entry[K, V]) *hashMap[K, V] {
 	hhs := func(a types.Entry[K, V]) uint { return hs(a.Key()) }
 	heq := func(a, b types.Entry[K, V]) bool { return eq(a.Key(), b.Key()) }
 	h := newHashTable[types.Entry[K, V]](hhs, heq)
-	return &hashMap[K, V]{*h}
+	m := &hashMap[K, V]{*h}
+	for _, e := range entries {
+		m.Put(e.Key(), e.Value())
+	}
+	return m
 }
 
 func (h *hashMap[K, V]) Get(k K) (V, bool) {

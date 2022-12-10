@@ -89,3 +89,24 @@ func TestPriorityQueueProperties(t *testing.T) {
 		assert.Equal(t, []int{1, 6, 7, 7, 8, 11}, utils.SliceFrom[int](q))
 	})
 }
+
+func TestQueueConstraintTypeConstructors(t *testing.T) {
+	tests := []struct {
+		name string
+		q    types.Queue[*intStruct]
+	}{
+		{"heap1", NewHeapPriorityQueueC[*intStruct]()},
+		{"linkedList1", NewLinkedListQueueC[*intStruct]()},
+		{"arrayList1", NewArrayListQueueC[*intStruct]()},
+		{"arrayList2", NewArrayListQueueOfSizeC[*intStruct](10)},
+		{"arrayList4", NewArrayListQueueOfSizePC[*intStruct](10, NoAutoSizing)},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			q := test.q
+			v1 := &intStruct{1}
+			q.Enqueue(v1)
+			assert.True(t, q.Contains(v1))
+		})
+	}
+}

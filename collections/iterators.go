@@ -33,7 +33,7 @@ func (s *arrayStack[T]) Iterator() types.Iterator[T] {
 	return &arrayStackIterator[T]{s, s.cur + 1}
 }
 
-type arrayStackIterator[T comparable] struct {
+type arrayStackIterator[T any] struct {
 	s   *arrayStack[T]
 	cur int
 }

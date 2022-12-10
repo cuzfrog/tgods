@@ -35,3 +35,24 @@ func TestStackProperties(t *testing.T) {
 		})
 	}
 }
+
+func TestStackConstraintInterface(t *testing.T) {
+	tests := []struct {
+		name string
+		s    types.Stack[*intStruct]
+	}{
+		{"arrStack", NewArrayStackC[*intStruct](10)},
+		{"linkedList", NewLinkedListStackC[*intStruct]()},
+		{"arrayList", NewCircularArrayStackC[*intStruct]()},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			set := test.s
+			s1 := &intStruct{3}
+			set.Add(s1)
+			assert.Equal(t, 1, set.Size())
+			s2 := &intStruct{3}
+			assert.True(t, set.Contains(s2))
+		})
+	}
+}

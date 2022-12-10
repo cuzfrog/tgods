@@ -40,3 +40,23 @@ func TestListProperties(t *testing.T) {
 		})
 	}
 }
+
+func TestListConstraintTypeConstructors(t *testing.T) {
+	tests := []struct {
+		name string
+		q    types.List[*intStruct]
+	}{
+		{"arrayList1", NewArrayListOfC[*intStruct]()},
+		{"arrayList2", NewArrayListOfSizeC[*intStruct](10)},
+		{"arrayList3", NewArrayListOfSizePC[*intStruct](10, NoAutoSizing)},
+		{"linkedList1", NewLinkedListOfC[*intStruct]()},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			q := test.q
+			v1 := &intStruct{1}
+			q.Add(v1)
+			assert.True(t, q.Contains(v1))
+		})
+	}
+}

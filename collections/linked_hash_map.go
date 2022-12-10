@@ -10,11 +10,15 @@ type linkedHashMap[K any, V any] struct {
 	limit int // the maximum size limit, 0 means unlimited
 }
 
-func newLinkedHashMap[K any, V any](hs types.Hash[K], eq types.Equal[K], sizeLimit int, accessOrder AccessOrder) *linkedHashMap[K, V] {
+func newLinkedHashMap[K any, V any](hs types.Hash[K], eq types.Equal[K], sizeLimit int, accessOrder AccessOrder, entries ...types.Entry[K, V]) *linkedHashMap[K, V] {
 	hhs := func(a types.Entry[K, V]) uint { return hs(a.Key()) }
 	heq := func(a, b types.Entry[K, V]) bool { return eq(a.Key(), b.Key()) }
 	h := newLinkedHashTable[types.Entry[K, V]](hhs, heq, accessOrder)
-	return &linkedHashMap[K, V]{*h, sizeLimit}
+	m := &linkedHashMap[K, V]{*h, sizeLimit}
+	for _, e := range entries {
+		m.Put(e.Key(), e.Value())
+	}
+	return m
 }
 
 func (h *linkedHashMap[K, V]) Get(k K) (V, bool) {
