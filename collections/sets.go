@@ -12,6 +12,7 @@ func NewTreeSetOf[T constraints.Ordered](values ...T) types.SortedSet[T] {
 }
 
 // NewTreeSetOfC creates a red black tree backed SortedSet with init values
+// 'C' stands for Client Customized Constrained type.
 func NewTreeSetOfC[T types.WithCompare[T]](values ...T) types.SortedSet[T] {
 	comp := func(a, b T) int8 { return a.Compare(b) }
 	return newRbTreeOfComp(comp, values...)
@@ -28,6 +29,7 @@ func NewHashSet[T any](hs types.Hash[T], eq types.Equal[T]) types.Set[T] {
 }
 
 // NewHashSetC creates a hash table with a constrained type that implements custom Hash and Equal
+// 'C' stands for Client Customized Constrained type.
 func NewHashSetC[T types.WithHashAndEqual[T]]() types.Set[T] {
 	hs := func(elem T) uint { return elem.Hash() }
 	eq := func(a, b T) bool { return a.Equal(b) }

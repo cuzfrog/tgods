@@ -1,18 +1,26 @@
 package collections
 
 import (
+	"github.com/cuzfrog/tgods/funcs"
+	"github.com/cuzfrog/tgods/types"
 	"github.com/cuzfrog/tgods/utils"
 )
 
 // arrayStack limited size array based stack
-type arrayStack[T comparable] struct {
+type arrayStack[T any] struct {
 	arr []T
 	cur int
+	eq  types.Equal[T]
 }
 
 func newArrayStack[T comparable](size int) *arrayStack[T] {
 	arr := make([]T, size)
-	return &arrayStack[T]{arr, -1}
+	return &arrayStack[T]{arr, -1, funcs.ValueEqual[T]}
+}
+
+func newArrayStackOfEq[T any](size int, eq types.Equal[T]) *arrayStack[T] {
+	arr := make([]T, size)
+	return &arrayStack[T]{arr, -1, eq}
 }
 
 func (s *arrayStack[T]) Size() int {
@@ -58,7 +66,7 @@ func (s *arrayStack[T]) Peek() (elem T, found bool) {
 
 func (s *arrayStack[T]) Contains(elem T) bool {
 	for i := 0; i <= s.cur; i++ {
-		if s.arr[i] == elem {
+		if s.eq(s.arr[i], elem) {
 			return true
 		}
 	}
