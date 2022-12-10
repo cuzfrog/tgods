@@ -50,3 +50,23 @@ func TestDequeProperties(t *testing.T) {
 		})
 	}
 }
+
+func TestDequeConstraintTypeConstructors(t *testing.T) {
+	tests := []struct {
+		name string
+		q    types.Deque[*intStruct]
+	}{
+		{"heap1", NewLinkedListDequeC[*intStruct]()},
+		{"linkedList1", NewArrayListDequeC[*intStruct]()},
+		{"arrayList2", NewArrayListDequeOfSizeC[*intStruct](10)},
+		{"arrayList4", NewArrayListDequeOfSizePC[*intStruct](10, NoAutoSizing)},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			q := test.q
+			v1 := &intStruct{1}
+			q.Enqueue(v1)
+			assert.True(t, q.Contains(v1))
+		})
+	}
+}
