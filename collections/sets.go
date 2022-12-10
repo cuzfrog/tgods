@@ -11,6 +11,12 @@ func NewTreeSetOf[T constraints.Ordered](values ...T) types.SortedSet[T] {
 	return newRbTreeOf(values...)
 }
 
+// NewTreeSetOfC creates a red black tree backed SortedSet with init values
+func NewTreeSetOfC[T types.WithCompare[T]](values ...T) types.SortedSet[T] {
+	comp := func(a, b T) int8 { return a.Compare(b) }
+	return newRbTreeOfComp(comp, values...)
+}
+
 // NewTreeSetOfComp creates a red black tree backed SortedSet with a Compare func
 func NewTreeSetOfComp[T any](comp types.Compare[T]) types.SortedSet[T] {
 	return newRbTreeOfComp(comp)

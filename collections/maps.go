@@ -11,6 +11,13 @@ func NewTreeMapOf[K constraints.Ordered, V any](entries ...types.Entry[K, V]) ty
 	return NewTreeMapOfComp(funcs.ValueCompare[K], entries...)
 }
 
+// NewTreeMapOfC creates a tree map with init values.
+// 'C' stands for Client Customized Constrained type.
+func NewTreeMapOfC[K types.WithCompare[K], V any](entries ...types.Entry[K, V]) types.SortedMap[K, V] {
+	comp := func(a, b K) int8 { return a.Compare(b) }
+	return NewTreeMapOfComp(comp, entries...)
+}
+
 // NewTreeMapOfComp creates a tree map with custom Compare func and init values.
 func NewTreeMapOfComp[K any, V any](comp types.Compare[K], entries ...types.Entry[K, V]) types.SortedMap[K, V] {
 	m := newTreeMapOfComp[K, V](comp)

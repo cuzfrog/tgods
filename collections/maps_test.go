@@ -173,6 +173,7 @@ func TestMapConstraintTypeConstructors(t *testing.T) {
 		name string
 		m    types.Map[*intStruct, int]
 	}{
+		{"treeMap1", NewTreeMapOfC[*intStruct, int]()},
 		{"hashMap1", NewHashMapC[*intStruct, int]()},
 		{"linkedHashMap1", NewLinkedHashMapC[*intStruct, int](0, OriginalOrder)},
 		{"linkedHashMap2", NewLRUCacheC[*intStruct, int](0, OriginalOrder)},

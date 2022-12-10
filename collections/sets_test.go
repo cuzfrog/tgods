@@ -92,6 +92,7 @@ func TestHashSetConstraintInterface(t *testing.T) {
 		name string
 		s    types.Set[*intStruct]
 	}{
+		{"treeSet1", NewTreeSetOfC[*intStruct]()},
 		{"hashSet1", NewHashSetC[*intStruct]()},
 		{"hashSet2", NewLinkedHashSetC[*intStruct]()},
 	}

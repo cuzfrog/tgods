@@ -13,8 +13,12 @@ type rbTree[T any] struct {
 	comp types.Compare[T]
 }
 
-func newRbTreeOfComp[T any](comp types.Compare[T]) *rbTree[T] {
-	return &rbTree[T]{nil, 0, comp}
+func newRbTreeOfComp[T any](comp types.Compare[T], values ...T) *rbTree[T] {
+	t := &rbTree[T]{nil, 0, comp}
+	for _, v := range values {
+		t.insert(v)
+	}
+	return t
 }
 
 func newRbTreeOf[T constraints.Ordered](values ...T) *rbTree[T] {
