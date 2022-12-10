@@ -22,11 +22,7 @@ func newRbTreeOfComp[T any](comp types.Compare[T], values ...T) *rbTree[T] {
 }
 
 func newRbTreeOf[T constraints.Ordered](values ...T) *rbTree[T] {
-	t := newRbTreeOfComp[T](funcs.ValueCompare[T])
-	for _, v := range values {
-		t.insert(v)
-	}
-	return t
+	return newRbTreeOfComp[T](funcs.ValueCompare[T], values...)
 }
 
 func rbTreeInsert[T any](t *rbTree[T], d T) (T, bool) {
