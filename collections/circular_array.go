@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/cuzfrog/tgods/funcs"
 	"github.com/cuzfrog/tgods/types"
+	"github.com/cuzfrog/tgods/utils"
 	"sort"
 )
 
@@ -218,13 +219,19 @@ func (l *circularArray[T]) Get(index int) (elem T, found bool) {
 
 // Set sets value by index and returns the old value, will not expand the list
 func (l *circularArray[T]) Set(index int, elem T) (oldElem T, found bool) {
-	arrIndex, ok := l.toArrIndex(index)
-	if ok {
-		oldElem = l.arr[arrIndex]
-		l.arr[arrIndex] = elem
-		return oldElem, true
+	if index >= cap(l.arr) {
+		return utils.Nil[T](), false
 	}
-	return oldElem, false
+	size := l.size
+	if index >= size {
+		for i := 0; i <= index-size; i++ {
+			l.Add(utils.Nil[T]())
+		}
+	}
+	arrIndex, _ := l.toArrIndex(index)
+	oldElem = l.arr[arrIndex]
+	l.arr[arrIndex] = elem
+	return oldElem, true
 }
 
 // Swap exchanges values of provided indices, if one of the indices is invalid, returns false

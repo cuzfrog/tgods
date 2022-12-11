@@ -156,7 +156,12 @@ func TestCircularArrayList_Set(t *testing.T) {
 	assert.Equal(t, 100, v)
 	assert.Equal(t, 5, l.arr[0])
 
-	v, ok = l.Set(1, 35)
+	v, ok = l.Set(4, 35)
+	assert.True(t, ok)
+	assert.Equal(t, 0, v)
+	assert.Equal(t, []int{5, 0, 0, 0, 35}, l.arr)
+
+	v, ok = l.Set(10, 355)
 	assert.False(t, ok)
 }
 
