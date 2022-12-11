@@ -18,10 +18,10 @@ type Iterator[T any] interface {
 }
 
 type IndexAccess[T any] interface {
-	Get(index int) (T, bool)
-	Set(index int, elem T) (T, bool)
-	Swap(indexA, indexB int) bool // if any index is invalid, return false
-	Sort(lessFn Less[T])          // sort elem by provided Less function
+	Get(index int) (T, bool)         // if no item of given index, return Nil and false
+	Set(index int, elem T) (T, bool) // if index is out of bound of cap, return Nil and false, cap will not be expanded. If index is within cap but >= current size, the arr will be filled with Nil up to the position of index before Set, thus return Nil and true.
+	Swap(indexA, indexB int) bool    // if any index is invalid, return false
+	Sort(lessFn Less[T])             // sort elem by provided Less function
 }
 
 type Queue[T any] interface {
