@@ -3,9 +3,16 @@ package utils
 import (
 	"github.com/cuzfrog/tgods/funcs"
 	"github.com/cuzfrog/tgods/mocks"
+	"github.com/cuzfrog/tgods/types"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
+
+type myInt int
+
+func (i myInt) Less(other myInt) bool {
+	return i < other
+}
 
 func TestSlice(t *testing.T) {
 	c := mocks.NewMockCollectionOf[int](1, 4, 3, 2)
@@ -28,12 +35,24 @@ func TestSliceProjection(t *testing.T) {
 
 func TestSort(t *testing.T) {
 	c := mocks.NewMockCollectionOf[int](1, 4, 3, 2)
-	Sort[int](c, funcs.ValueLess[int])
-	assert.Equal(t, "yes", c.GetFlag("SortCalled"))
+	less := funcs.ValueLess[int]
+	Sort[int](c, less)
+	assert.ObjectsAreEqual(less, c.GetFlag("SortLessFn"))
+}
+
+func TestSortC(t *testing.T) {
+	c := mocks.NewMockCollectionOf[myInt](1, 4, 3, 2)
+	SortC[myInt](c)
+	var less types.Less[myInt]
+	less = c.GetFlag("SortLessFn").(types.Less[myInt])
+
+	assert.True(t, less(1, 2))
+	assert.False(t, less(1, 1))
+	assert.False(t, less(2, 1))
 }
 
 func TestSortOrderable(t *testing.T) {
 	c := mocks.NewMockCollectionOf[int](1, 4, 3, 2)
 	SortOrderable[int](c)
-	assert.Equal(t, "yes", c.GetFlag("SortCalled"))
+	assert.ObjectsAreEqual(funcs.ValueLess[int], c.GetFlag("SortLessFn"))
 }

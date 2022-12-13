@@ -59,12 +59,22 @@ func NewStrHash() types.Hash[string] {
 
 // ========== HOF =========
 
-// CompToEq is a high-order function that converts a Compare to an Equal
+// CompToEq is a high-order function that converts a types.Compare to an types.Equal
 func CompToEq[T any](comp types.Compare[T]) types.Equal[T] {
 	return func(a, b T) bool { return comp(a, b) == 0 }
 }
 
-// InverseComp changes a greater than Compare to a smaller than, and vice versa
+// CompToLess is a high-order function that converts a types.Compare to a types.Less
+func CompToLess[T any](comp types.Compare[T]) types.Less[T] {
+	return func(a, b T) bool { return comp(a, b) < 0 }
+}
+
+// InverseComp is a high-order function that changes a greater than types.Compare to a smaller than, and vice versa
 func InverseComp[T any](comp types.Compare[T]) types.Compare[T] {
 	return func(a, b T) int8 { return comp(b, a) }
+}
+
+// InverseLess is a high-order function that inverse a types.Less function
+func InverseLess[T any](less types.Less[T]) types.Less[T] {
+	return func(a, b T) bool { return less(b, a) }
 }

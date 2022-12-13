@@ -55,6 +55,11 @@ func Sort[T any](list types.IndexAccess[T], lessFn types.Less[T]) {
 	list.Sort(lessFn)
 }
 
+// SortC sorts the index based collection with elements implementing types.WithLess
+func SortC[T types.WithLess[T]](list types.IndexAccess[T]) {
+	list.Sort(func(a, b T) bool { return a.Less(b) })
+}
+
 func SortOrderable[T constraints.Ordered](list types.IndexAccess[T]) {
 	list.Sort(funcs.ValueLess[T])
 }
