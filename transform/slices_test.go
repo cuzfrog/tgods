@@ -79,3 +79,11 @@ func TestCountSlice(t *testing.T) {
 	res := CountSlice[int](c, func(elem int) bool { return elem > 2 })
 	assert.Equal(t, 2, res)
 }
+
+func TestSumSlice(t *testing.T) {
+	ints := []int{1, 3, 4}
+	assert.Equal(t, 8, SumSlice[int](ints))
+
+	strs := []string{"a", "b", "c"}
+	assert.Equal(t, "abc", SumSlice[string](strs))
+}

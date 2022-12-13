@@ -87,3 +87,11 @@ func TestCount(t *testing.T) {
 	})
 	assert.Equal(t, 2, res)
 }
+
+func TestSum(t *testing.T) {
+	ints := mocks.NewMockCollectionOf(1, 3, 4)
+	assert.Equal(t, 8, Sum[int](ints))
+
+	strs := mocks.NewMockCollectionOf("a", "b", "c")
+	assert.Equal(t, "abc", Sum[string](strs))
+}
