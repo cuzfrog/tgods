@@ -41,7 +41,7 @@ func MultiValuesTo[K any, V any](src types.Map[K, types.Collection[V]], tgt type
 	itor := src.Iterator()
 	for itor.Next() {
 		entry := itor.Value()
-		addedCnt += AddAll[V](entry.Value(), tgt)
+		addedCnt += AddAllTo[V](entry.Value(), tgt)
 	}
 	return addedCnt
 }

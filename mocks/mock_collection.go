@@ -11,7 +11,7 @@ type MockCollection[T comparable] interface {
 	types.IndexAccess[T]
 	SetElems(values ...T)
 	Elems() []T
-	GetFlag(key string) string
+	GetFlag(key string) interface{}
 }
 
 type MockList[T comparable] interface {
@@ -22,18 +22,18 @@ type MockList[T comparable] interface {
 type mockCollection[T comparable] struct {
 	arr   []T
 	size  int
-	flags map[string]string
+	flags map[string]interface{}
 }
 
 // ======== Constructors ========
 
 func NewMockCollectionOf[T comparable](values ...T) MockCollection[T] {
-	return &mockCollection[T]{values, len(values), make(map[string]string, 10)}
+	return &mockCollection[T]{values, len(values), make(map[string]interface{}, 10)}
 }
 
 func NewMockCollection[T comparable](size int) MockCollection[T] {
 	arr := make([]T, size)
-	return &mockCollection[T]{arr, 0, make(map[string]string, 10)}
+	return &mockCollection[T]{arr, 0, make(map[string]interface{}, 10)}
 }
 
 // ======== Mocks ========
@@ -47,7 +47,7 @@ func (mc *mockCollection[T]) Elems() []T {
 	return mc.arr
 }
 
-func (mc *mockCollection[T]) GetFlag(key string) string {
+func (mc *mockCollection[T]) GetFlag(key string) interface{} {
 	return mc.flags[key]
 }
 
@@ -131,7 +131,7 @@ func (mc *mockCollection[T]) Swap(indexA, indexB int) bool {
 	panic("implement me")
 }
 func (mc *mockCollection[T]) Sort(lessFn types.Less[T]) {
-	mc.flags["SortCalled"] = "yes"
+	mc.flags["SortLessFn"] = lessFn
 }
 
 // ======== Iterator ========

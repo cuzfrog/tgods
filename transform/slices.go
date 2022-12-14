@@ -1,6 +1,9 @@
 package transform
 
-import "github.com/cuzfrog/tgods/types"
+import (
+	"github.com/cuzfrog/tgods/types"
+	"golang.org/x/exp/constraints"
+)
 
 // MapSliceTo transforms elem into another Collection, returns elem count collected
 func MapSliceTo[T any, R any](src []T, tgt types.Collection[R], mapFn func(elem T) R) int {
@@ -89,4 +92,12 @@ func CountSlice[T any](arr []T, conditionFunc func(elem T) bool) int {
 		}
 	}
 	return cnt
+}
+
+func SumSlice[T constraints.Ordered](arr []T) T {
+	var s T
+	for _, t := range arr {
+		s += t
+	}
+	return s
 }

@@ -26,11 +26,22 @@ func TestCompToEq(t *testing.T) {
 	assert.False(t, fn(1, 2))
 }
 
+func TestCompToLess(t *testing.T) {
+	fn := CompToLess(ValueCompare[int])
+	assert.True(t, fn(1, 2))
+	assert.False(t, fn(1, 1))
+}
+
 func TestInverseComp(t *testing.T) {
 	fn := InverseComp(ValueCompare[int])
 	assert.Equal(t, int8(0), fn(1, 1))
 	assert.Equal(t, int8(-1), fn(2, 1))
 	assert.Equal(t, int8(1), fn(2, 3))
+}
+
+func TestInverseLess(t *testing.T) {
+	fn := InverseLess(ValueLess[int])
+	assert.True(t, fn(2, 1))
 }
 
 func TestNumHash(t *testing.T) {

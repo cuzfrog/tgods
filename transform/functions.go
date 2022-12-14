@@ -1,6 +1,9 @@
 package transform
 
-import "github.com/cuzfrog/tgods/types"
+import (
+	"github.com/cuzfrog/tgods/types"
+	"golang.org/x/exp/constraints"
+)
 
 // MapTo transforms elem into another Collection, returns elem count collected
 func MapTo[T any, R any](src types.Collection[T], tgt types.Collection[R], mapFn func(elem T) R) int {
@@ -98,4 +101,13 @@ func Count[T any](col types.Collection[T], conditionFunc func(elem T) bool) int 
 		}
 	}
 	return cnt
+}
+
+func Sum[T constraints.Ordered](col types.Collection[T]) T {
+	var s T
+	it := col.Iterator()
+	for it.Next() {
+		s += it.Value()
+	}
+	return s
 }
