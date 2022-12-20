@@ -124,6 +124,9 @@ func (mc *mockCollection[T]) Tail() (T, bool) {
 func (mc *mockCollection[T]) Get(index int) (T, bool) {
 	panic("implement me")
 }
+func (mc mockCollection[T]) MustGet(index int) T {
+	panic("implement me")
+}
 func (mc *mockCollection[T]) Set(index int, elem T) (T, bool) {
 	panic("implement me")
 }

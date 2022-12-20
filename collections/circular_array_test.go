@@ -146,6 +146,10 @@ func TestCircularArrayList_Get(t *testing.T) {
 	assert.Equal(t, 100, v)
 	v, ok = l.Get(13)
 	assert.False(t, ok)
+
+	v = l.MustGet(12)
+	assert.Equal(t, 100, v)
+	assert.Panics(t, func() { l.MustGet(13) })
 }
 
 func TestCircularArrayList_Set(t *testing.T) {

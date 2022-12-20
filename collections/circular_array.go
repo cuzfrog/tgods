@@ -217,6 +217,14 @@ func (l *circularArray[T]) Get(index int) (elem T, found bool) {
 	return elem, false
 }
 
+func (l *circularArray[T]) MustGet(index int) T {
+	elem, found := l.Get(index)
+	if !found {
+		panic(fmt.Sprintf("index %d is out of current size %d", index, l.size))
+	}
+	return elem
+}
+
 // Set sets value by index and returns the old value, will not expand the list
 func (l *circularArray[T]) Set(index int, elem T) (oldElem T, found bool) {
 	if index >= cap(l.arr) {
