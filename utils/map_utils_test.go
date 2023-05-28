@@ -17,6 +17,11 @@ func TestMapUtilsFunctions(t *testing.T) {
 	values := ValuesFrom(m)
 	assert.ElementsMatch(t, []string{"a", "b", "f"}, values)
 
+	col := mocks.NewMockCollectionOf[string]()
+	addCnt := ValuesTo[int, string](m, col)
+	assert.Equal(t, addCnt, 3)
+	assert.ElementsMatch(t, []string{"a", "b", "f"}, SliceFrom[string](col))
+
 	v := Compute(m, 2, func(v string, found bool) string { return v + "-computed" })
 	assert.Equal(t, "b-computed", v)
 	v, _ = m.Get(2)
