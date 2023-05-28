@@ -35,6 +35,17 @@ func ValuesFromMulti[K any, V any](m types.Map[K, types.Collection[V]]) []V {
 	return s
 }
 
+func ValuesTo[K any, V any](src types.Map[K, V], tgt types.Collection[V]) int {
+	addedCnt := 0
+	itor := src.Iterator()
+	for itor.Next() {
+		entry := itor.Value()
+		tgt.Add(entry.Value())
+		addedCnt++
+	}
+	return addedCnt
+}
+
 // MultiValuesTo adds all values from a multi map to a target collection
 func MultiValuesTo[K any, V any](src types.Map[K, types.Collection[V]], tgt types.Collection[V]) int {
 	addedCnt := 0
