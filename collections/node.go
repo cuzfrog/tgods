@@ -27,15 +27,15 @@ func newSlNode[T any](v T, next node[T]) node[T] {
 }
 
 func newDlNode[T any](v T, prev, next node[T]) node[T] {
-	return &dlNode[T]{&slNode[T]{v, next}, prev}
+	return &dlNode[T]{slNode[T]{v, next}, prev}
 }
 
 func newSlxNode[T any](v T, next, external node[T]) node[T] {
-	return &slxNode[T]{&slNode[T]{v, next}, external}
+	return &slxNode[T]{slNode[T]{v, next}, external}
 }
 
 func newDlxNode[T any](v T, prev, next, external node[T]) node[T] {
-	return &dlxNode[T]{&dlNode[T]{&slNode[T]{v, next}, prev}, external}
+	return &dlxNode[T]{dlNode[T]{slNode[T]{v, next}, prev}, external}
 }
 
 type slNode[T any] struct {
@@ -44,19 +44,19 @@ type slNode[T any] struct {
 }
 
 type dlNode[T any] struct {
-	*slNode[T]
+	slNode[T]
 	prev node[T]
 }
 
 // singly linked with external reference
 type slxNode[T any] struct {
-	*slNode[T]
+	slNode[T]
 	x node[T]
 }
 
 // doubly linked with external reference
 type dlxNode[T any] struct {
-	*dlNode[T]
+	dlNode[T]
 	x node[T]
 }
 
