@@ -136,3 +136,13 @@ func TestLinkedHashMap_Head_Tail(t *testing.T) {
 	assert.Equal(t, 1, k)
 	assert.Equal(t, 11, v)
 }
+
+func TestLinkedHashMap_RemoveHead_After_Expanding(t *testing.T) {
+	m := newLinkedHashMap[int, int](funcs.NumHash[int], funcs.ValueEqual[int], 30, OriginalOrder)
+	for i := 1; i < 20; i++ {
+		m.Put(i, 10+i)
+	}
+	k, v, _ := m.RemoveHead()
+	assert.Equal(t, k, 1)
+	assert.Equal(t, v, 11)
+}

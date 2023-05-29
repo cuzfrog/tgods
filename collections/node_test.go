@@ -44,9 +44,7 @@ func Test_Node(t *testing.T) {
 				assert.Same(t, x, n.External())
 			} else {
 				assert.Nil(t, n.External())
-				assert.Panics(t, func() {
-					n.SetExternal(x)
-				})
+				assert.Nil(t, n.SetExternal(x))
 			}
 		})
 	}
