@@ -113,7 +113,7 @@ func (n *slNode[T]) SetNext(next node[T]) node[T] {
 }
 
 func (n *slNode[T]) SetExternal(_ node[T]) node[T] {
-	panic("not supported")
+	return nil
 }
 
 func (n *slxNode[T]) SetExternal(x node[T]) node[T] {

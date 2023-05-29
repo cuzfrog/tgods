@@ -145,16 +145,20 @@ func (h *hashTable[T]) shrinkIfNeeded() {
 // hashRedistribute c - the new cap
 func (h *hashTable[T]) hashRedistribute(c int) {
 	a := make([]bucket[T], c)
-	it := h.Iterator()
-	for it.Next() {
-		i := hashToIndex(h.hs(it.Value()), c)
-		b := a[i]
-		if b == nil {
-			b = newSlBucketOf(it.Value())
-		} else {
-			b, _, _, _ = saveElemIntoBucket(a[i], it.Value(), h.eq, h.newNodeOf)
+	for _, srcBucket := range h.arr {
+		for srcBucket != nil {
+			v := srcBucket.Value()
+			i := hashToIndex(h.hs(v), c)
+			b := a[i]
+			if b == nil {
+				b = h.newNodeOf(v)
+			} else {
+				b, _, _, _ = saveElemIntoBucket(b, v, h.eq, h.newNodeOf)
+			}
+			a[i] = b
+			b.SetExternal(srcBucket.External())
+			srcBucket = srcBucket.Next()
 		}
-		a[i] = b
 	}
 	h.arr = a
 }
