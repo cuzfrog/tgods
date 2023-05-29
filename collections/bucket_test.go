@@ -57,3 +57,13 @@ func TestNode_Bucket(t *testing.T) {
 		})
 	}
 }
+
+func TestNode_removeElemFromBucket(t *testing.T) {
+	l := newSlNode(3, newSlNode(4, newSlNode(5, nil)))
+	b, n := removeElemFromBucket[int](l, 3, eqInt)
+	assert.Equal(t, 4, b.Value())
+	assert.Equal(t, 5, b.Next().Value())
+
+	assert.Equal(t, 3, n.Value())
+	assert.Nil(t, n.Next())
+}

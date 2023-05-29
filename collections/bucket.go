@@ -32,11 +32,12 @@ func newSlBucketOf[T any](v T) bucket[T] {
 //	return saveElemIntoBucket[T](elem, n, eq, newNodeOf)
 //}
 
-//saveElemIntoBucket puts the elem into the bucket, returns:
-//  bucket - the either this or a changed bucket for performance based on size of the elem
-//  node - the current node saving this elem
-//  T - the old elem
-//  bool - if found an existing elem by the eq func
+// saveElemIntoBucket puts the elem into the bucket, returns:
+//
+//	bucket - the either this or a changed bucket for performance based on size of the elem
+//	node - the current node saving this elem
+//	T - the old elem
+//	bool - if found an existing elem by the eq func
 func saveElemIntoBucket[T any](b bucket[T], elem T, eq types.Equal[T], newNodeOf func(elem T) node[T]) (bucket[T], node[T], T, bool) {
 	h := b
 	var np node[T]
@@ -54,7 +55,7 @@ func saveElemIntoBucket[T any](b bucket[T], elem T, eq types.Equal[T], newNodeOf
 	return h, np.Next(), utils.Nil[T](), false
 }
 
-//findNodeFromBucket finds and returns the node by given eq func and input v
+// findNodeFromBucket finds and returns the node by given eq func and input v
 func findNodeFromBucket[T any](b bucket[T], v T, eq types.Equal[T]) node[T] {
 	var next node[T] = b
 	for next != nil {
@@ -66,10 +67,12 @@ func findNodeFromBucket[T any](b bucket[T], v T, eq types.Equal[T]) node[T] {
 	return nil
 }
 
-// removeElemFromBucket removes the elem from the bucket, return the elem and true if found
+// removeElemFromBucket removes the elem from the bucket, return the updated bucket and the old node containing the elem
 func removeElemFromBucket[T any](b bucket[T], elem T, eq types.Equal[T]) (bucket[T], node[T]) {
 	if eq(elem, b.Value()) {
-		return nil, b
+		nb := b.Next()
+		b.SetNext(nil)
+		return nb, b
 	}
 	h := b
 	for b.Next() != nil {
