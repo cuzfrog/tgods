@@ -150,13 +150,15 @@ func (h *hashTable[T]) hashRedistribute(c int) {
 			v := srcBucket.Value()
 			i := hashToIndex(h.hs(v), c)
 			b := a[i]
+			var n node[T]
 			if b == nil {
 				b = h.newNodeOf(v)
+				n = b
 			} else {
-				b, _, _, _ = saveElemIntoBucket(b, v, h.eq, h.newNodeOf)
+				b, n, _, _ = saveElemIntoBucket(b, v, h.eq, h.newNodeOf)
 			}
 			a[i] = b
-			b.SetExternal(srcBucket.External())
+			n.SetExternal(srcBucket.External())
 			srcBucket = srcBucket.Next()
 		}
 	}
